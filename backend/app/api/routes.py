@@ -27,10 +27,11 @@ class Context:
 
 
 def authenticated(
-    x_tenant_id: Annotated[UUID, Header()], authorization: Annotated[str | None, Header()] = None
+    x_tenant_id: Annotated[UUID | None, Header()] = None,
+    authorization: Annotated[str | None, Header()] = None,
 ):
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(401, "Bearer credential required")
+    if x_tenant_id is None or not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(401, "Tenant and bearer credential required")
     token = authorization[7:]
     with transaction(x_tenant_id, token):
         pass
@@ -67,7 +68,7 @@ def readiness(ctx: Annotated[Context, Depends(authenticated)]):
             if row.current_user != "mediaos_runtime" or row.rolsuper or row.rolbypassrls:
                 return Response(status_code=503)
             repo.all("workflow_runs")
-        return {"status": "ready", "database": "ready", "schema": "0002", "mode": "deterministic"}
+        return {"status": "ready", "database": "ready", "schema": "0003", "mode": "deterministic"}
     except DBAPIError:
         return Response(status_code=503)
 

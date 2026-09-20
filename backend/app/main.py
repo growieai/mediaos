@@ -11,6 +11,7 @@ from app.config import get_settings
 from app.intelligence.http import SourcePolicyError, SourceUnavailable
 from app.intelligence.routes import router as intelligence_router
 from app.observability import configure_logging, request_id
+from app.rendering.routes import router as rendering_router
 from app.services.workflows import ConflictError, SkillFailed
 
 configure_logging()
@@ -126,6 +127,7 @@ async def failed(request: Request, exc: SkillFailed):
 
 app.include_router(router)
 app.include_router(intelligence_router)
+app.include_router(rendering_router)
 
 
 @app.exception_handler(SourceUnavailable)

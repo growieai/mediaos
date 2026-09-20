@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "identity_version": "sofia-proposed-v1",
+  "status": "PROPOSED_HUMAN_REVIEW_REQUIRED",
+  "fictional_adult": true,
+  "provider": "codex_imagegen",
+  "execution_mode": "built_in_tool",
+  "generated_at": "2026-09-21",
+  "model": null,
+  "tokens": null,
+  "cost": null,
+  "cost_status": "NOT_REPORTED_BY_TOOL",
+  "canonical_image": "portrait.png",
+  "reference_sheet": "reference-sheet.png",
+  "prompt_record": "prompts.md",
+  "notes": "Generated fictional AI character. Exact appearance remains proposed until reviewed. No real-person identity or personal biography is claimed. These are imported design assets, not a runtime image-generation API execution."
+}

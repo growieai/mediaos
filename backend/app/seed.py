@@ -114,11 +114,25 @@ def main():
     config = CharacterConfig.model_validate(data)
     secret_path = REPO_ROOT / ".local" / "credentials.json"
     secret_path.parent.mkdir(exist_ok=True)
+    (secret_path.parent / "renders").mkdir(mode=0o700, exist_ok=True)
     if secret_path.exists():
         tokens = json.loads(secret_path.read_text())["tokens"]
     else:
         tokens = {role: secrets.token_urlsafe(32) for role in ("OPERATOR", "APPROVER", "ADMIN")}
     ids = seed(engine, "growie", "Growie", "Sofía", "Spain SMB Growth", config, tokens)
+    from app.rendering.seed import seed_visual_config
+
+    reference_metadata_path = root / "references/v1/metadata.json"
+    reference_metadata = json.loads(reference_metadata_path.read_text(encoding="utf-8"))
+    seed_visual_config(
+        engine,
+        ids["tenant_id"],
+        ids["influencer_id"],
+        "Sofía",
+        config.disclosure,
+        "characters/sofia/references/v1/portrait.png",
+        reference_metadata,
+    )
     from app.intelligence.seed import seed_intelligence
 
     ingestion_path = REPO_ROOT / ".local/ingestion-credentials.json"

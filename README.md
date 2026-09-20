@@ -1,13 +1,14 @@
 # Growie Media OS
 
 For the prepared M0–M2 review flow and local startup, see [Testing guide](docs/TESTING.md).
+For rendered images and separate visual approval, see [Visual testing](docs/VISUAL_TESTING.md).
 
 Standalone, multi-tenant internal media workflow. Growie is the first seed tenant and Sofía the first influencer. Character behavior comes from versioned database configuration.
 
 Milestones 0/1 implement:
 `SourceSnapshot → ResearchPack → ContentBrief → CAROUSEL revision → QA → AWAITING_APPROVAL → human approval → APPROVED`.
 
-Every step, attempt, artifact and state change is persisted in PostgreSQL. M2 adds bounded official-source discovery, immutable raw snapshots, opportunity versions, verification, audience scoring and sourced drafts. Live workflows use deterministic typed skills with zero model cost; manual mock workflows remain available. There is no rendering or publishing.
+Every step, attempt, artifact and state change is persisted in PostgreSQL. M2 adds bounded official-source discovery, immutable raw snapshots, opportunity versions, verification, audience scoring and sourced drafts. M3 adds deterministic PNG rendering, visual QA, exact human visual approval and private ZIP export. Runtime workflows remain deterministic/mock with zero model cost. Nothing is published to social platforms.
 
 Baseline `a021ac1` remains frozen. Its M0/M1 invariants now pass in the M2 integration suite, including [hosted CI and container startup/approval acceptance](https://github.com/growieai/mediaos/actions/runs/35529691067). M2 development is isolated on `milestone-2-spain-intelligence`; Cámara access permission remains outstanding.
 
@@ -53,4 +54,18 @@ Use `.venv/bin/python` on WSL/Linux. The last command explicitly performs live o
 
 BDNS and BOE public API connectors are enabled. Cámara's recorded-page parser is implemented, but automated access is disabled because its published terms prohibit automation. Permission is needed before enabling live Cámara fetching.
 
-See [M2 implementation report](docs/MILESTONE_2_IMPLEMENTATION_REPORT.md) for actual results and remaining limitations. No Milestone 3 functionality is included.
+See [M2 implementation report](docs/MILESTONE_2_IMPLEMENTATION_REPORT.md) for its results and remaining limitations. For Cámara permission, use the draft in [Cámara access request](docs/CAMARA_ACCESS_REQUEST.md); no email has been sent automatically.
+
+## Render and review (M3)
+
+After migration and seed, run `python scripts/dev.py visual-acceptance`. It verifies separate content
+and visual approvals, checked PNG/ZIP output, stale-revision rejection and blocked claims, then leaves
+a fresh render for your review. The report is `.local/visual-acceptance-report.json`; approvals in this
+harness are simulations. The one-screen console previews every image and supports exact visual
+approval and download. Downloading does not post anything.
+
+The proposed Sofía portrait/reference pack was generated with Codex's built-in image tool and imported
+as versioned configuration. Final appearance still needs your review. The application does not require
+an AI key to render carousels. As requested, paid model calls stay disabled until you configure them;
+Instagram stays disconnected until you connect an account. The tested structured-output adapter is
+not yet enabled in runtime workflows. See [Build plan](docs/BUILD_PLAN.md) for dependency gates.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import VisualReview from "./VisualReview";
 
 type Run = { id: string; state: string; source_snapshot_id: string; asset_version_id: string | null; research_version_id: string | null; qa_report_id: string | null };
 type Identity = { memberships: { roles: string[] }[]; influencers: { id: string; name: string }[]; missions: { id: string; name: string }[] };
@@ -130,6 +131,7 @@ export default function Home() {
       {operator && <button disabled={busy || ["APPROVED", "BLOCKED", "REVISION_REQUIRED", "AWAITING_APPROVAL", "FAILED"].includes(run.state)} onClick={() => action(async () => { await api("workflow-runs/" + run.id + "/execute", "POST"); await refresh(run.id); })}>Execute / resume</button>}
       {approver && <><button disabled={busy || !waiting} onClick={() => action(() => decision("approve"))}>Approve exact revisions</button>{" "}
       <button disabled={busy || !waiting} onClick={() => action(() => decision("reject"))}>Reject</button></>}
+      <VisualReview key={`${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} refresh={id => action(() => refresh(id))} />
       {Object.entries(artifacts).map(([name, rows]) => <details key={name} open={["content_asset_versions", "qa_reports"].includes(name)}>
         <summary>{name} ({rows.length})</summary>
         <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", background: "#fff", padding: 12 }}>{JSON.stringify(rows, null, 2)}</pre>

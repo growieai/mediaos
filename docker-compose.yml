@@ -45,6 +45,11 @@ services:
       APP_ENV: development
     volumes:
       - ./.local/ingestion-credentials.json:/workspace/.local/ingestion-credentials.json:ro
+      - type: bind
+        source: ./.local/renders
+        target: /workspace/.local/renders
+        bind:
+          create_host_path: false
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:

@@ -77,6 +77,9 @@ def metadata():
             "relevance_scores",
             "editorial_decisions",
             "workflow_opportunities",
+            "visual_config_versions",
+            "render_runs",
+            "visual_approval_records",
         ],
     )
     return meta

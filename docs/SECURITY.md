@@ -46,4 +46,25 @@ Raw response checksums and exact raw snapshots are database-validated. All norma
 
 The old QA/approval guards remain intact. The additional approval trigger locks the current opportunity and checks conflicts, versions, source eligibility and expiry. Binding expiry is capped against actual source observations and the mission policy in PostgreSQL, so an operator cannot extend freshness by fabricating a relevance-score expiry. An approved historical revision may later become stale; future publishing must revalidate evidence at dispatch. Publishing is absent in this milestone.
 
-Cámara states that its electronic-office conditions prohibit automation. Its source registry is disabled and its connector rejects live discovery pending permission: https://sede.camara.es/sede/html/titularidad . No access-control bypass is implemented.
+Cámara states that its electronic-office conditions prohibit automation. Its source registry is disabled and its connector rejects live discovery pending permission: https://sede.camara.es/sede/html/titularidad . No access-control bypass is implemented. `CAMARA_ACCESS_REQUEST.md` contains a request for an approved access route; no request has been sent by the application.
+
+## Visual asset boundary (M3)
+
+Visual tables use forced tenant RLS. The runtime role has SELECT access; guarded functions alone
+create/advance render state and record visual decisions. APPROVER is required for a visual decision;
+OPERATOR cannot approve. Every decision binds exact content/research/QA/configuration/manifest
+versions and a matching M1 content approval. A new revision, official-source conflict, expiry or
+new canonical visual configuration blocks export. Configuration inserts and approval/export
+serialize on the influencer row as well as workflow/source locks.
+
+The fixed renderer is trusted application code; SQL validates exact text/fact coverage and manifest
+hashes but cannot independently inspect PNG pixels. Actual files are checked during completion,
+preview, approval and export. A missing or modified PNG prevents approval/export; the approval
+transaction rolls back on file-integrity failure. Human visual review is additional to deterministic QA.
+
+Files are private under `.local/renders/<tenant UUID>/<render UUID>/files`. No request may choose a
+filesystem path or URL. Server configuration resolves only bundled font/character catalog paths.
+PNG previews require tenant authentication; credentials never enter URLs. The proxy permits only
+JSON, PNG and ZIP response types, sanitizes attachment names, and sets no-store/nosniff headers.
+Local storage must be replaced by durable private object storage and backup/retention procedures
+before multi-host production operation. No social publishing is enabled by visual approval.

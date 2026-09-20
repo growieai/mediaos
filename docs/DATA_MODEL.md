@@ -48,3 +48,23 @@ Opportunity is a stable tenant/canonical-ID root. Its versions, links, facts, ch
 One Opportunity can reference multiple original sources. BDNS identifiers are canonical when explicitly present; BOE/Cámara cross-references must be explicit and unambiguous. Similar titles create POSSIBLE_DUPLICATE records only. Conflicting known date/amount/eligibility fields retain both sources and block factual approval. Conflicts currently require investigation; automatic conflict resolution is deliberately absent.
 
 Relevance scores store eligibility separately from weighted component scores. Mission policies and segments are versioned/admin-seeded data. Editorial decisions include mission objective, content mix, history references, evidence context and reasons. Workflow bindings pin exact opportunity/source/editorial revisions and a database-capped evidence expiry.
+
+## M3 additions
+
+Migration 0003 adds `visual_config_versions`, `render_runs` and `visual_approval_records`, all with
+forced tenant RLS and composite ownership constraints. Visual configurations contain typed layout,
+font hashes and optional exact character-reference hash/provenance. They are immutable, consecutive
+admin-seeded revisions. A newer canonical visual configuration makes earlier renders stale.
+
+RenderRun records exact workflow/content/research/QA/configuration IDs, tenant-scoped idempotency,
+input hash, ordered sequence, state, timestamps, error category and immutable terminal manifest.
+The manifest covers PNG checksums/dimensions, exact text coverage/fact IDs, fonts, portrait, renderer
+version and visual findings. Files live privately under tenant/render UUID paths in local development.
+
+VisualApprovalRecord pins the exact render manifest and matching immutable Content ApprovalRecord,
+approver, decision and timestamp. Runtime cannot directly insert or modify protected visual tables.
+New content, QA, visual configuration or render revisions cannot inherit an earlier visual approval.
+
+`visual.render` records a deterministic SkillRun and zero-cost CostEvent. Interrupted attempts are
+preserved. Imported reference images record provider/tool and prompt provenance separately; their
+unreported model/tokens/cost are null. They are not represented as zero-cost runtime model calls.

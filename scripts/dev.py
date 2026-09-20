@@ -32,6 +32,7 @@ def main():
             if os.name != "nt":
                 env.chmod(0o600)
         (ROOT / ".local").mkdir(exist_ok=True)
+        (ROOT / ".local/renders").mkdir(mode=0o700, exist_ok=True)
         run(sys.executable, "-m", "venv", BACKEND / ".venv")
         run(PYTHON, "-m", "pip", "install", "-r", BACKEND / "requirements.lock")
         run(NPM, "ci", cwd=ROOT / "apps/console")
@@ -53,10 +54,12 @@ def main():
         run("docker", "compose", "up", "-d", "--build", "api", "console")
     elif action == "acceptance":
         run(PYTHON, "-m", "app.acceptance", cwd=BACKEND)
+    elif action == "visual-acceptance":
+        run(PYTHON, "-m", "app.rendering.acceptance", cwd=BACKEND)
     elif action == "down":
         run("docker", "compose", "down")
     else:
-        print("Commands: setup, up, migrate, seed, test, check, dev, acceptance, down")
+        print("Commands: setup, up, migrate, seed, test, check, dev, acceptance, visual-acceptance, down")
 
 
 if __name__ == "__main__":

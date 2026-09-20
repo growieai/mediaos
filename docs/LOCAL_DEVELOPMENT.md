@@ -1,5 +1,11 @@
 # Local development
 
+For M3 rendering, run migration and seed after pulling the visual-production branch. Setup/seed create
+`.local/renders` as the current user; Compose refuses to auto-create that bind mount as root.
+Run `python scripts/dev.py visual-acceptance` for persisted render/approval/ZIP checks. See
+`VISUAL_TESTING.md` for the one-screen testing procedure. Native Windows/WSL use the same
+standalone database and private render directory; no AI credentials are required in mock mode.
+
 Use a fresh standalone database. No Growie production credentials or services are involved.
 
 ## Windows and WSL

@@ -1,4 +1,34 @@
-# Build Plan — First Influencer
+# Build Plan — First Influencer (roadmap reconciliation)
+
+The user-defined milestones supersede the starter numbering below. **M2 is Spain Intelligence;
+M3 is visual production.** The old ingestion/visual sections below are historical scope, not
+additional completed milestones. M0/M1 remains frozen at `a021ac1`; M2 implementation and
+verification are recorded in `MILESTONE_2_IMPLEMENTATION_REPORT.md`.
+
+Current branch: `milestone-3-visual-production`. M3 adds a proposed versioned character pack,
+deterministic 1080×1350 rendering, immutable private PNG files/manifests, visual QA, separate
+guarded visual approval, and checked ZIP export. Its one-screen preview also delivers the
+starter's Milestone 5 preview capability. Human review is required before treating Sofía's
+proposed appearance as final. A built-in design-tool generation is not a verified runtime image API.
+
+The remaining roadmap proceeds one verified loop at a time:
+
+| Capability | Independent work | Live dependency / completion gate |
+| --- | --- | --- |
+| Typed model skills | Strict fact/template selection adapter and mock transport tests | User chose mock mode until credentials are configured. Persist real attempts/usage/cost semantics before enabling the adapter; no live API result is claimed. |
+| Visual approval | Exact file preview, QA findings, human decision and private ZIP export | New PostgreSQL negative tests, inspected images, browser acceptance and CI must pass. Durable object storage is required for production. |
+| Instagram (original M6) | Dry-run adapter, persisted intent, idempotency and reconciliation | User will connect an account later. Permissions, token storage, HTTPS media delivery and explicit dispatch authorization are required for a real post. |
+| Metrics (M7) | Typed metric snapshots and content/post lineage | Actual connected post and verified insights access. Missing metrics remain unknown, never zero. |
+| Community (M8) | Idempotent events, classifications and reviewed reply drafts | Webhooks, account permissions and explicit send authorization. Automatic comments/DMs remain disabled. |
+| Conversion (M9) | Consent-aware requests, attribution and dry-run handoff contract | Explicitly chosen destination and credentials. Existing Growie production services/database remain out of bounds. |
+| Reels (M10) | Begin only after carousel/source QA and measured metrics are stable | Final character selection, video provider, suitable voice rights, durable storage and audiovisual QA. A storyboard stub is not completed video production. |
+
+Marketplace, external creator UI/signup and customer billing stay deferred. Production operations
+also require organizational identity/token lifecycle, private infrastructure, TLS, secrets management,
+backup/restore checks, alerting, rollback and durable orchestration. CI verifies only the commits
+and flows that actually ran; no deployment to existing Growie services is authorized.
+
+## Historical starter sequence
 
 ## Milestone 0 — repository can run
 - Docker dependencies start.

@@ -67,3 +67,27 @@ A successful unchanged fetch records a new observation. A changed document produ
 The editor can CREATE_CONTENT, WATCH, IGNORE or HUMAN_REVIEW. Broad programme fit is not a promise that an individual business qualifies. Duplicate recent coverage becomes WATCH. An explicit low brand-fit weight prevents promotion from dominating the initial score. No score or model confidence overrides deterministic source eligibility.
 
 M1 state transitions are unchanged. Opportunity checks extend the original QA function and also run in an approval INSERT trigger. Ingestion and approval lock the same Opportunity row, preventing a concurrent source change from slipping through approval. Refreshing evidence requires a new workflow/ResearchPack binding; an old approval never transfers.
+
+## Visual workflow (M3)
+
+`current QA PASS → RenderRun CREATED → RENDERING → PASS / REVISION_REQUIRED / BLOCKED / FAILED`.
+PASS means deterministic visual checks passed, not human approval. With exact content APPROVED,
+an authorized human reviews the images/caption and creates a separate VisualApprovalRecord.
+Only a current, visually approved render can pass the ZIP export guard.
+
+- `GET/POST /v1/workflow-runs/{id}/renders` lists configurations/history or creates and executes a render.
+- `GET /v1/renders/{id}` returns the persisted render and visual decisions.
+- `POST /v1/renders/{id}/execute` resumes CREATED/RENDERING with a bounded attempt history.
+- `GET /v1/renders/{id}/slides/{index}` returns an authenticated PNG preview.
+- `POST /v1/renders/{id}/approve` or `/reject` records an exact manifest-hash decision.
+- `GET /v1/renders/{id}/export` rechecks approvals/freshness and returns checked PNGs, manifest and caption.
+
+Creation requires asset_version_id, visual_config_version_id and idempotency_key. Repeating identical
+input returns the same RenderRun; a different payload conflicts. A terminal failed/rejected render
+needs an explicit new request key after correction. A process interruption can resume an already
+written immutable output after checksum validation; it never duplicates a committed successful artifact.
+
+Changing content requires the existing new QA/content approval flow and a new render/visual approval.
+Changing canonical visual configuration or creating a newer render makes older exports invalid.
+An interrupted render that becomes stale is marked FAILED. A failed visual check never advances
+the content workflow to APPROVED, and a pre-existing content approval never bypasses visual review.
