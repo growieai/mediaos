@@ -119,6 +119,19 @@ def main():
     else:
         tokens = {role: secrets.token_urlsafe(32) for role in ("OPERATOR", "APPROVER", "ADMIN")}
     ids = seed(engine, "growie", "Growie", "Sofía", "Spain SMB Growth", config, tokens)
+    from app.intelligence.seed import seed_intelligence
+
+    ingestion_path = REPO_ROOT / ".local/ingestion-credentials.json"
+    ingestion_tokens = (
+        json.loads(ingestion_path.read_text(encoding="utf-8")) if ingestion_path.exists() else {}
+    )
+    ingestion_tokens.setdefault(ids["tenant_id"], secrets.token_urlsafe(32))
+    seed_intelligence(
+        engine, ids["tenant_id"], ids["mission_id"], ingestion_tokens[ids["tenant_id"]]
+    )
+    ingestion_path.write_text(json.dumps(ingestion_tokens, indent=2), encoding="utf-8")
+    if os.name != "nt":
+        ingestion_path.chmod(0o600)
     secret_path.write_text(json.dumps({**ids, "tokens": tokens}, indent=2), encoding="utf-8")
     if os.name != "nt":
         secret_path.chmod(0o600)

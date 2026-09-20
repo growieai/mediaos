@@ -5,7 +5,9 @@ Standalone, multi-tenant internal media workflow. Growie is the first seed tenan
 Milestones 0/1 implement:
 `SourceSnapshot → ResearchPack → ContentBrief → CAROUSEL revision → QA → AWAITING_APPROVAL → human approval → APPROVED`.
 
-Every step, attempt, artifact and state change is persisted in PostgreSQL. This release has deterministic mock skills only. It does not call AI providers, fetch sources, render images, or publish content.
+Every step, attempt, artifact and state change is persisted in PostgreSQL. M2 adds bounded official-source discovery, immutable raw snapshots, opportunity versions, verification, audience scoring and sourced drafts. Live workflows use deterministic typed skills with zero model cost; manual mock workflows remain available. There is no rendering or publishing.
+
+Baseline `a021ac1` is frozen as **M0/M1 — Code Complete / Environment Verification Pending**. Docker and hosted CI remain operational checks until actually executed. M2 development is isolated on `milestone-2-spain-intelligence`.
 
 ## Quick start
 
@@ -34,3 +36,19 @@ The acceptance command simulates separate operator/approver API requests and rec
 - [Security and approval invariants](docs/SECURITY.md)
 
 Production launch requires the deferred operational work described in the architecture document. Do not point this stack at Growie's existing databases or services.
+
+## Spain intelligence (M2)
+
+After migration and seed, use the console's Official-source intelligence section, or from `backend`:
+
+```bash
+.venv/Scripts/python.exe -m app.intelligence.cli ingest --source BDNS --query PYME
+.venv/Scripts/python.exe -m app.intelligence.cli draft
+.venv/Scripts/python.exe -m app.intelligence.acceptance
+```
+
+Use `.venv/bin/python` on WSL/Linux. The last command explicitly performs live official-source requests and simulated approver API calls. Normal tests use recorded fixtures and never contact government sites.
+
+BDNS and BOE public API connectors are enabled. Cámara's recorded-page parser is implemented, but automated access is disabled because its published terms prohibit automation. Permission is needed before enabling live Cámara fetching.
+
+See [M2 implementation report](docs/MILESTONE_2_IMPLEMENTATION_REPORT.md) for actual results and remaining limitations. No Milestone 3 functionality is included.

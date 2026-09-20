@@ -1,0 +1,606 @@
+<html><head><title>Sede Electrónica</title><meta name="description" content="Acceso a los trámites publicados por la Cámara de Comercio de España, los cuales se pueden solicitar de forma totalmente electóónica"><meta name="keywords" content="Sede Electrónica, Contratación y Licitación Electrónica de Pixelware"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/sede/webjars/bootstrap/css/bootstrap.min.css"><link rel="stylesheet" href="/sede/webjars/font-awesome/css/font-awesome.min.css"><link rel="stylesheet" href="/sede/webjars/animate.css/animate.css"><link rel="stylesheet" href="/sede/css/master.css"><script type="text/javascript" src="/sede/js/session.js"></script><script type="text/javascript" src="/sede/js/Time.js"></script><script type="text/javascript" src="/sede/webjars/jquery/jquery.min.js"></script><script type="text/javascript" src="/sede/webjars/bootstrap/js/bootstrap.min.js"></script><script type="text/javascript" src="/sede/js/plugins/identity/obj.identity.min.js"></script><script type="text/javascript" src="/sede/js/custom.js"></script><script type="text/javascript">
+		/*<![CDATA[*/
+			
+			var timeUrl = "/sede/time";
+			var timeOut;
+			
+			function updateTimerFromServer() {
+				var date;
+				$.ajax({
+					url: timeUrl,
+		  			type: "GET",
+		  			success: function(data) {
+		  				clearTimeout(timeOut);
+		  				date = new Date(data);
+		  				updateTimer(date);
+		  				setTimeout(function () {updateTimerFromServer()}, 30000);
+					}	
+				})
+			}
+			
+			function updateTimer(date) {
+				var hr = MostrarHora24(date);
+				$("#time").text(hr);
+				date.setSeconds(date.getSeconds() + 1);
+				timeOut = setTimeout(function(data) {updateTimer(data)}, 1000, date);
+				
+			}
+						
+			$(document).ready(function () {
+				$(".layout-content").addClass("show");
+				updateTimerFromServer();
+				initMessages();
+				$(".layout-link").on("click", function() {
+					$(".layout-content").addClass("animated fadeOut");
+					$(".layout-wait").removeClass("hide").addClass("animated fadeIn");
+					$('html, body').animate({ scrollTop: 0 }, 'slow');	     			
+				});
+				
+				// Avatar color
+				$(".header-user-auth").css("background-color", avatar_color($(".header-user-auth").text()));
+			});
+			function layout_link_cancel() {
+				$(".layout-wait").addClass("animated fadeOut");
+				$(".layout-content").removeClass("fadeOut").addClass("animated fadeIn");
+			}
+			
+		/*]]>*/
+		</script><style type="text/css">
+		/*Conditions Consent Begin*/
+		#conditionsConsent {
+			background-color: #C2002F;
+			min-height: 26px;
+			font-size: 14px;
+			color: #ccc;
+			line-height: 26px;
+			padding: 8px 0 8px 30px;
+			font-family: "Trebuchet MS",Helvetica,sans-serif;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			display: none;
+			z-index: 9999;
+		}
+		#conditionsConsent a {
+			color: #4B8EE7;
+			text-decoration: none;
+		}
+		#conditionsConsent a.conditionsConsentOK {
+			background-color: #f5f5f5;
+			color: #000;
+			display: inline-block;
+			border-radius: 5px;
+			padding: 0 20px;
+			cursor: pointer;
+			float: right;
+			margin: 0 60px 0 10px;
+		}
+		#conditionsConsent a.conditionsConsentOK:hover {
+			background-color: #eeeeee;
+		}
+	</style><script type="text/javascript">
+		$(document).ready(function() {
+			if(sessionStorage.getItem('infoCondiciones') == 1){
+			 	$("#conditionsConsent").hide();
+			}else{
+				setTimeout(function () {
+					$("#conditionsConsent").fadeIn(200);
+				}, 1000);
+				$(".conditionsConsentOK").click(function() {
+				 sessionStorage.setItem('infoCondiciones', 1);
+			  		$("#conditionsConsent").fadeOut(200);
+				});
+			}
+
+			// Click banner tab
+			  $('#tabsBannerCamaras a').on('click', function(e){
+				  	var actualTabId = $(e.target).parent().attr('id');
+				  	sessionStorage.setItem('last_banner_tab', actualTabId);
+				});
+			
+			// Click infoCamaras tab			
+			$('#tabsInfoCamaras a').on('click', function(e){				
+					sessionStorage.setItem('last_banner_tab', "banner-tab4");								  				
+			});
+			
+			// Click privateCamaras tab			
+			$('#tabsPrivateCamaras a').on('click', function(e){				
+					sessionStorage.setItem('last_banner_tab', "banner-tab5");								  				
+			});
+						
+			updateTabsBannerCamaras();		
+		}); 
+		
+		//Functions
+		function updateTabsBannerCamaras(){			
+			var lastTabId = sessionStorage.getItem('last_banner_tab');
+			if(lastTabId){
+			  	var lastTabObject = $('#' + lastTabId);
+			  	if(lastTabObject)
+		  			lastTabObject.addClass('active');
+			}
+		}	
+		
+		function cleanTabsBannerCamaras(){
+			sessionStorage.setItem('last_banner_tab', "");
+			var element = $("#tabsBannerCamaras").find(".active");
+			if(element)
+				element.removeClass("active");
+		}	
+		
+		function selectTabBannerCamaras(tabId){
+			cleanTabsBannerCamaras();
+			sessionStorage.setItem('last_banner_tab', tabId);
+			updateTabsBannerCamaras();
+		}
+	</script><script>
+		(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-5JFVRHR');
+	</script><script type="text/javascript" src="/sede/js/plugins/jquery.livesearch.js"></script><script type="text/javascript" src="/sede/js/preguntas.js"></script><script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".layout-navigation .list-group-item.active").removeClass("active");
+		$(".layout-navigation #navTramites").addClass("active");
+
+		$("#searchQuery").liveUpdate('#gridSubtramites', '.panel');
+		$(".accordion-titulo").click(function(evento) {
+			evento.preventDefault();
+			var contenido = $(this).next(".accordion-content");
+			if (contenido.css("display") == "none") { //open
+				contenido.slideDown(250);
+				$(this).addClass("open");
+			} else { //close
+				contenido.slideUp(250);
+				$(this).removeClass("open");
+			}
+		});
+	});
+	
+	$(document).ready(function() {
+		$("#formNuevaPregunta").addClass("animated fadeIn");
+		$("#sendPregunta").click(function(evento) {
+			$("#formNuevaPregunta").addClass("animated fadeOut");
+			$(".layout-wait").removeClass("hide").addClass("animated fadeIn");
+		});
+	});
+</script></head><body>
+	<header class="layout-header" role="banner">
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="headerTime" style="display:none;">
+			<div id="select-language">
+			</div>
+			<a data-locale="es" href="#">Español</a>|<a data-locale="gl" href="#">Galego</a>
+			<span id="time"></span>
+		</div>
+		
+		<div class="navbar-header container-fluid">
+			<a class="navbar-brand layout-link" href="/sede/" onclick="cleanTabsBannerCamaras();">
+				<img alt="Brand" src="/sede/images/cce-gray-32.png">
+				
+			</a>
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-main-navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+
+		
+		<div class="collapse navbar-collapse blanco" id="bs-main-navbar-collapse">
+			<ul class="nav navbar-nav navbar-right" onclick="cleanTabsBannerCamaras();">
+				<li><a href="/sede/" title="SEDE ELECTRÓNICA DE LA CÁMARA DE ESPAÑA">SEDE ELECTRÓNICA DE LA CÁMARA DE ESPAÑA</a></li>
+				
+				
+				<li><a href="/sede/html/preguntas-frecuentes-sede" title="AYUDA" class="layout-link">AYUDA</a></li>
+				<li><a href="/sede/tramites/" title="BUSCADOR" class="layout-link"><span class="glyphicon glyphicon-search"></span></a></li>
+				
+			</ul>
+		</div>
+	<!-- /.navbar-collapse --></nav>
+	<div class="layout-wait media hide">
+		<div class="media-left media-middle">
+			<i class="fa fa-2x fa-spinner fa-spin"></i>
+		</div>
+		<div class="media-body">
+			<h4>Cargando</h4>
+			<p>Por favor, espere.</p>
+		</div>
+	</div>
+</header>
+	<section class="layout-banner inner">
+	<div class="page-header">
+		<div class="container" style="position:relative;">
+			<h1>Sede Electrónica</h1>
+			<p class="hidden-sm"></p>
+			<ul class="nav nav-tabs navbar-right" id="tabsBannerCamaras">
+				<li role="presentation" id="banner-tab1"><a href="/sede/tramites/vista?categoria1=1" class="layout-link">Convocatorias para empresas</a></li>
+				<li role="presentation" id="banner-tab2"><a href="/sede/tramites/vista?categoria1=2&amp;tipo=3&amp;programa=vacio&amp;excluidos=tipo,programa" class="layout-link">Convocatorias para Cámaras</a></li>
+				<li role="presentation" id="banner-tab3"><a href="/sede/organismos" class="layout-banner-entidades layout-link">Acceda a su Cámara</a></li>
+				<li role="presentation" id="banner-tab4"><a href="/sede/html/titularidad" class="layout-link">¿Qué es la sede?</a></li>
+				<li role="presentation" id="banner-tab5"><a href="/sede/solicitante" class="layout-link"><i class="glyphicon glyphicon-folder-open"></i> Mi portal</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+
+	<div class="container">
+		<div class="row">
+			
+			<div class="layout-content col-sm-9">
+				<div class="container-fluid">
+					<ol class="breadcrumb">
+						<li><a href="/sede/">Inicio</a></li>
+						<li><a href="/sede/tramites">Trámites</a></li>
+						<li class="active">Trámite</li>
+					</ol>
+					<div class="contentPanel">
+						<div>
+		
+		
+		<h3>Convocatoria de dotación de fondos para Somos Futuro III</h3>
+		<blockquote class="lead">El objeto de la presente convocatoria es articular la dotación de fondos a las Cámaras de Comercio para la ejecución de las jornadas &quot;Somos Futuro III&quot; en la anualidad 2026/2027, actuación incardinada en el marco del Fondo Social Europeo +,  Período de 
+Programación 2021-2027</blockquote>
+		<div class="row">
+		
+			<div class="col-md-4 form-group">
+				<label class="control-label">Dirigido a</label>
+				<div class="form-control-static">
+					<i class="fa fa-user text-warning"></i> <span class="text-warning">Cámaras Territoriales</span>
+				</div>
+			</div>
+			
+			
+			<div class="col-md-5">
+		
+			<label class="control-label">Periodo de solicitudes</label>
+				<div><i class="fa fa-circle text-success"></i> 
+					<span>15/sep/2026 09:00 - 28/sep/2026 23:59</span>
+				</div>
+			<div class="progress">
+				<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" style="width:38%" aria-valuenow="5" aria-valuemax="13"></div>
+			</div>
+		
+	</div>
+			<div class="col-md-4 form-group">
+				<label class="control-label">Convocado por</label>
+				<div class="form-control-static">
+					<i class="fa fa-university"></i> <span>Cámara de España</span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<table class="table table-striped">
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+						<div class="col-sm-12">
+							<div class="tabbable">
+								<ul class="nav nav-tabs">
+									<li class="active"><a href="#divSolicitud" data-toggle="tab">Solicitud</a></li>
+									<li><a href="#divDocumentacion" data-toggle="tab">Documentación</a></li>
+									
+									<li><a href="#divPreguntasFrecuentes" data-toggle="tab">Quejas o sugerencias</a></li>
+								</ul>
+								<div class="tab-content">
+									<div id="divSolicitud" class="tab-pane fade in active top-buffer">
+										<div>
+											<h3>Forma de presentación</h3>
+											<label>Telemática</label>
+											<div>
+												<a href="/sede/nuevasolicitud?idTramite=TR0000006758" class="btn btn-primary btn-lg"><i class="fa fa-play"></i>
+													<span>Iniciar la presentación telemática</span></a>
+											</div>
+											
+											
+											
+										</div>
+										<div>
+											<h3>Composición de la solicitud</h3>
+											<div>
+												<label>Información </label>
+												<ul class="list-group">
+													<li class="list-group-item">
+														<span>001EMPR - Documentación de participación</span>
+														<ul>
+															<li>
+																<span class="text-info"> Anexo I. Solicitud de participación</span>
+															</li>
+															<li>
+																<span class="text-info">Anexo II. Declaración Jurada de la capacidad del beneficiario para la ejecución de las actuaciones</span>
+															</li>
+															<li>
+																<span class="text-info">Certificación positiva expedida por la Agencia Estatal de Administración Tributaria, de hallarse al corriente en el cumplimiento de sus obligaciones tributarias o, en su defecto, declaración responsable de no 
+estar obligado a presentarlas</span>
+															</li>
+															<li>
+																<span class="text-info">Certificación positiva expedida por la Tesorería General de la Seguridad Social, de hallarse al corriente en el cumplimiento de sus obligaciones con la Seguridad Social o, en su defecto, declaración 
+responsable de no estar obligado a presentarlas</span>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</div>
+										</div>
+										
+									</div>
+
+									<div id="divDocumentacion" class="tab-pane fade top-buffer">
+										<h3>
+											<span>Documentación</span>
+										</h3>
+										<div>
+											<a class="btn btn-default btn" role="button" href="/sede/tramites/TR0000006758/documento/003000083243">
+												<i class="glyphicon glyphicon-file"></i> <span>Convocatoria_Somos_Futuro_III.pdf</span>
+											</a>
+										</div>
+										<div>
+											<a class="btn btn-default btn" role="button" href="/sede/tramites/TR0000006758/documento/003000083010">
+												<i class="glyphicon glyphicon-file"></i> <span>ANEXO_I_Somos_Futuro_III.docx</span>
+											</a><a class="btn btn-default btn" role="button" href="/sede/tramites/TR0000006758/documento/003000083011">
+												<i class="glyphicon glyphicon-file"></i> <span>ANEXO_II_Somos_Futuro_III.docx</span>
+											</a>
+										</div>
+										
+										
+									<!-- <div th:each="documento : ${tramite.documentos}">
+											<i class="glyphicon glyphicon-file"></i><span
+												th:text="${documento.nombre}"></span>
+										</div> --></div>
+									
+									<script>
+									//Una vez que está cargado el documento, buscamos dento del contenido del div cuyo id es #gridTramites, 
+									//Si tiene el div cuya clase es .media tramite, si no la tiene, es que no se han cargado convocatorias,
+									//Por lo tanto se oculta la pestaña.
+									 $(document).ready(function(){
+										if(!!($("#gridTramites").html()) && $("#gridTramites").html().match(".media tramite") == null){
+											$('a[href$="#divConvocatorias"]').parent().remove();
+										}
+									 });
+									</script> 
+									
+									
+									
+									
+									<div id="divPreguntasFrecuentes" class="tab-pane fade top-buffer">
+										
+										<div class="alert alert-warning media">
+											<div class="media-left">
+												<span><i class="fa fa-info-circle fa-lg"></i></span>
+											</div>
+											<div class="media-body">
+												<span>Para poder formular quejas o sugerencias debe estar previamente registrado, o bien manifestar el interés mediante la inscripción de una solicitud</span>
+											</div>					
+										</div>
+										
+										
+										
+										
+										
+										
+										
+									<!-- PREGUNTAS Solicitante--><!-- / PREGUNTAS publicas de solicitudes asociadas al tramite --><!-- Preguntas Frecuentes --><!-- /Preguntas Frecuentes --></div>
+									
+								<!-- /Preguntas--></div>
+							</div>
+						</div>
+
+						
+					</div>
+				</div>
+				
+			<!--  /.container-fluid --></div>
+			
+			
+			<div class="layout-navigation col-sm-3">
+	
+	
+	
+	<h3 class="navigation-title">Enlaces</h3>
+	<div class="navigation-sections">
+		<div class="media">
+			<div class="media-left"><i class="fa fa-book"></i></div>
+			<div class="media-body"><h4 class="media-heading"><a href="/sede/html/legislacion-sede" class="layout-link">Normativa</a></h4></div>
+		</div>
+		
+		<div class="media">
+			<div class="media-left"><i class="fa fa-check-square-o"></i></div>
+			<div class="media-body"><h4 class="media-heading"><a href="/sede/csv" class="layout-link">Verificar documentos</a></h4></div>
+		</div>
+		<div class="media">
+			<div class="media-left"><i class="fa fa-calendar"></i></div>
+			<div class="media-body"><h4 class="media-heading"><a href="/sede/html/calendario" class="layout-link">Calendario y hora oficial</a></h4></div>
+		</div>
+		<div class="media">
+			<div class="media-left"><i class="fa fa-comment"></i></div>
+			<div class="media-body"><h4 class="media-heading"><a href="/sede/html/quejas-sugerencias" class="layout-link">Quejas y sugerencias</a></h4></div>
+		</div>
+	</div>
+	<div class="navigation-sections">
+		<div class="media">
+			<div class="media-left" style="color:#C2002F"><i class="fa fa-exclamation-triangle"></i></div>
+			<div class="media-body"><h4 class="media-heading"><a href="/sede/html/requisitos-tecnicos" class="layout-link" style="color:#C2002F">Requisitos técnicos</a></h4></div>
+		</div>
+		<div class="media">
+			<div class="media-left" style="color:#C2002F"><i class="fa  fa-video-camera"></i></div>
+			<div class="media-body"><h4 class="media-heading"><a href="/sede/estaticos/ayuda.htm" target="_blank" style="color:#C2002F">Vídeos tutoriales</a></h4></div>
+		</div>
+		<div class="media">
+			<div class="media-left" style="color:#C2002F"><i class="fa fa-exclamation-triangle"></i></div>
+			<div class="media-body"><h4 class="media-heading"><a href="/sede/validar/certificado" class="layout-link">Validar mi certificado</a></h4></div>
+		</div>
+		<div class="media">
+			<div class="media-left" style="color:#C2002F"><i class="fa fa-exclamation-triangle"></i></div>
+			<div class="media-body"><h4 class="media-heading"><a href="/sede/validar/firma" class="layout-link">Validar capacidad de firma</a></h4></div>
+		</div>
+	</div>
+	<h3 class="navigation-title">Avisos</h3>
+	<div>
+		<div class="navigation-sections avisos">
+			<div class="media">
+				<div class="media-left calendar-date">
+					<div class="day color-red">20</div>
+					<div class="month">oct</div>
+					
+				</div>
+
+				<div class="media-body">
+					<h5 class="media-center">
+						<a href="/sede/tramites/TR0000006237" class="layout-link"><span class="texto-rojo">AMPLIADO EL PLAZO DE PRESENTACIÓN DE SOLICTUDES HASTA EL MIÉRCOLES 22 DE OCTUBRE</span></a>
+						
+					</h5>
+				</div>
+			</div>
+			<div class="media">
+				<div class="media-left calendar-date">
+					<div class="day color-red">09</div>
+					<div class="month">dic</div>
+					
+				</div>
+
+				<div class="media-body">
+					<h5 class="media-center">
+						<a href="/sede/tramites/TR0000005103" class="layout-link"><span class="texto-rojo">Se publica modificación Apartado 11 Justificación de la convocatoria</span></a>
+						
+					</h5>
+				</div>
+			</div>
+			<div class="media">
+				<div class="media-left calendar-date">
+					<div class="day color-red">09</div>
+					<div class="month">dic</div>
+					
+				</div>
+
+				<div class="media-body">
+					<h5 class="media-center">
+						<a href="/sede/tramites/TR0000005057" class="layout-link"><span class="texto-rojo">Se publica modificación apartado 11 de la convocatoria</span></a>
+						
+					</h5>
+				</div>
+			</div>
+			<div class="media">
+				<div class="media-left calendar-date">
+					<div class="day color-red">12</div>
+					<div class="month">abr</div>
+					
+				</div>
+
+				<div class="media-body">
+					<h5 class="media-center">
+						<a href="/sede/tramites/TR0000005103" class="layout-link"><span class="texto-rojo">Se publica Anexo 2 MODIFICADO Gastos Elegibles</span></a>
+						
+					</h5>
+				</div>
+			</div>
+			<div class="media">
+				<div class="media-left calendar-date">
+					<div class="day color-red">12</div>
+					<div class="month">abr</div>
+					
+				</div>
+
+				<div class="media-body">
+					<h5 class="media-center">
+						<a href="/sede/tramites/TR0000005057" class="layout-link"><span class="texto-rojo">Se publica Anexo 2 MODIFICADO Gastos Elegibles</span></a>
+						
+					</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+			
+							
+			
+		<!-- Modal --><!-- /Modal --></div>
+		
+	<!-- / row --></div>
+	
+	<div class="layout-footer">
+
+	<div class="container">
+
+		<div class="row rojo">
+			
+			<div class="col-md-6">
+				<div class="row" style="padding-left: 10px">
+					<div class="headline"><h5>Sitios de la Cámara</h5></div>
+					<div id="" class="col-md-6">
+						<ul class="list-unstyled link-list texto-blanco">
+							<li><a title="Cámara de Comercio de España" href="http://www.camara.es" target="_blank">Cámara de Comercio de España</a></li>
+							<li>-</li>
+							<li><a title="Programas de Garantía Juvenil" href=" http://empleoygarantiajuvenil.camara.es" target="_blank">Programas de Garantía Juvenil</a></li>
+							<li><a title="Emprendedoras" href="https://www.camara.es/creacion-de-empresas/emprendedoras" target="_blank">Emprendedoras</a></li>
+						</ul>
+					</div>
+					<div id="" class="col-md-6">
+						<ul class="list-unstyled link-list texto-blanco">
+							<li><a title="Pyme Innova" href="https://pymeinnova.camara.es/" target="_blank">Pyme Innova</a></li>
+							<li><a title="Xpande" href=" http://www.camara.es/comercio-exterior/plan-de-expansion-internacional-para-pymes" target="_blank">Xpande</a></li>
+							<li><a title="Pyme Digital" href=" http://www.camara.es/innovacion-y-competitividad/ticcamaras" target="_blank">Pyme Digital</a></li>
+							<li><a title="Plan de Apoyo al Comercio Minorista" href=" http://apoyoalcomercio.camara.es" target="_blank">Plan de Apoyo al Comercio Minorista</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+
+			
+			<div class="col-md-3 map-img">
+				<div class="headline"><h5>Contacto</h5></div>
+				<span>Contacta con nosotros en nuestras oficinas:</span>
+				<address class="md-margin-bottom-40">
+					
+					<a>Calle de la Ribera del Loira 12 - 28042 Madrid</a>
+
+				</address>
+			</div>
+			
+			<div class="col-md-3 map-img">
+				<br>
+				<br>
+				<span>Por teléfono: </span>
+				<span>+34 91.590.69.00</span>
+				<br>
+				<span>Por e-mail: </span>
+				<span>soporte.sede@camara.es</span>
+			</div>
+		</div>
+		
+		
+
+		
+		
+		
+		<div class="row" style="padding-top: 10px">
+			<div class="">
+				<img src="/sede/images/logo-ue.png" class="img-responsive" style="margin-left: auto;margin-right: auto" alt="Financiado por la Unión Europea. Gobierno de España. Fondos Europeos. Plan de Recuperación, Transformación y Resiliencia.">
+			</div>
+		</div>
+
+		<div class="row" style="padding-top: 10px">
+			<div class="col-md-6">
+				<ol class="breadcrumb blanco texto-negro" style="background-color:#FFFFFF">
+					<li><span>© 2026 <span>Cámara de Comercio de España</span></span></li>
+				</ol>
+			</div>
+		</div>
+		
+		<div class="row" style="padding-top: 10px; padding-bottom: 20px">
+		</div>
+
+	</div> 
+	<div id="conditionsConsent">
+		<span><b>IMPORTANTE</b><br>Al utilizar nuestra sede electrónica conoce y acepta las <a href="/sede/html/titularidad" target="_blank">condiciones de uso</a> que prohíben explícitamente cualquier tipo de práctica o técnica de automatización</span>
+		<a class="conditionsConsentOK">Acepto</a>
+	</div>
+</div>
+</body></html>

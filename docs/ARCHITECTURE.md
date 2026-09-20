@@ -31,3 +31,13 @@ Production readiness requires an EU deployment decision, managed PostgreSQL, TLS
 Docker Compose is local development configuration, not a production manifest. It binds ports to localhost. Keep database infrastructure private in production. The privileged migration identity must never be available to API/console workloads.
 
 No connection to Growie production infrastructure is needed or permitted by this setup.
+
+## Milestone 2: source intelligence
+
+A generic SourceConnector interface separates discovery and normalization from tenant-scoped orchestration. SourceDefinition supplies authority, trust, parser version, enabled/access policy, polling limits and normalization preference. Country-specific code stays in connectors and seed data. No generic workflow branches on Sofía, Growie or Spain.
+
+The synchronous IngestionRunner commits its request, HTTP attempts, exact raw response/RAW SourceSnapshot, normalized projection, opportunity/evidence/version and cursor checkpoints independently. It can resume an interrupted page at its saved document offset. A dedicated INGESTOR principal performs official capture; an operator can request execution but cannot mint official attestations.
+
+A live-source workflow binds an immutable Opportunity version and editorial decision to the existing M1 workflow. Its ResearchPack carries typed opportunity context and exact allowed facts. The M1 factual-text policy remains strict: claims must equal their referenced evidence excerpts; free factual paraphrasing is not accepted. Content is a structured excerpt carousel with the configured character voice, disclosure and CTA. This implementation makes no LLM calls and does not claim semantic model reasoning.
+
+Only BDNS and BOE public APIs are enabled. Cámara's parser is available for recorded documents; its live connector fails closed pending source permission. There is no production scheduler, external creator surface, graphics or social publishing.

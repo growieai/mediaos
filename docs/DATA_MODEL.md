@@ -36,3 +36,15 @@ QA binds to a content/research revision and policy version. Approval binds to th
 ## Costs
 
 Each SkillRun records skill/schema versions, provider/model/adapter, attempt, hash, timing, status, retryability, output and artifact references. Prompt version is null because no model prompts run. Mock execution is explicitly provider=mock, cost=0, is_mock=true. CostEvent records zero token usage, USD and mock-zero-v1 pricing. No fabricated estimates are used.
+
+## Milestone 2 additions
+
+Migration 0002 adds source_definitions, ingestion_runs, ingestion_attempts, raw_source_documents, source_observations, opportunities, opportunity_versions, source_links, opportunity_facts, verification_conflicts, change_events, duplicate_candidates, audience_segments, mission_editorial_policies, relevance_scores, editorial_decisions and workflow_opportunities. Every table is tenant-owned with forced RLS and composite ownership foreign keys.
+
+SourceSnapshot now also supports ingestion outside a WorkflowRun. RAW snapshots preserve the exact UTF-8 official response and checksum before parsing. NORMALIZED snapshots retain typed-parser text and a parent pointer to the raw snapshot. Workflow source copies link to the normalized parent; relational evidence spans continue to target their exact text. The original response is always retrievable through raw_document_id. A parser failure still leaves a raw snapshot. M1 manual submission remains limited to 100,000 characters; bounded HTTP responses are limited to 2 MB.
+
+Opportunity is a stable tenant/canonical-ID root. Its versions, links, facts, change events and conflicts are immutable. The optional grant profile distinguishes UNKNOWN eligibility from YES/NO, programme budget from applicant maximum, and recorded dates from unresolved relative rules. Repeated identical captures add observations without changing evidence or manufacturing an Opportunity revision.
+
+One Opportunity can reference multiple original sources. BDNS identifiers are canonical when explicitly present; BOE/Cámara cross-references must be explicit and unambiguous. Similar titles create POSSIBLE_DUPLICATE records only. Conflicting known date/amount/eligibility fields retain both sources and block factual approval. Conflicts currently require investigation; automatic conflict resolution is deliberately absent.
+
+Relevance scores store eligibility separately from weighted component scores. Mission policies and segments are versioned/admin-seeded data. Editorial decisions include mission objective, content mix, history references, evidence context and reasons. Workflow bindings pin exact opportunity/source/editorial revisions and a database-capped evidence expiry.

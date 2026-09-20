@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     enable_video: bool = False
     max_request_bytes: int = 262144
     max_skill_attempts: int = Field(default=3, ge=1, le=5)
+    intelligence_tokens: SecretStr | None = None
 
     @model_validator(mode="after")
     def milestone_scope(self):

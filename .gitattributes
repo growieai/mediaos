@@ -1,1 +1,5 @@
 * text=auto eol=lf
+# Preserve recorded response bytes so fixture provenance hashes match on every host.
+backend/tests/fixtures/official/*.json -text -whitespace
+backend/tests/fixtures/official/*.xml -text -whitespace
+backend/tests/fixtures/official/*.html -text -whitespace

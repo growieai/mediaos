@@ -1,0 +1,58 @@
+[
+  {
+    "file": "bdns-relative-deadline.json",
+    "url": "https://www.infosubvenciones.es/bdnstrans/api/convocatorias?numConv=930103",
+    "captured_at": "2026-09-20T16:10:50.340680+00:00",
+    "sha256": "fa37c0c40993edce5bc59050fd7f779e314a63150f6e07d5091d13189639677c",
+    "is_fixture": true,
+    "usage": "Recorded official public response for deterministic parser tests; never publication evidence."
+  },
+  {
+    "file": "bdns-929780.json",
+    "url": "https://www.infosubvenciones.es/bdnstrans/api/convocatorias?numConv=929780",
+    "captured_at": "2026-09-20T16:12:34.738865+00:00",
+    "sha256": "12b0e9c88086c0432881e7c293ce2155ed534d0f4110d1736afcb3a30832dc1a",
+    "is_fixture": true,
+    "usage": "Recorded official public response for deterministic parser tests; never publication evidence."
+  },
+  {
+    "file": "bdns-page.json",
+    "url": "https://www.infosubvenciones.es/bdnstrans/api/convocatorias/busqueda?descripcion=PYME&pageSize=5&page=0&order=fechaRecepcion&direccion=desc&fechaDesde=01/09/2026",
+    "captured_at": "2026-09-20T16:10:51.537536+00:00",
+    "sha256": "2ca7c907878e9c7c1d5843fadbccde0f1433593f69b047c5070ef6694c7693b1",
+    "is_fixture": true,
+    "usage": "Recorded official public response for deterministic parser tests; never publication evidence."
+  },
+  {
+    "file": "boe-summary.json",
+    "url": "https://www.boe.es/datosabiertos/api/boe/sumario/20260918",
+    "captured_at": "2026-09-20T16:09:29.845092+00:00",
+    "sha256": "08c7a4dba970e6a3892f0562c319448074e3ae55d7fb2ca32b2d5ee5068c318b",
+    "is_fixture": true,
+    "usage": "Recorded official public response for deterministic parser tests; never publication evidence."
+  },
+  {
+    "file": "boe-notice.xml",
+    "url": "https://www.boe.es/diario_boe/xml.php?id=BOE-B-2026-30165",
+    "captured_at": "2026-09-20T16:12:36.175637+00:00",
+    "sha256": "954cba2f8cc019258e149be86403aa53c5c3f8c7295b5e82ddc58221cf82784b",
+    "is_fixture": true,
+    "usage": "Recorded official public response for deterministic parser tests; never publication evidence."
+  },
+  {
+    "file": "camara-listing.html",
+    "url": "https://sede.camara.es/sede/",
+    "captured_at": "2026-09-20T16:09:33.923000+00:00",
+    "sha256": "6a7b50a52120c42ec8c460a98f2f76374d445d37fa7eac23aa439dfd959f836a",
+    "is_fixture": true,
+    "usage": "Recorded official public response for deterministic parser tests; never publication evidence."
+  },
+  {
+    "file": "camara-programme.html",
+    "url": "https://sede.camara.es/sede/tramites/TR0000006758",
+    "captured_at": "2026-09-20T16:10:56.991354+00:00",
+    "sha256": "c70f88a5a070d780cf12d557a1404e783564aacbc8aacea389a254135255ae7c",
+    "is_fixture": true,
+    "usage": "Recorded official public response for deterministic parser tests; never publication evidence."
+  }
+]

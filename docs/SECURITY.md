@@ -33,3 +33,17 @@ Compose binds services to loopback and passes migration credentials only to main
 All external-creator, publishing, replies and video flags must remain false; enabling them fails startup. There is no publishing code, even for APPROVED content.
 
 Test data runs only in the explicit disposable mediaos_test database. Fixture markers cannot be removed after source submission and always block QA. Synthetic tests that exercise positive paths are not production content and must never be copied into production.
+
+## Official-source trust boundary (M2)
+
+INGESTOR is a separate internal principal, with the same restricted database runtime role and forced tenant RLS. Its secret is server-only: local seed writes `.local/ingestion-credentials.json` separately from operator credentials; production must inject INTELLIGENCE_TOKENS through a secret manager. API request bodies never accept source bodies, authority assertions or an ingestion credential for automatic official verification. Operators cannot invoke the protected attestation successfully. ADMIN is trusted maintenance authority, as in M1.
+
+The HTTP adapter permits only fixed HTTPS official hosts, forbids credentials, alternate ports and redirects, enforces timeouts/size bounds, serializes host access, and applies bounded backoff/cache policy. Discovered links remain untrusted; application/document links are retained without unrestricted fetching. XML DTD/entity declarations are rejected. No browser login or automated application submission is implemented.
+
+Government-host Retry-After cooldowns persist across tenants and new request keys in the private source_host_cooldowns infrastructure table. Restricted runtime callers have no direct table privileges. Guarded functions require an INGESTOR with the host in its seeded source configuration and only extend cooldowns. Minimum request spacing and concurrency are process-local; a future distributed worker deployment requires shared request-slot allocation too.
+
+Raw response checksums and exact raw snapshots are database-validated. All normalized data and source observations are immutable and restricted to INGESTOR writes. Fixture flags persist through every projection and workflow; neither schema validity nor a score can make a fixture approvable. An original fixture record is never relabelled as live.
+
+The old QA/approval guards remain intact. The additional approval trigger locks the current opportunity and checks conflicts, versions, source eligibility and expiry. Binding expiry is capped against actual source observations and the mission policy in PostgreSQL, so an operator cannot extend freshness by fabricating a relevance-score expiry. An approved historical revision may later become stale; future publishing must revalidate evidence at dispatch. Publishing is absent in this milestone.
+
+Cámara states that its electronic-office conditions prohibit automation. Its source registry is disabled and its connector rejects live discovery pending permission: https://sede.camara.es/sede/html/titularidad . No access-control bypass is implemented.

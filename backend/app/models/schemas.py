@@ -134,10 +134,29 @@ class Fact(StrictModel):
         return self
 
 
+class OpportunityResearch(StrictModel):
+    schema_version: Literal[1] = 1
+    opportunity_id: UUID
+    opportunity_version_id: UUID
+    canonical_external_id: str
+    audience_segment_id: UUID
+    relevance_score_id: UUID
+    editorial_decision_id: UUID
+    source_snapshot_ids: list[UUID]
+    opportunity_fact_ids: list[UUID]
+    uncertainty: list[str]
+    conflict_ids: list[UUID]
+    opening_date: date | None = None
+    closing_date: date | None = None
+    fresh_until: datetime
+    recommended_angle: str
+
+
 class ResearchPack(StrictModel):
     schema_version: Literal[1] = 1
     facts: list[Fact]
     verification_status: Literal["VERIFIED", "UNVERIFIED"]
+    opportunity_context: OpportunityResearch | None = None
 
 
 class ContentBrief(StrictModel):

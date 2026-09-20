@@ -9,7 +9,7 @@ from uuid import UUID
 from sqlalchemy import text
 from sqlalchemy.dialects.postgresql import insert
 
-from app.ai.client import MockAdapter
+from app.ai.client import DeterministicAdapter, MockAdapter
 from app.config import get_settings
 from app.db.repository import Repository, canonical_hash, engine, transaction
 from app.models.schemas import (
@@ -17,10 +17,12 @@ from app.models.schemas import (
     CharacterConfig,
     ContentBrief,
     CreateRun,
+    OpportunityResearch,
     QAReport,
     ResearchPack,
     SourceInput,
 )
+from app.observability import request_id
 from app.skills import creator, editor, qa, research
 
 log = logging.getLogger("mediaos")
@@ -42,7 +44,9 @@ def typed(schema, value):
     return schema.model_validate_json(json.dumps(value, default=str), strict=True)
 
 
-def create_run(tenant_id: UUID, token: str, request: CreateRun, correlation_id: UUID):
+def create_run(
+    tenant_id: UUID, token: str, request: CreateRun, correlation_id: UUID, after_create=None
+):
     data = request.model_dump(mode="json", exclude={"idempotency_key"})
     digest = canonical_hash(data)
     with transaction(tenant_id, token) as repo:
@@ -77,6 +81,8 @@ def create_run(tenant_id: UUID, token: str, request: CreateRun, correlation_id: 
             existing = repo.one("workflow_runs", idempotency_key=request.idempotency_key)
             if existing["canonical_input_hash"] != digest:
                 raise ConflictError("Idempotency key already used with a different payload")
+            if after_create:
+                after_create(repo, existing)
             return existing
         run = dict(row)
         source = request.source.model_dump(mode="python", exclude={"evidence"})
@@ -91,7 +97,10 @@ def create_run(tenant_id: UUID, token: str, request: CreateRun, correlation_id: 
             created_by=repo.principal_id,
         )
         repo.checkpoint(run["id"], "SOURCE_CAPTURED", snapshot["id"])
-        return repo.one("workflow_runs", id=run["id"])
+        result = repo.one("workflow_runs", id=run["id"])
+        if after_create:
+            after_create(repo, result)
+        return result
 
 
 def config_for(repo, run):
@@ -110,6 +119,9 @@ def source_input(snapshot):
 
 
 def save_research(repo, run, output):
+    bindings = repo.all("workflow_opportunities", workflow_run_id=run["id"])
+    if bindings:
+        output.opportunity_context = typed(OpportunityResearch, bindings[0]["research_context"])
     pack = repo.insert("research_packs", workflow_run_id=run["id"])
     version = repo.insert(
         "research_pack_versions",
@@ -271,25 +283,27 @@ class Runner:
                     skill_version="1.0.0",
                     input_schema_version=1,
                     output_schema_version=1,
-                    provider="mock",
+                    provider=self.adapter.provider,
                     model=self.adapter.model,
                     adapter=self.adapter.version,
                     attempt=len(rows) + 1,
                     input_hash=canonical_hash(inputs),
                     status="RUNNING",
-                    is_mock=True,
+                    is_mock=self.adapter.is_mock,
                 )
                 repo.insert(
                     "cost_events",
                     workflow_run_id=run_id,
                     skill_run_id=attempt["id"],
-                    provider="mock",
+                    provider=self.adapter.provider,
                     model=self.adapter.model,
                     input_tokens=0,
                     output_tokens=0,
                     cost=0,
                     currency="USD",
-                    price_version="mock-zero-v1",
+                    price_version="mock-zero-v1"
+                    if self.adapter.is_mock
+                    else "deterministic-zero-v1",
                 )
             started = time.monotonic()
             try:
@@ -361,6 +375,10 @@ class Runner:
                 repo = Repository(conn, self.tenant_id, self.token)
                 repo.require("OPERATOR")
                 repo.one("workflow_runs", id=run_id)
+                if type(self.adapter) is MockAdapter and repo.all(
+                    "workflow_opportunities", workflow_run_id=run_id
+                ):
+                    self.adapter = DeterministicAdapter()
                 locked = conn.execute(
                     text("SELECT pg_try_advisory_lock(hashtextextended(:key,0))"),
                     {"key": str(run_id)},
@@ -368,8 +386,10 @@ class Runner:
             if not locked:
                 raise ConflictError("Workflow is already executing")
             try:
+                correlation_context = request_id.set(request_id.get() or str(run_id))
                 return self._execute(conn, run_id)
             finally:
+                request_id.reset(correlation_context)
                 if conn.in_transaction():
                     conn.rollback()
                 with conn.begin():
@@ -446,6 +466,14 @@ class Runner:
             elif state == "BRIEFING":
                 assert pack_row is not None
                 pack = typed(ResearchPack, pack_row["payload"])
+                audience = config.audience
+                if pack.opportunity_context:
+                    with conn.begin():
+                        repo = Repository(conn, self.tenant_id, self.token)
+                        segment = repo.one(
+                            "audience_segments", id=pack.opportunity_context.audience_segment_id
+                        )
+                        audience = [segment["payload"]["name"]]
                 self.attempt(
                     conn,
                     run_id,
@@ -457,9 +485,15 @@ class Runner:
                         "config": config.model_dump(mode="json"),
                         "mission_id": str(mission["id"]),
                         "mission_objective": mission["objective"],
+                        "audience": audience,
                     },
-                    lambda repo, r, pack=pack, config=config, mission=mission: editor.build_brief(
-                        pack, config, mission["objective"]
+                    lambda repo,
+                    r,
+                    pack=pack,
+                    config=config,
+                    mission=mission,
+                    audience=audience: editor.build_brief(
+                        pack, config, mission["objective"], audience=audience
                     ),
                     save_brief,
                 )
@@ -506,5 +540,6 @@ def artifacts(repo, run_id):
         "approval_records",
         "skill_runs",
         "cost_events",
+        "workflow_opportunities",
     )
     return {name: repo.all(name, workflow_run_id=run_id) for name in names}

@@ -8,6 +8,8 @@ from sqlalchemy.exc import DBAPIError
 
 from app.api.routes import router
 from app.config import get_settings
+from app.intelligence.http import SourcePolicyError, SourceUnavailable
+from app.intelligence.routes import router as intelligence_router
 from app.observability import configure_logging, request_id
 from app.services.workflows import ConflictError, SkillFailed
 
@@ -123,3 +125,17 @@ async def failed(request: Request, exc: SkillFailed):
 
 
 app.include_router(router)
+app.include_router(intelligence_router)
+
+
+@app.exception_handler(SourceUnavailable)
+async def source_unavailable(request: Request, exc: SourceUnavailable):
+    return JSONResponse(
+        {"detail": "Official source unavailable; inspect persisted ingestion attempts"},
+        status_code=503,
+    )
+
+
+@app.exception_handler(SourcePolicyError)
+async def source_policy(request: Request, exc: SourcePolicyError):
+    return JSONResponse({"detail": "Source access policy rejected the request"}, status_code=409)

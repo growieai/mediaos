@@ -27,7 +27,7 @@ def database():
     # Destructive reset is permitted only for the explicitly configured disposable test DB.
     assert make_url(admin_url).database == "mediaos_test"
     assert make_url(runtime_url).database == "mediaos_test"
-    admin = create_engine(admin_url, hide_parameters=True)
+    admin = create_engine(admin_url, hide_parameters=True, connect_args={"connect_timeout": 15})
     with admin.begin() as conn:
         conn.execute(text("DROP SCHEMA IF EXISTS private CASCADE"))
         conn.execute(text("DROP SCHEMA public CASCADE"))

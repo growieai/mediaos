@@ -4,7 +4,15 @@ from contextvars import ContextVar
 from datetime import UTC, datetime
 
 request_id: ContextVar[str | None] = ContextVar("request_id", default=None)
-FIELDS = ("tenant_id", "workflow_run_id", "skill_run_id", "attempt", "state", "error_category")
+FIELDS = (
+    "tenant_id",
+    "workflow_run_id",
+    "skill_run_id",
+    "ingestion_run_id",
+    "attempt",
+    "state",
+    "error_category",
+)
 
 
 class SafeJsonFormatter(logging.Formatter):

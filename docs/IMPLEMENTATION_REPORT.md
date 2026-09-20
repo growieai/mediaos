@@ -1,6 +1,6 @@
 # Milestones 0/1 implementation report
 
-Implementation is present and locally verified. **Milestone sign-off remains pending Docker execution and hosted CI.** Docker is not installed on this machine and this repository has no Git remote. No Milestone 2 work was started.
+Frozen baseline: **a021ac1 — M0/M1 — Code Complete / Environment Verification Pending**. The results below describe that baseline. Docker execution and hosted CI were not verified at baseline and must not be represented as complete without an actual run. Milestone 2 continues separately on `milestone-2-spain-intelligence`; see its implementation report.
 
 Repository: C:/mediaos/growie-media-os-starter. The starter was imported into Git with baseline commit f7a8061.
 

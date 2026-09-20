@@ -1,0 +1,2131 @@
+{
+    "status": {
+        "code": "200",
+        "text": "ok"
+    },
+    "data": {
+        "sumario": {
+            "metadatos": {
+                "publicacion": "BOE",
+                "fecha_publicacion": "20260918"
+            },
+            "diario": [
+                {
+                    "numero": "231",
+                    "sumario_diario": {
+                        "identificador": "BOE-S-2026-231",
+                        "url_pdf": {
+                            "szBytes": "334000",
+                            "szKBytes": "326",
+                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-S-2026-231.pdf"
+                        }
+                    },
+                    "seccion": [
+                        {
+                            "codigo": "1",
+                            "nombre": "I. Disposiciones generales",
+                            "departamento": [
+                                {
+                                    "codigo": "1220",
+                                    "nombre": "CORTES GENERALES",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Medidas urgentes",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19419",
+                                                    "control": "2026\/14312",
+                                                    "titulo": "Resoluci\u00f3n de 16 de septiembre de 2026, del Congreso de los Diputados, por la que se ordena la publicaci\u00f3n del Acuerdo de derogaci\u00f3n del Real Decreto-ley 21\/2026, de 25 de agosto, de transparencia e integridad de las actividades de los grupos de inter\u00e9s.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190154",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123452",
+                                                        "pagina_final": "123452",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19419.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19419",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19419"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19420",
+                                                    "control": "2026\/14313",
+                                                    "titulo": "Resoluci\u00f3n de 16 de septiembre de 2026, del Congreso de los Diputados, por la que se ordena la publicaci\u00f3n del Acuerdo de convalidaci\u00f3n del Real Decreto-ley 22\/2026, de 1 de septiembre, por el que se aprueban medidas urgentes de car\u00e1cter social y econ\u00f3mico de apoyo a la ciudad de Ceuta.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190129",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123453",
+                                                        "pagina_final": "123453",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19420.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19420",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19420"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9585",
+                                    "nombre": "MINISTERIO DE LA PRESIDENCIA, JUSTICIA Y RELACIONES CON LAS CORTES",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Organizaci\u00f3n",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19421",
+                                                "control": "2026\/14240",
+                                                "titulo": "Orden PJC\/972\/2026, de 14 de septiembre, por la que se regulan el Comit\u00e9 Asesor para la Valoraci\u00f3n de Tratamientos con Hormona de Crecimiento y Sustancias relacionadas y el Comit\u00e9 Interdisciplinar de Valoraci\u00f3n de Tratamientos de Protonterapia para el colectivo de mutualistas adscrito a entidades de seguro concertadas y se establecen su composici\u00f3n y funciones dentro del organismo aut\u00f3nomo Mutualidad General Judicial.",
+                                                "url_pdf": {
+                                                    "szBytes": "222379",
+                                                    "szKBytes": "217",
+                                                    "pagina_inicial": "123454",
+                                                    "pagina_final": "123459",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19421.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19421",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19421"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9575",
+                                    "nombre": "MINISTERIO PARA LA TRANSICI\u00d3N ECOL\u00d3GICA Y EL RETO DEMOGR\u00c1FICO",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Subvenciones",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19422",
+                                                "control": "2026\/14307",
+                                                "titulo": "Real Decreto 733\/2026, de 16 de septiembre, por el que se regula la concesi\u00f3n directa de una subvenci\u00f3n a la Comunidad Aut\u00f3noma de Canarias para abaratar a los agricultores el sobrecoste de la desalaci\u00f3n y de la extracci\u00f3n de agua de pozos y de galer\u00edas para el riego agr\u00edcola, y se modifica el Real Decreto 1159\/2020, de 22 de diciembre, por el que se regula la concesi\u00f3n directa de una subvenci\u00f3n a la Agencia del Agua de Castilla-La Mancha, O.A., para la ejecuci\u00f3n de diversas obras y actuaciones de mejora del entorno socioecon\u00f3mico de los n\u00facleos colindantes con los embalses de Entrepe\u00f1as y Buend\u00eda.",
+                                                "url_pdf": {
+                                                    "szBytes": "260545",
+                                                    "szKBytes": "254",
+                                                    "pagina_inicial": "123460",
+                                                    "pagina_final": "123469",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19422.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19422",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19422"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9589",
+                                    "nombre": "MINISTERIO DE ECONOM\u00cdA, COMERCIO Y EMPRESA",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Pol\u00edtica econ\u00f3mica",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19423",
+                                                "control": "2026\/14204",
+                                                "titulo": "Orden ECM\/973\/2026, de 9 de septiembre, por la que se determina la tipolog\u00eda de los fondos de pensiones para su clasificaci\u00f3n en funci\u00f3n de su pol\u00edtica de inversi\u00f3n.",
+                                                "url_pdf": {
+                                                    "szBytes": "229839",
+                                                    "szKBytes": "224",
+                                                    "pagina_inicial": "123470",
+                                                    "pagina_final": "123474",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19423.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19423",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19423"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Seguros privados",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19424",
+                                                "control": "2026\/14205",
+                                                "titulo": "Orden ECM\/974\/2026, de 9 de septiembre, por la que se modifica la Orden ECM\/271\/2025, de 27 de febrero, por la que se aprueban los modelos de informaci\u00f3n cuantitativa a efectos de supervisi\u00f3n, estad\u00edsticos y contables de las entidades aseguradoras y reaseguradoras y los modelos de informaci\u00f3n cuantitativa a efectos estad\u00edsticos y contables de los grupos de entidades aseguradoras y reaseguradoras.",
+                                                "url_pdf": {
+                                                    "szBytes": "695306",
+                                                    "szKBytes": "679",
+                                                    "pagina_inicial": "123475",
+                                                    "pagina_final": "123502",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19424.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19424",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19424"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9534",
+                                    "nombre": "COMISI\u00d3N NACIONAL DE LOS MERCADOS Y LA COMPETENCIA",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Gas natural",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19425",
+                                                    "control": "2026\/14132",
+                                                    "titulo": "Circular 4\/2026, de 8 de septiembre, de la Comisi\u00f3n Nacional de los Mercados y la Competencia, por la que se establece la metodolog\u00eda para determinar la retribuci\u00f3n de las instalaciones de transporte de gas natural y de las plantas de gas natural licuado.",
+                                                    "url_pdf": {
+                                                        "szBytes": "2115999",
+                                                        "szKBytes": "2066",
+                                                        "pagina_inicial": "123503",
+                                                        "pagina_final": "123589",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19425.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19425",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19425"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19426",
+                                                    "control": "2026\/14133",
+                                                    "titulo": "Circular 5\/2026, de 8 de septiembre, de la Comisi\u00f3n Nacional de los Mercados y la Competencia, por la que se establece la tasa de retribuci\u00f3n financiera aplicable a las actividades de regasificaci\u00f3n, transporte, y gesti\u00f3n t\u00e9cnica del sistema y a las actividades vinculadas a la distribuci\u00f3n de gas natural, en el periodo regulatorio 2027-2032.",
+                                                    "url_pdf": {
+                                                        "szBytes": "215918",
+                                                        "szKBytes": "211",
+                                                        "pagina_inicial": "123590",
+                                                        "pagina_final": "123594",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19426.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19426",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19426"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19427",
+                                                    "control": "2026\/14134",
+                                                    "titulo": "Circular 6\/2026, de 8 de septiembre, de la Comisi\u00f3n Nacional de los Mercados y la Competencia, por la que se establece la metodolog\u00eda de retribuci\u00f3n de la distribuci\u00f3n de gas natural.",
+                                                    "url_pdf": {
+                                                        "szBytes": "676018",
+                                                        "szKBytes": "660",
+                                                        "pagina_inicial": "123595",
+                                                        "pagina_final": "123611",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19427.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19427",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19427"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "8080",
+                                    "nombre": "COMUNIDAD AUT\u00d3NOMA DE EXTREMADURA",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Medidas urgentes",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19428",
+                                                    "control": "2026\/14135",
+                                                    "titulo": "Decreto-ley 3\/2026, de 28 de julio, de medidas extraordinarias y urgentes orientadas a adaptar la normativa auton\u00f3mica en materia de C\u00e1maras Oficiales de Comercio, Industria y Servicios de Extremadura a la normativa b\u00e1sica estatal, as\u00ed como a facilitar el ejercicio del comercio ambulante.",
+                                                    "url_pdf": {
+                                                        "szBytes": "252027",
+                                                        "szKBytes": "246",
+                                                        "pagina_inicial": "123612",
+                                                        "pagina_final": "123621",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19428.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19428",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19428"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19429",
+                                                    "control": "2026\/14136",
+                                                    "titulo": "Decreto-ley 4\/2026, de 28 de julio, de actuaciones urgentes en materia de urbanismo para la agilizaci\u00f3n de la aprobaci\u00f3n del planeamiento y su ejecuci\u00f3n para el impulso a la promoci\u00f3n de vivienda.",
+                                                    "url_pdf": {
+                                                        "szBytes": "815000",
+                                                        "szKBytes": "796",
+                                                        "pagina_inicial": "123622",
+                                                        "pagina_final": "123676",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19429.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19429",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19429"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "2A",
+                            "nombre": "II. Autoridades y personal. - A. Nombramientos, situaciones e incidencias",
+                            "departamento": [
+                                {
+                                    "codigo": "9585",
+                                    "nombre": "MINISTERIO DE LA PRESIDENCIA, JUSTICIA Y RELACIONES CON LAS CORTES",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Destinos",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19430",
+                                                "control": "2026\/14249",
+                                                "titulo": "Orden PJC\/975\/2026, de 14 de septiembre, por la que se resuelve la convocatoria de libre designaci\u00f3n, efectuada por Orden PJC\/554\/2026, de 21 de mayo, para el Cuerpo de Letrados de la Administraci\u00f3n de Justicia.",
+                                                "url_pdf": {
+                                                    "szBytes": "294773",
+                                                    "szKBytes": "288",
+                                                    "pagina_inicial": "123677",
+                                                    "pagina_final": "123681",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19430.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19430",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19430"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Situaciones",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19431",
+                                                "control": "2026\/14320",
+                                                "titulo": "Resoluci\u00f3n de 20 de agosto de 2026, de la Direcci\u00f3n General de Seguridad Jur\u00eddica y Fe P\u00fablica, por la que se declara la jubilaci\u00f3n de don Jos\u00e9 Manuel Mu\u00f1oz Roncero, registrador de la propiedad de Mijas n.\u00ba 2.",
+                                                "url_pdf": {
+                                                    "szBytes": "192125",
+                                                    "szKBytes": "188",
+                                                    "pagina_inicial": "123682",
+                                                    "pagina_final": "123682",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19431.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19431",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19431"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9589",
+                                    "nombre": "MINISTERIO DE ECONOM\u00cdA, COMERCIO Y EMPRESA",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Destinos",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19432",
+                                                "control": "2026\/14209",
+                                                "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, de la Subsecretar\u00eda, por la que se resuelve la convocatoria de libre designaci\u00f3n, efectuada por Resoluci\u00f3n de 28 de julio de 2026, en el Organismo Aut\u00f3nomo Instituto Nacional de Estad\u00edstica.",
+                                                "url_pdf": {
+                                                    "szBytes": "206975",
+                                                    "szKBytes": "202",
+                                                    "pagina_inicial": "123683",
+                                                    "pagina_final": "123684",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19432.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19432",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19432"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "4510",
+                                    "nombre": "MINISTERIO FISCAL",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Ceses",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19433",
+                                                "control": "2026\/14325",
+                                                "titulo": "Decreto de 31 de julio de 2026, de la Fiscal General del Estado, por el que se dispone el cese de do\u00f1a Margarita Sanz Fabregat como Fiscal Delegada de la especialidad de Medio Ambiente y Urbanismo de la Fiscal\u00eda Provincial de Castell\u00f3n.",
+                                                "url_pdf": {
+                                                    "szBytes": "198790",
+                                                    "szKBytes": "194",
+                                                    "pagina_inicial": "123685",
+                                                    "pagina_final": "123686",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19433.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19433",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19433"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "8140",
+                                    "nombre": "COMUNIDAD AUT\u00d3NOMA DEL PA\u00cdS VASCO",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Destinos",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19434",
+                                                "control": "2026\/14259",
+                                                "titulo": "Orden de 11 de septiembre de 2026, del Departamento de Justicia y Derechos Humanos, por la que se corrigen errores en la de 31 de julio de 2026, por la que se otorga destino al personal funcionario del Cuerpo de Tramitaci\u00f3n Procesal y Administrativa de la Administraci\u00f3n de Justicia, que super\u00f3 el proceso selectivo extraordinario para acceso, por el sistema de concurso-oposici\u00f3n, turno libre, convocado por Orden JUS\/1327\/2022, de 28 de diciembre.",
+                                                "url_pdf": {
+                                                    "szBytes": "204372",
+                                                    "szKBytes": "200",
+                                                    "pagina_inicial": "123687",
+                                                    "pagina_final": "123687",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19434.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19434",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19434"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "310",
+                                    "nombre": "UNIVERSIDADES",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Nombramientos",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19435",
+                                                    "control": "2026\/13881",
+                                                    "titulo": "Resoluci\u00f3n de 9 de julio de 2026, de la Universidad Polit\u00e9cnica de Catalu\u00f1a, por la que se nombra Catedr\u00e1tico de Universidad a don Marc Berenguer Ferrer.",
+                                                    "url_pdf": {
+                                                        "szBytes": "199172",
+                                                        "szKBytes": "195",
+                                                        "pagina_inicial": "123688",
+                                                        "pagina_final": "123688",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19435.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19435",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19435"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19436",
+                                                    "control": "2026\/13882",
+                                                    "titulo": "Resoluci\u00f3n de 17 de julio de 2026, de la Universidad Polit\u00e9cnica de Catalu\u00f1a, por la que se nombra Profesor Titular de Universidad a don Pau Catal\u00e0 Calder\u00f3n.",
+                                                    "url_pdf": {
+                                                        "szBytes": "197783",
+                                                        "szKBytes": "193",
+                                                        "pagina_inicial": "123689",
+                                                        "pagina_final": "123689",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19436.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19436",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19436"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19437",
+                                                    "control": "2026\/14049",
+                                                    "titulo": "Resoluci\u00f3n de 2 de septiembre de 2026, de la Universidad Nacional de Educaci\u00f3n a Distancia, por la que se nombra Catedr\u00e1tico de Universidad a don Antonio Robles G\u00f3mez.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190702",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123690",
+                                                        "pagina_final": "123690",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19437.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19437",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19437"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19438",
+                                                    "control": "2026\/14050",
+                                                    "titulo": "Resoluci\u00f3n de 2 de septiembre de 2026, de la Universidad Nacional de Educaci\u00f3n a Distancia, por la que se nombra Profesora Titular de Universidad a do\u00f1a Sara Garc\u00eda Herranz.",
+                                                    "url_pdf": {
+                                                        "szBytes": "191085",
+                                                        "szKBytes": "187",
+                                                        "pagina_inicial": "123691",
+                                                        "pagina_final": "123691",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19438.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19438",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19438"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19439",
+                                                    "control": "2026\/14099",
+                                                    "titulo": "Resoluci\u00f3n de 9 de septiembre de 2026, de la Universidad de Le\u00f3n, por la que se nombra Profesora Titular de Universidad a do\u00f1a Mar\u00eda Carmen Rodr\u00edguez Santos.",
+                                                    "url_pdf": {
+                                                        "szBytes": "192486",
+                                                        "szKBytes": "188",
+                                                        "pagina_inicial": "123692",
+                                                        "pagina_final": "123692",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19439.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19439",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19439"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19440",
+                                                    "control": "2026\/14100",
+                                                    "titulo": "Resoluci\u00f3n de 9 de septiembre de 2026, de la Universidad Rovira i Virgili, por la que se nombra personal funcionario de cuerpos docentes universitarios.",
+                                                    "url_pdf": {
+                                                        "szBytes": "199184",
+                                                        "szKBytes": "195",
+                                                        "pagina_inicial": "123693",
+                                                        "pagina_final": "123694",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19440.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19440",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19440"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "2B",
+                            "nombre": "II. Autoridades y personal. - B. Oposiciones y concursos",
+                            "departamento": [
+                                {
+                                    "codigo": "9525",
+                                    "nombre": "ADMINISTRACI\u00d3N LOCAL",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Personal funcionario",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19441",
+                                                    "control": "2026\/105109",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, del Ayuntamiento de Alcobendas (Madrid), referente a la convocatoria para proveer puesto de trabajo por el sistema de libre designaci\u00f3n.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190410",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123695",
+                                                        "pagina_final": "123695",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19441.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19441",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19441"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19442",
+                                                    "control": "2026\/105110",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, del Ayuntamiento de Alcobendas (Madrid), referente a la convocatoria para proveer puesto de trabajo por el sistema de libre designaci\u00f3n.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190510",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123696",
+                                                        "pagina_final": "123696",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19442.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19442",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19442"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "nombre": "Personal funcionario y laboral",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19443",
+                                                    "control": "2026\/105115",
+                                                    "titulo": "Resoluci\u00f3n de 2 de septiembre de 2026, del Ayuntamiento de Alborea (Albacete), referente a la convocatoria para proveer una plaza.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190069",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123697",
+                                                        "pagina_final": "123697",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19443.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19443",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19443"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19444",
+                                                    "control": "2026\/105113",
+                                                    "titulo": "Resoluci\u00f3n de 8 de septiembre de 2026, del Ayuntamiento de Rivas-Vaciamadrid (Madrid), referente a la convocatoria para proveer varias plazas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190403",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123698",
+                                                        "pagina_final": "123698",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19444.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19444",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19444"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19445",
+                                                    "control": "2026\/105111",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, del Ayuntamiento de Viladecans (Barcelona), referente a la convocatoria para proveer varias plazas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190458",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123699",
+                                                        "pagina_final": "123699",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19445.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19445",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19445"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19446",
+                                                    "control": "2026\/105112",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, del Ayuntamiento de Santa Olalla (Toledo), referente a la convocatoria para proveer una plaza.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190810",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123700",
+                                                        "pagina_final": "123700",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19446.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19446",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19446"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19447",
+                                                    "control": "2026\/105118",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, del Ayuntamiento de Santa Cruz de Tenerife, referente a la convocatoria para proveer varias plazas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190403",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123701",
+                                                        "pagina_final": "123701",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19447.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19447",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19447"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19448",
+                                                    "control": "2026\/105122",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, del Ayuntamiento de Sant Vicent del Raspeig\/San Vicente del Raspeig (Alicante\/Alacant), referente a la convocatoria para proveer varias plazas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190759",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123702",
+                                                        "pagina_final": "123702",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19448.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19448",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19448"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19449",
+                                                    "control": "2026\/105124",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, del Ayuntamiento de Mislata (Valencia\/Val\u00e8ncia), referente a la convocatoria para proveer varias plazas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190985",
+                                                        "szKBytes": "187",
+                                                        "pagina_inicial": "123703",
+                                                        "pagina_final": "123703",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19449.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19449",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19449"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19450",
+                                                    "control": "2026\/105130",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, de la Comarca de Andorra-Sierra de Arcos (Teruel), que deja sin efecto la de 10 de agosto de 2026, referente a la convocatoria para proveer una plaza.",
+                                                    "url_pdf": {
+                                                        "szBytes": "189923",
+                                                        "szKBytes": "185",
+                                                        "pagina_inicial": "123704",
+                                                        "pagina_final": "123704",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19450.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19450",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19450"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19451",
+                                                    "control": "2026\/105114",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, de la Mancomunidad de Municipios de la Comarca de \u00c9cija (Sevilla), referente a la convocatoria para proveer una plaza.",
+                                                    "url_pdf": {
+                                                        "szBytes": "191031",
+                                                        "szKBytes": "187",
+                                                        "pagina_inicial": "123705",
+                                                        "pagina_final": "123705",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19451.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19451",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19451"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19452",
+                                                    "control": "2026\/105116",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, del Ayuntamiento de Motril (Granada), referente a la convocatoria para proveer varias plazas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190849",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123706",
+                                                        "pagina_final": "123706",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19452.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19452",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19452"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19453",
+                                                    "control": "2026\/105117",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, del Ayuntamiento de Motril (Granada), referente a la convocatoria para proveer una plaza.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190909",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123707",
+                                                        "pagina_final": "123707",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19453.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19453",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19453"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19454",
+                                                    "control": "2026\/105119",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, del Ayuntamiento de Valladolid, referente a la convocatoria para proveer varias plazas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190046",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123708",
+                                                        "pagina_final": "123708",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19454.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19454",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19454"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19455",
+                                                    "control": "2026\/105120",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, del Ayuntamiento de Bustarviejo (Madrid), referente a la convocatoria para proveer una plaza.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190334",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123709",
+                                                        "pagina_final": "123709",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19455.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19455",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19455"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19456",
+                                                    "control": "2026\/105121",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, del Ayuntamiento de La Peza (Granada), referente a la convocatoria para proveer una plaza.",
+                                                    "url_pdf": {
+                                                        "szBytes": "191008",
+                                                        "szKBytes": "187",
+                                                        "pagina_inicial": "123710",
+                                                        "pagina_final": "123710",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19456.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19456",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19456"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19457",
+                                                    "control": "2026\/105123",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, del Ayuntamiento de Segorbe (Castell\u00f3n\/Castell\u00f3), referente a la convocatoria para proveer una plaza.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190720",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123711",
+                                                        "pagina_final": "123711",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19457.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19457",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19457"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19458",
+                                                    "control": "2026\/105131",
+                                                    "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, del Ayuntamiento de Benidorm (Alicante\/Alacant), referente a la convocatoria para proveer varias plazas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190706",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123712",
+                                                        "pagina_final": "123712",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19458.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19458",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19458"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "310",
+                                    "nombre": "UNIVERSIDADES",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Cuerpos docentes universitarios",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19459",
+                                                    "control": "2026\/14218",
+                                                    "titulo": "Resoluci\u00f3n de 7 de septiembre de 2026, de la Universidad Nacional de Educaci\u00f3n a Distancia, por la que se convoca concurso de acceso a plazas de cuerpos docentes universitarios.",
+                                                    "url_pdf": {
+                                                        "szBytes": "252250",
+                                                        "szKBytes": "246",
+                                                        "pagina_inicial": "123713",
+                                                        "pagina_final": "123723",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19459.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19459",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19459"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19460",
+                                                    "control": "2026\/14219",
+                                                    "titulo": "Resoluci\u00f3n de 7 de septiembre de 2026, de la Universidad Nacional de Educaci\u00f3n a Distancia, por la que se convoca concurso para la provisi\u00f3n de plaza de cuerpos docentes universitarios.",
+                                                    "url_pdf": {
+                                                        "szBytes": "247991",
+                                                        "szKBytes": "242",
+                                                        "pagina_inicial": "123724",
+                                                        "pagina_final": "123733",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19460.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19460",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19460"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19461",
+                                                    "control": "2026\/14171",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, de la Universidad de Barcelona, por la que se convoca concurso de acceso a plazas de cuerpos docentes universitarios.",
+                                                    "url_pdf": {
+                                                        "szBytes": "291219",
+                                                        "szKBytes": "284",
+                                                        "pagina_inicial": "123734",
+                                                        "pagina_final": "123750",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19461.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19461",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19461"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19462",
+                                                    "control": "2026\/14221",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, de la Universidad de Valladolid, por la que se convoca concurso de acceso a plazas de cuerpos docentes universitarios.",
+                                                    "url_pdf": {
+                                                        "szBytes": "347339",
+                                                        "szKBytes": "339",
+                                                        "pagina_inicial": "123751",
+                                                        "pagina_final": "123764",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19462.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19462",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19462"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "nombre": "Personal docente e investigador",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19463",
+                                                "control": "2026\/14220",
+                                                "titulo": "Resoluci\u00f3n de 7 de septiembre de 2026, de la Universidad Nacional de Educaci\u00f3n a Distancia, por la que se convoca concurso de acceso a plaza de Profesorado Permanente Laboral.",
+                                                "url_pdf": {
+                                                    "szBytes": "394590",
+                                                    "szKBytes": "385",
+                                                    "pagina_inicial": "123765",
+                                                    "pagina_final": "123777",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19463.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19463",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19463"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Personal t\u00e9cnico, de gesti\u00f3n y de administraci\u00f3n y servicios",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19464",
+                                                    "control": "2026\/14280",
+                                                    "titulo": "Resoluci\u00f3n de 25 de agosto de 2026, de la Universidad Nacional de Educaci\u00f3n a Distancia, por la que se aprueba la relaci\u00f3n provisional de personas admitidas y excluidas a las pruebas selectivas para la provisi\u00f3n, por el sistema general de acceso libre, de plaza de personal laboral, Grupo III, Nivel B, convocadas por Resoluci\u00f3n de 3 de junio de 2026.",
+                                                    "url_pdf": {
+                                                        "szBytes": "228057",
+                                                        "szKBytes": "223",
+                                                        "pagina_inicial": "123778",
+                                                        "pagina_final": "123780",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19464.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19464",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19464"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19465",
+                                                    "control": "2026\/14281",
+                                                    "titulo": "Resoluci\u00f3n de 26 de agosto de 2026, de la Universidad Nacional de Educaci\u00f3n a Distancia, por la que se aprueba la relaci\u00f3n provisional de personas admitidas y excluidas a las pruebas selectivas para la provisi\u00f3n, por el sistema general de acceso libre, de plaza de personal laboral, Grupo I, Nivel B, convocadas por Resoluci\u00f3n de 23 de junio de 2026.",
+                                                    "url_pdf": {
+                                                        "szBytes": "203720",
+                                                        "szKBytes": "199",
+                                                        "pagina_inicial": "123781",
+                                                        "pagina_final": "123782",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19465.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19465",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19465"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "3",
+                            "nombre": "III. Otras disposiciones",
+                            "departamento": [
+                                {
+                                    "codigo": "5140",
+                                    "nombre": "MINISTERIO DE HACIENDA",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Contrataci\u00f3n administrativa",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19466",
+                                                "control": "2026\/14347",
+                                                "titulo": "Orden HAC\/976\/2026, de 15 de septiembre, sobre los \u00edndices de precios de la mano de obra y materiales, sobre los \u00edndices de precios de los materiales espec\u00edficos de suministros de fabricaci\u00f3n de armamento y equipamiento, as\u00ed como sobre los \u00edndices de precios de componentes de transporte de viajeros por carretera, para el primer trimestre de 2026, aplicables a la revisi\u00f3n de precios de contratos de las Administraciones P\u00fablicas.",
+                                                "url_pdf": {
+                                                    "szBytes": "239797",
+                                                    "szKBytes": "234",
+                                                    "pagina_inicial": "123783",
+                                                    "pagina_final": "123784",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19466.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19466",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19466"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Convenios",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19467",
+                                                    "control": "2026\/14179",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, de la Secretar\u00eda de Estado de Hacienda, por la que se publica la Adenda de pr\u00f3rroga del Convenio con la Mancomunidad de Municipios del Campo de Gibraltar y el Ayuntamiento de Los Barrios, para la financiaci\u00f3n de inversiones.",
+                                                    "url_pdf": {
+                                                        "szBytes": "202154",
+                                                        "szKBytes": "197",
+                                                        "pagina_inicial": "123785",
+                                                        "pagina_final": "123786",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19467.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19467",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19467"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19468",
+                                                    "control": "2026\/14180",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, de la Secretar\u00eda de Estado de Hacienda, por la que se publica la Adenda de pr\u00f3rroga del Convenio con la Mancomunidad de Municipios del Campo de Gibraltar y el Ayuntamiento de San Mart\u00edn del Tesorillo, para la financiaci\u00f3n de inversiones.",
+                                                    "url_pdf": {
+                                                        "szBytes": "200393",
+                                                        "szKBytes": "196",
+                                                        "pagina_inicial": "123787",
+                                                        "pagina_final": "123788",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19468.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19468",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19468"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19469",
+                                                    "control": "2026\/14183",
+                                                    "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, de la Secretar\u00eda de Estado de Hacienda, por la que se publica la Adenda de pr\u00f3rroga del Convenio con la Mancomunidad de Municipios del Campo de Gibraltar y el Ayuntamiento de Castellar de la Frontera, para la financiaci\u00f3n de inversiones.",
+                                                    "url_pdf": {
+                                                        "szBytes": "200299",
+                                                        "szKBytes": "196",
+                                                        "pagina_inicial": "123789",
+                                                        "pagina_final": "123790",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19469.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19469",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19469"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "nombre": "Tesoro y Presupuestos. Res\u00famenes",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19470",
+                                                "control": "2026\/14348",
+                                                "titulo": "Resoluci\u00f3n de 11 de septiembre de 2026, de la Intervenci\u00f3n General de la Administraci\u00f3n del Estado, por la que se publican las \u00abOperaciones de ejecuci\u00f3n del Presupuesto del Estado y de sus modificaciones y operaciones de Tesorer\u00eda\u00bb del mes de julio de 2026.",
+                                                "url_pdf": {
+                                                    "szBytes": "477897",
+                                                    "szKBytes": "467",
+                                                    "pagina_inicial": "123791",
+                                                    "pagina_final": "123826",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19470.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19470",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19470"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "7320",
+                                    "nombre": "MINISTERIO DEL INTERIOR",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Vigilantes de seguridad",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19471",
+                                                "control": "2026\/14287",
+                                                "titulo": "Resoluci\u00f3n de 15 de septiembre de 2026, de la Secretar\u00eda de Estado de Seguridad, por la que se publica la relaci\u00f3n de personas admitidas y excluidas a las pruebas de selecci\u00f3n para vigilante de seguridad y su especialidad de vigilante de explosivos y escolta privado.",
+                                                "url_pdf": {
+                                                    "szBytes": "326066",
+                                                    "szKBytes": "318",
+                                                    "pagina_inicial": "123827",
+                                                    "pagina_final": "123832",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19471.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19471",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19471"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9575",
+                                    "nombre": "MINISTERIO PARA LA TRANSICI\u00d3N ECOL\u00d3GICA Y EL RETO DEMOGR\u00c1FICO",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Comunidad Aut\u00f3noma de Andaluc\u00eda. Convenio",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19472",
+                                                "control": "2026\/14362",
+                                                "titulo": "Resoluci\u00f3n de 9 de septiembre de 2026, de la Direcci\u00f3n General de Pol\u00edticas contra la Despoblaci\u00f3n, por la que se publica la Adenda de modificaci\u00f3n del Convenio con la Universidad de Huelva, para la realizaci\u00f3n del Programa Campus Rural de pr\u00e1cticas universitarias en el medio rural.",
+                                                "url_pdf": {
+                                                    "szBytes": "219575",
+                                                    "szKBytes": "214",
+                                                    "pagina_inicial": "123833",
+                                                    "pagina_final": "123836",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19472.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19472",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19472"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Comunidad de Madrid. Convenio",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19473",
+                                                "control": "2026\/14292",
+                                                "titulo": "Resoluci\u00f3n de 7 de septiembre de 2026, de la Agencia Estatal de Meteorolog\u00eda, por la que se publica la Adenda de modificaci\u00f3n y pr\u00f3rroga del Convenio con la Universidad Complutense de Madrid, para la regulaci\u00f3n de las actividades conjuntas de ambas instituciones en el \u00e1rea de investigaciones y servicios clim\u00e1ticos.",
+                                                "url_pdf": {
+                                                    "szBytes": "202930",
+                                                    "szKBytes": "198",
+                                                    "pagina_inicial": "123837",
+                                                    "pagina_final": "123839",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19473.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19473",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19473"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Impacto ambiental",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19474",
+                                                "control": "2026\/14361",
+                                                "titulo": "Resoluci\u00f3n de 7 de septiembre de 2026, de la Direcci\u00f3n General de Calidad y Evaluaci\u00f3n Ambiental, por la que se formula informe de impacto ambiental del proyecto \u00abInfraestructura de almacenamiento con bater\u00edas \u201cHibridaci\u00f3n Larral\u201d, para su hibridaci\u00f3n con el parque fotovoltaico existente Larral, y su infraestructura de evacuaci\u00f3n, en la provincia de Zaragoza\u00bb.",
+                                                "url_pdf": {
+                                                    "szBytes": "531421",
+                                                    "szKBytes": "519",
+                                                    "pagina_inicial": "123840",
+                                                    "pagina_final": "123856",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19474.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19474",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19474"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Instalaciones el\u00e9ctricas",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19475",
+                                                "control": "2026\/14360",
+                                                "titulo": "Resoluci\u00f3n de 1 de septiembre de 2026, de la Direcci\u00f3n General de Pol\u00edtica Energ\u00e9tica y Minas, por la que se otorga a Redexis Infraestructuras, SL, autorizaci\u00f3n administrativa y aprobaci\u00f3n del proyecto de ejecuci\u00f3n de las instalaciones del \u00abProyecto de nueva posici\u00f3n sobre el gaseoducto Zaragoza-Calatayud para inyecci\u00f3n de biometano en La Almunia de Do\u00f1a Godina (Zaragoza)\u00bb.",
+                                                "url_pdf": {
+                                                    "szBytes": "220607",
+                                                    "szKBytes": "215",
+                                                    "pagina_inicial": "123857",
+                                                    "pagina_final": "123862",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19475.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19475",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19475"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "4110",
+                                    "nombre": "MINISTERIO DE CULTURA",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Convenios",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19476",
+                                                "control": "2026\/14122",
+                                                "titulo": "Resoluci\u00f3n de 10 de septiembre de 2026, del Museo Nacional Centro de Arte Reina Sof\u00eda, por la que se publica el Convenio con Acad\u00e9mie de France \u00e0 Madrid, para la colaboraci\u00f3n en el programa de estancias de investigaci\u00f3n.",
+                                                "url_pdf": {
+                                                    "szBytes": "234303",
+                                                    "szKBytes": "229",
+                                                    "pagina_inicial": "123863",
+                                                    "pagina_final": "123869",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19476.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19476",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19476"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9588",
+                                    "nombre": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Comunidad Aut\u00f3noma de las Illes Balears. Convenio",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19477",
+                                                "control": "2026\/14364",
+                                                "titulo": "Resoluci\u00f3n de 2 de septiembre de 2026, de la Secretar\u00eda de Estado de Derechos Sociales, por la que se publica el Convenio con la Comunidad Aut\u00f3noma de las Illes Balears, para colaborar en el desarrollo de programas formativos del nuevo modelo de cuidados y apoyos en la Comunidad Aut\u00f3noma dirigidos a profesionales de derechos sociales.",
+                                                "url_pdf": {
+                                                    "szBytes": "359634",
+                                                    "szKBytes": "351",
+                                                    "pagina_inicial": "123870",
+                                                    "pagina_final": "123877",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19477.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19477",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19477"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9565",
+                                    "nombre": "MINISTERIO DE CIENCIA, INNOVACI\u00d3N Y UNIVERSIDADES",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Comunidad Aut\u00f3noma de Catalu\u00f1a. Convenio",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19478",
+                                                "control": "2026\/14365",
+                                                "titulo": "Resoluci\u00f3n de 8 de septiembre de 2026, de la Presidencia de la Agencia Estatal Consejo Superior de Investigaciones Cient\u00edficas, M.P., por la que se publica el Convenio con la Universidad de Barcelona, para el desarrollo de tesis doctorales y colaboraci\u00f3n en programas de doctorado.",
+                                                "url_pdf": {
+                                                    "szBytes": "296709",
+                                                    "szKBytes": "290",
+                                                    "pagina_inicial": "123878",
+                                                    "pagina_final": "123889",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19478.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19478",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19478"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Convenios",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19479",
+                                                "control": "2026\/14231",
+                                                "titulo": "Resoluci\u00f3n de 9 de septiembre de 2026, del Centro de Investigaciones Energ\u00e9ticas, Medioambientales y Tecnol\u00f3gicas, O.A., M.P., por la que se publica el Convenio con el Ayuntamiento de Madrid, para la realizaci\u00f3n de un protocolo de actuaci\u00f3n para situaciones de emergencia en las instalaciones del Centro de Investigaciones Energ\u00e9ticas, Medioambientales y Tecnol\u00f3gicas.",
+                                                "url_pdf": {
+                                                    "szBytes": "231462",
+                                                    "szKBytes": "226",
+                                                    "pagina_inicial": "123890",
+                                                    "pagina_final": "123896",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19479.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19479",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19479"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "1020",
+                                    "nombre": "BANCO DE ESPA\u00d1A",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Mercado de divisas",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19480",
+                                                "control": "2026\/14368",
+                                                "titulo": "Resoluci\u00f3n de 17 de septiembre de 2026, del Banco de Espa\u00f1a, por la que se publican los cambios del euro correspondientes al d\u00eda 17 de septiembre de 2026, publicados por el Banco Central Europeo, que tendr\u00e1n la consideraci\u00f3n de cambios oficiales, de acuerdo con lo dispuesto en el art\u00edculo 36 de la Ley 46\/1998, de 17 de diciembre, sobre la Introducci\u00f3n del Euro.",
+                                                "url_pdf": {
+                                                    "szBytes": "216436",
+                                                    "szKBytes": "211",
+                                                    "pagina_inicial": "123897",
+                                                    "pagina_final": "123898",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19480.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19480",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19480"
+                                            }
+                                        },
+                                        {
+                                            "nombre": "Pr\u00e9stamos hipotecarios. \u00cdndices",
+                                            "item": {
+                                                "identificador": "BOE-A-2026-19481",
+                                                "control": "2026\/14369",
+                                                "titulo": "Resoluci\u00f3n de 17 de septiembre de 2026, del Banco de Espa\u00f1a, por la que se publican determinados tipos de inter\u00e9s oficiales de referencia del mercado hipotecario.",
+                                                "url_pdf": {
+                                                    "szBytes": "194362",
+                                                    "szKBytes": "190",
+                                                    "pagina_inicial": "123899",
+                                                    "pagina_final": "123899",
+                                                    "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19481.pdf"
+                                                },
+                                                "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19481",
+                                                "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19481"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "310",
+                                    "nombre": "UNIVERSIDADES",
+                                    "epigrafe": [
+                                        {
+                                            "nombre": "Planes de estudios",
+                                            "item": [
+                                                {
+                                                    "identificador": "BOE-A-2026-19482",
+                                                    "control": "2026\/14128",
+                                                    "titulo": "Resoluci\u00f3n de 1 de septiembre de 2026, de la Universidad Internacional de La Rioja, por la que se publica el cambio de denominaci\u00f3n del t\u00edtulo de M\u00e1ster Universitario en Neurobiolog\u00eda y Conductas Adictivas por el de M\u00e1ster Universitario en Investigaci\u00f3n en Neurobiolog\u00eda y Conductas Adictivas.",
+                                                    "url_pdf": {
+                                                        "szBytes": "190506",
+                                                        "szKBytes": "186",
+                                                        "pagina_inicial": "123900",
+                                                        "pagina_final": "123900",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19482.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19482",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19482"
+                                                },
+                                                {
+                                                    "identificador": "BOE-A-2026-19483",
+                                                    "control": "2026\/14129",
+                                                    "titulo": "Resoluci\u00f3n de 1 de septiembre de 2026, de la Universidad Internacional de La Rioja, por la que se publican planes de estudios de M\u00e1ster Universitario.",
+                                                    "url_pdf": {
+                                                        "szBytes": "287241",
+                                                        "szKBytes": "281",
+                                                        "pagina_inicial": "123901",
+                                                        "pagina_final": "123905",
+                                                        "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-A-2026-19483.pdf"
+                                                    },
+                                                    "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-A-2026-19483",
+                                                    "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-A-2026-19483"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "5A",
+                            "nombre": "V. Anuncios. - A. Contrataci\u00f3n del Sector P\u00fablico",
+                            "departamento": [
+                                {
+                                    "codigo": "9585",
+                                    "nombre": "MINISTERIO DE LA PRESIDENCIA, JUSTICIA Y RELACIONES CON LAS CORTES",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30133",
+                                        "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Junta de Contrataci\u00f3n del Ministerio de la Presidencia, Justicia y Relaciones con las Cortes. Objeto: Dise\u00f1o de la creatividad y de la estrategia de una campa\u00f1a de publicidad con motivo del 48 aniversario de la Constituci\u00f3n Espa\u00f1ola: la m\u00e1s longeva de nuestra historia. Expediente: MPR20260051.",
+                                        "url_pdf": {
+                                            "szBytes": "223919",
+                                            "szKBytes": "219",
+                                            "pagina_inicial": "48918",
+                                            "pagina_final": "48920",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30133.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30133",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30133"
+                                    }
+                                },
+                                {
+                                    "codigo": "6110",
+                                    "nombre": "MINISTERIO DE DEFENSA",
+                                    "item": [
+                                        {
+                                            "identificador": "BOE-B-2026-30134",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de la Secci\u00f3n Econ\u00f3mico-Administrativa 41 - Base A\u00e9rea de San Javier. Objeto: Murcia \/ Alcantarilla \/ B.A. Alcantarilla \/ Sustituci\u00f3n balizas hal\u00f3genas por balizas led en campos de vuelo de la B.A. de Alcantarilla. Expediente: 2026\/EA41\/00000906E.",
+                                            "url_pdf": {
+                                                "szBytes": "213828",
+                                                "szKBytes": "209",
+                                                "pagina_inicial": "48921",
+                                                "pagina_final": "48922",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30134.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30134",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30134"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30135",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de la Secci\u00f3n Econ\u00f3mico-Administrativa 41 - Base A\u00e9rea de San Javier. Objeto: Plataforma neum\u00e1tica 4,70 y otros accesorios complementarios para el EZAPAC. Expediente: 2026\/EA41\/00001377E.",
+                                            "url_pdf": {
+                                                "szBytes": "214755",
+                                                "szKBytes": "210",
+                                                "pagina_inicial": "48923",
+                                                "pagina_final": "48924",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30135.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30135",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30135"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30136",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de Intendencia de Asuntos Econ\u00f3micos Centro. Objeto: Productos alimenticios.- lote 1. Expediente: 2026\/ETSAE0038\/00002474E.",
+                                            "url_pdf": {
+                                                "szBytes": "217441",
+                                                "szKBytes": "212",
+                                                "pagina_inicial": "48925",
+                                                "pagina_final": "48926",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30136.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30136",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30136"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30137",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de Intendencia de Asuntos Econ\u00f3micos Centro. Objeto: Adquisici\u00f3n de productos alimenticios.- lote 2. Expediente: 2026\/ETSAE0038\/00002475E.",
+                                            "url_pdf": {
+                                                "szBytes": "217494",
+                                                "szKBytes": "212",
+                                                "pagina_inicial": "48927",
+                                                "pagina_final": "48928",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30137.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30137",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30137"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30138",
+                                            "titulo": "Anuncio de licitaci\u00f3n de: Jefatura de la Secci\u00f3n de Asuntos Econ\u00f3micos de la Unidad Militar de Emergencias. Objeto: Adquisici\u00f3n de un (1) armario de conmutaci\u00f3n sobre remolque para la UME. Expediente: 2026\/SP03038000\/00002778E.",
+                                            "url_pdf": {
+                                                "szBytes": "224008",
+                                                "szKBytes": "219",
+                                                "pagina_inicial": "48929",
+                                                "pagina_final": "48931",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30138.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30138",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30138"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30139",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Intendente de Ferrol. Objeto: ORM: 2018AR001S. SERFER. 5TO CBAM 1642\/24 LOTE 1. Suministro abierto de repuestos SEC auxiliares propulsi\u00f3n con destino buques ARFER. Expediente: 2026\/AR42U\/00002178.",
+                                            "url_pdf": {
+                                                "szBytes": "213678",
+                                                "szKBytes": "209",
+                                                "pagina_inicial": "48932",
+                                                "pagina_final": "48933",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30139.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30139",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30139"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30140",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Intendente de Ferrol. Objeto: SERCOFER.Suministro de Aceites y Lubricantes para su uso en Buques de la Armada. LOTE1. Expediente: 2026\/AR42U\/00002275.",
+                                            "url_pdf": {
+                                                "szBytes": "213416",
+                                                "szKBytes": "208",
+                                                "pagina_inicial": "48934",
+                                                "pagina_final": "48935",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30140.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30140",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30140"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30141",
+                                            "titulo": "Anuncio de licitaci\u00f3n de: Jefatura de la Secci\u00f3n Econ\u00f3mico Administrativa 22 - Base A\u00e9rea de Torrej\u00f3n (Agrupaci\u00f3n de Base). Objeto: APO 155 INFRA - Acuerdo Marco de mantenimiento correctivo de instalaciones y edificios en la Base A\u00e9rea de Torrej\u00f3n. Expediente: 2026\/EA22\/00001229E.",
+                                            "url_pdf": {
+                                                "szBytes": "230475",
+                                                "szKBytes": "225",
+                                                "pagina_inicial": "48936",
+                                                "pagina_final": "48938",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30141.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30141",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30141"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30142",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de Asuntos Econ\u00f3micos del Estado Mayor de la Defensa. Objeto: Adquisici\u00f3n y soporte t\u00e9cnico de la plataforma de software INTELION para el an\u00e1lisis de la desinformaci\u00f3n en el \u00e1mbito cognitivo. Expediente: 2026\/SP02002001\/00000962E.",
+                                            "url_pdf": {
+                                                "szBytes": "215386",
+                                                "szKBytes": "210",
+                                                "pagina_inicial": "48939",
+                                                "pagina_final": "48940",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30142.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30142",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30142"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30143",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de Asuntos Econ\u00f3micos del Estado Mayor de la Defensa. Objeto: Adecuaci\u00f3n vallado Perimetral CGEMAD. Expediente: 2026\/SP02002001\/00001193E.",
+                                            "url_pdf": {
+                                                "szBytes": "213481",
+                                                "szKBytes": "208",
+                                                "pagina_inicial": "48941",
+                                                "pagina_final": "48942",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30143.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30143",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30143"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30144",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de Asuntos Econ\u00f3micos del Estado Mayor de la Defensa. Objeto: Suministro e instalaci\u00f3n de un elevador de veh\u00edculos en el taller del CGEMAD. Expediente: 2026\/SP02002001\/00001159E.",
+                                            "url_pdf": {
+                                                "szBytes": "214864",
+                                                "szKBytes": "210",
+                                                "pagina_inicial": "48943",
+                                                "pagina_final": "48944",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30144.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30144",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30144"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30145",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de Asuntos Econ\u00f3micos del Estado Mayor de la Defensa. Objeto: Adquisici\u00f3n de discos SSD para almacenamiento externo en la Escuela Militar de Ciberoperaciones. Expediente: 2026\/SP02002001\/00000953E.",
+                                            "url_pdf": {
+                                                "szBytes": "214226",
+                                                "szKBytes": "209",
+                                                "pagina_inicial": "48945",
+                                                "pagina_final": "48946",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30145.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30145",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30145"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30146",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de Intendencia de Asuntos Econ\u00f3micos Centro. Objeto: Adquisici\u00f3n de productos alimenticios.- lote 3. Expediente: 2026\/ETSAE0038\/00002476E.",
+                                            "url_pdf": {
+                                                "szBytes": "217491",
+                                                "szKBytes": "212",
+                                                "pagina_inicial": "48947",
+                                                "pagina_final": "48948",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30146.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30146",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30146"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30147",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Jefatura de Intendencia de Asuntos Econ\u00f3micos Centro. Objeto: Adquisici\u00f3n de productos alimenticios.- lote 4. Expediente: 2026\/ETSAE0038\/00002477E.",
+                                            "url_pdf": {
+                                                "szBytes": "217377",
+                                                "szKBytes": "212",
+                                                "pagina_inicial": "48949",
+                                                "pagina_final": "48950",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30147.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30147",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30147"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "5140",
+                                    "nombre": "MINISTERIO DE HACIENDA",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30148",
+                                        "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Delegaci\u00f3n Especial de la Agencia Tributaria en Valencia. Objeto: Suministro en r\u00e9gimen de alquiler de un aseo qu\u00edmico para los contenedores SVA en el Puerto de Alicante. Expediente: 26030069300.",
+                                        "url_pdf": {
+                                            "szBytes": "215299",
+                                            "szKBytes": "210",
+                                            "pagina_inicial": "48951",
+                                            "pagina_final": "48952",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30148.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30148",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30148"
+                                    }
+                                },
+                                {
+                                    "codigo": "7320",
+                                    "nombre": "MINISTERIO DEL INTERIOR",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30149",
+                                        "titulo": "Anuncio de rectificaci\u00f3n del anuncio de licitaci\u00f3n p\u00fablica de la Subdirecci\u00f3n General de Gesti\u00f3n Econ\u00f3mica y Patrimonial para la contrataci\u00f3n del servicio de mantenimiento de los edificios y locales de los Servicios Centrales del Ministerio del Interior. Expediente: 26P037.",
+                                        "url_pdf": {
+                                            "szBytes": "203832",
+                                            "szKBytes": "199",
+                                            "pagina_inicial": "48953",
+                                            "pagina_final": "48953",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30149.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30149",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30149"
+                                    }
+                                },
+                                {
+                                    "codigo": "9586",
+                                    "nombre": "MINISTERIO DE TRANSPORTES Y MOVILIDAD SOSTENIBLE",
+                                    "item": [
+                                        {
+                                            "identificador": "BOE-B-2026-30150",
+                                            "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Presidencia de la Autoridad Portuaria de Huelva. Objeto: Prestaci\u00f3n del Servicio de Alumbrado Ornamental Navide\u00f1o en los Viales del Puerto de Huelva. Expediente: ORD\/0242\/TG.",
+                                            "url_pdf": {
+                                                "szBytes": "217928",
+                                                "szKBytes": "213",
+                                                "pagina_inicial": "48954",
+                                                "pagina_final": "48955",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30150.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30150",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30150"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30151",
+                                            "titulo": "Anuncio de correcci\u00f3n de errores de: ADIF - Presidencia. Objeto: Servicios para la redacci\u00f3n del proyecto para la adaptaci\u00f3n de la estaci\u00f3n de Vila-Seca a las nuevas necesidades ferroviarias y urbanas. Expediente: 4.26\/06110.0045.",
+                                            "url_pdf": {
+                                                "szBytes": "201006",
+                                                "szKBytes": "196",
+                                                "pagina_inicial": "48956",
+                                                "pagina_final": "48956",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30151.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30151",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30151"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30152",
+                                            "titulo": "Anuncio de licitaci\u00f3n de: ADIF - Presidencia. Objeto: Servicios auxiliares como apoyo en fase de obras en la estaci\u00f3n de Val\u00e8ncia Nord. Expediente: 3.26\/24108.0165.",
+                                            "url_pdf": {
+                                                "szBytes": "221166",
+                                                "szKBytes": "216",
+                                                "pagina_inicial": "48957",
+                                                "pagina_final": "48958",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30152.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30152",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30152"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9575",
+                                    "nombre": "MINISTERIO PARA LA TRANSICI\u00d3N ECOL\u00d3GICA Y EL RETO DEMOGR\u00c1FICO",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30153",
+                                        "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Direcci\u00f3n General del Agua. Objeto: Contrato de servicios de asistencia a al explotaci\u00f3n y mantenimiento de las presas y balsas de titularidad estatal en la zona de explotaci\u00f3n \"A\" de la Confederaci\u00f3n Hidrogr\u00e1fica del Duero, O.A . Expediente: 02.963\u20100062\/0411.",
+                                        "url_pdf": {
+                                            "szBytes": "219120",
+                                            "szKBytes": "214",
+                                            "pagina_inicial": "48959",
+                                            "pagina_final": "48960",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30153.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30153",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30153"
+                                    }
+                                },
+                                {
+                                    "codigo": "9589",
+                                    "nombre": "MINISTERIO DE ECONOM\u00cdA, COMERCIO Y EMPRESA",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30154",
+                                        "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Junta de Contrataci\u00f3n del Ministerio de Econom\u00eda, Comercio y Empresa. Objeto: Servicio de asistencia sanitaria para el personal laboral en el exterior de la Secretar\u00eda de Estado de Comercio-Subdirecci\u00f3n General de Oficinas Econ\u00f3micas y Comerciales en el exterior y Red Territorial de Comercio, e ICEX Espa\u00f1a exportaci\u00f3n e inversiones E.P.E., y sus beneficiarios. Expediente: 202600000002.",
+                                        "url_pdf": {
+                                            "szBytes": "229329",
+                                            "szKBytes": "224",
+                                            "pagina_inicial": "48961",
+                                            "pagina_final": "48963",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30154.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30154",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30154"
+                                    }
+                                },
+                                {
+                                    "codigo": "4335",
+                                    "nombre": "MINISTERIO DE SANIDAD",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30155",
+                                        "titulo": "Anuncio de licitaci\u00f3n de: Gerencia de Atenci\u00f3n Sanitaria de Melilla - Instituto Nacional de Gesti\u00f3n Sanitaria. Objeto: Suministro de medicamentos para dispensaci\u00f3n hospitalaria con destino a los pacientes beneficiarios del Instituto Nacional de Gesti\u00f3n Sanitaria en el \u00c1rea Sanitaria de Melilla. Expediente: P.A. 2026-061-GME.",
+                                        "url_pdf": {
+                                            "szBytes": "248707",
+                                            "szKBytes": "243",
+                                            "pagina_inicial": "48964",
+                                            "pagina_final": "48969",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30155.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30155",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30155"
+                                    }
+                                },
+                                {
+                                    "codigo": "9565",
+                                    "nombre": "MINISTERIO DE CIENCIA, INNOVACI\u00d3N Y UNIVERSIDADES",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30156",
+                                        "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Direcci\u00f3n General del Centro para el Desarrollo Tecnol\u00f3gico y la Innovaci\u00f3n, E.P.E. Objeto: Suministro de gas natural para el edificio del CDTI, sito en c\/Cid, 4 de Madrid. Expediente: 08\/2026 SS (SG).",
+                                        "url_pdf": {
+                                            "szBytes": "214812",
+                                            "szKBytes": "210",
+                                            "pagina_inicial": "48970",
+                                            "pagina_final": "48971",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30156.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30156",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30156"
+                                    }
+                                },
+                                {
+                                    "codigo": "9579",
+                                    "nombre": "MINISTERIO DE INCLUSI\u00d3N, SEGURIDAD SOCIAL Y MIGRACIONES",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30157",
+                                        "titulo": "Anuncio de formalizaci\u00f3n de contratos de: INSS-Direcci\u00f3n provincial de Granada. Objeto: Servicio de mantenimiento integral preventivo y correctivo a todo riesgo de las instalaciones del Instituto Nacional de la Seguridad Social fr Granada durante 2026 y 2027. Expediente: 18\/VC-157\/26.",
+                                        "url_pdf": {
+                                            "szBytes": "226392",
+                                            "szKBytes": "221",
+                                            "pagina_inicial": "48972",
+                                            "pagina_final": "48974",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30157.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30157",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30157"
+                                    }
+                                },
+                                {
+                                    "codigo": "1040",
+                                    "nombre": "COMISI\u00d3N NACIONAL DEL MERCADO DE VALORES",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30158",
+                                        "titulo": "Anuncio de formalizaci\u00f3n de contratos de: Comisi\u00f3n Nacional del Mercado de Valores. Objeto: Servicio de seguimiento de la informaci\u00f3n de la Comisi\u00f3n Nacional del Mercado de Valores (CNMV) en los medios de comunicaci\u00f3n . Expediente: 24\/26.",
+                                        "url_pdf": {
+                                            "szBytes": "208522",
+                                            "szKBytes": "204",
+                                            "pagina_inicial": "48975",
+                                            "pagina_final": "48975",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30158.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30158",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30158"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "5B",
+                            "nombre": "V. Anuncios. - B. Otros anuncios oficiales",
+                            "departamento": [
+                                {
+                                    "codigo": "5140",
+                                    "nombre": "MINISTERIO DE HACIENDA",
+                                    "item": [
+                                        {
+                                            "identificador": "BOE-B-2026-30159",
+                                            "titulo": "Resoluci\u00f3n de la Delegaci\u00f3n de Econom\u00eda y Hacienda en Burgos por la que se anuncia acuerdo de inicio de expediente de investigaci\u00f3n de un inmueble urbano sito en la calle Plazuela n\u00famero 12 en el t\u00e9rmino municipal de Sargentes de la Lora (Burgos).",
+                                            "url_pdf": {
+                                                "szBytes": "203401",
+                                                "szKBytes": "199",
+                                                "pagina_inicial": "48976",
+                                                "pagina_final": "48976",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30159.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30159",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30159"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30160",
+                                            "titulo": "Resoluci\u00f3n de la Delegaci\u00f3n de Econom\u00eda y Hacienda en Burgos por la que se anuncia acuerdo de inicio de expediente de investigaci\u00f3n de un inmueble urbano sito en la calle La Iglesia n\u00famero 21 en el t\u00e9rmino municipal de Sargentes de la Lora (Burgos).",
+                                            "url_pdf": {
+                                                "szBytes": "203219",
+                                                "szKBytes": "198",
+                                                "pagina_inicial": "48977",
+                                                "pagina_final": "48977",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30160.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30160",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30160"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9586",
+                                    "nombre": "MINISTERIO DE TRANSPORTES Y MOVILIDAD SOSTENIBLE",
+                                    "item": [
+                                        {
+                                            "identificador": "BOE-B-2026-30161",
+                                            "titulo": "Anuncio de la Autoridad Portuaria de Barcelona por el que se somete a informaci\u00f3n p\u00fablica la propuesta presentada por la sociedad Creuers del Port de Barcelona, S.A. para la modificaci\u00f3n sustancial de la concesi\u00f3n administrativa de que es titular en el puerto de Barcelona. Exp. 066\/2026-SGSJC.",
+                                            "url_pdf": {
+                                                "szBytes": "204192",
+                                                "szKBytes": "199",
+                                                "pagina_inicial": "48978",
+                                                "pagina_final": "48978",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30161.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30161",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30161"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30162",
+                                            "titulo": "Anuncio del Administrador de Infraestructuras Ferroviarias por el que se somete a informaci\u00f3n p\u00fablica a efectos de declaraci\u00f3n de la necesidad de ocupaci\u00f3n el Proyecto de Construcci\u00f3n para la Prolongaci\u00f3n y Mejora de las Condiciones de Accesibilidad y Evacuaci\u00f3n de Andenes en la Estaci\u00f3n de Cercan\u00edas de Las Retamas, C. Madrid.",
+                                            "url_pdf": {
+                                                "szBytes": "215969",
+                                                "szKBytes": "211",
+                                                "pagina_inicial": "48979",
+                                                "pagina_final": "48980",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30162.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30162",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30162"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30163",
+                                            "titulo": "Anuncio de Adif-Alta Velocidad por el que se somete a informaci\u00f3n p\u00fablica a efectos de declaraci\u00f3n de la necesidad de ocupaci\u00f3n el Proyecto B\u00e1sico de las Subestaciones El\u00e9ctricas de Tracci\u00f3n, Centros de Autotransformaci\u00f3n Asociados y L\u00edneas de Acometida en Alta Tensi\u00f3n del Tramo Lorca-Almer\u00eda. L\u00ednea de Alta Velocidad Murcia-Almer\u00eda.",
+                                            "url_pdf": {
+                                                "szBytes": "835543",
+                                                "szKBytes": "816",
+                                                "pagina_inicial": "48981",
+                                                "pagina_final": "48992",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30163.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30163",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30163"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30164",
+                                            "titulo": "Anuncio del Administrador de Infraestructuras Ferroviarias por el que se somete a informaci\u00f3n p\u00fablica a efectos de declaraci\u00f3n de la necesidad de ocupaci\u00f3n el Proyecto Constructivo de plataforma de la Variante Sur Ferroviaria de Bilbao. Fase 1. Tramo: Viaducto del Kadagua.",
+                                            "url_pdf": {
+                                                "szBytes": "241872",
+                                                "szKBytes": "236",
+                                                "pagina_inicial": "48993",
+                                                "pagina_final": "48994",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30164.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30164",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30164"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9590",
+                                    "nombre": "MINISTERIO DE EDUCACI\u00d3N, FORMACI\u00d3N PROFESIONAL Y DEPORTES",
+                                    "item": [
+                                        {
+                                            "identificador": "BOE-B-2026-30165",
+                                            "titulo": "Extracto de la Resoluci\u00f3n de la Secretar\u00eda General de Formaci\u00f3n Profesional por la que se procede a la convocatoria, de \u00e1mbito estatal, para la concesi\u00f3n de subvenciones a entidades de formaci\u00f3n destinadas a la financiaci\u00f3n de acciones formativas en el sector de la prevenci\u00f3n y actuaci\u00f3n ante emergencias naturales e incendios, vinculadas al cat\u00e1logo nacional de est\u00e1ndares de competencias profesionales, para el a\u00f1o 2026",
+                                            "url_pdf": {
+                                                "szBytes": "207541",
+                                                "szKBytes": "203",
+                                                "pagina_inicial": "48995",
+                                                "pagina_final": "48996",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30165.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30165",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30165"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30166",
+                                            "titulo": "Extracto de la Resoluci\u00f3n de la Secretar\u00eda General de Formaci\u00f3n Profesional por la que se procede a la convocatoria, de \u00e1mbito estatal, de concesi\u00f3n de subvenciones a entidades de formaci\u00f3n para la financiaci\u00f3n de acciones formativas dirigidas a personas trabajadoras y vinculadas al cat\u00e1logo nacional de est\u00e1ndares de competencias profesionales, en el sector del transporte por carretera, para el a\u00f1o 2026",
+                                            "url_pdf": {
+                                                "szBytes": "207541",
+                                                "szKBytes": "203",
+                                                "pagina_inicial": "48997",
+                                                "pagina_final": "48998",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30166.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30166",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30166"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9593",
+                                    "nombre": "MINISTERIO DE POL\u00cdTICA TERRITORIAL Y MEMORIA DEMOCR\u00c1TICA",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30167",
+                                        "titulo": "Anuncio de la Delegaci\u00f3n del Gobierno en Madrid, por el que se convoca el levantamiento de actas previas a la ocupaci\u00f3n y, si procediera, formalizaci\u00f3n de las actas de ocupaci\u00f3n en el procedimiento de expropiaci\u00f3n forzosa para la ejecuci\u00f3n de los proyectos de las instalaciones fotovoltaicas Collarada Solar, de 50,24 MW, Popa Solar, de 61,12 MW y Maladeta Solar, de 162,56 MW de potencia instalada y sus infraestructuras de evacuaci\u00f3n, en los t\u00e9rminos municipales de Santorcaz y Anchuelo, en la Comunidad de Madrid. Exp.: Pfot-180, Pfot-181 y Pfot-185.",
+                                        "url_pdf": {
+                                            "szBytes": "536108",
+                                            "szKBytes": "524",
+                                            "pagina_inicial": "48999",
+                                            "pagina_final": "49008",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30167.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30167",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30167"
+                                    }
+                                },
+                                {
+                                    "codigo": "9575",
+                                    "nombre": "MINISTERIO PARA LA TRANSICI\u00d3N ECOL\u00d3GICA Y EL RETO DEMOGR\u00c1FICO",
+                                    "item": [
+                                        {
+                                            "identificador": "BOE-B-2026-30168",
+                                            "titulo": "Anuncio de la Confederaci\u00f3n Hidrogr\u00e1fica del Duero, O.A, de resoluci\u00f3n de la concesi\u00f3n de un aprovechamiento de aguas subterr\u00e1neas, con destino a riego y uso ganadero, en el t\u00e9rmino municipal de Armu\u00f1a (Segovia). Ref. exp.: C-0122\/2026 (INTEGRA-AYE) SG.",
+                                            "url_pdf": {
+                                                "szBytes": "209324",
+                                                "szKBytes": "204",
+                                                "pagina_inicial": "49009",
+                                                "pagina_final": "49010",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30168.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30168",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30168"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30169",
+                                            "titulo": "Anuncio de la Confederaci\u00f3n Hidrogr\u00e1fica del Duero, O.A, de informaci\u00f3n p\u00fablica de la modificaci\u00f3n de caracter\u00edsticas de la concesi\u00f3n de un aprovechamiento de aguas, con destino a riego, en el t\u00e9rmino municipal de Olmos de Ojeda (Palencia). Ref. exp.: MC-0173\/2026 (INTEGRA-AYE) PA.",
+                                            "url_pdf": {
+                                                "szBytes": "213937",
+                                                "szKBytes": "209",
+                                                "pagina_inicial": "49011",
+                                                "pagina_final": "49012",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30169.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30169",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30169"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30170",
+                                            "titulo": "Anuncio del Servicio de R\u00e9gimen de Usuarios de la Confederaci\u00f3n Hidrogr\u00e1fica del Duero, O.A. de informaci\u00f3n p\u00fablica sobre la tramitaci\u00f3n de un procedimiento de extinci\u00f3n del derecho a un aprovechamiento de aguas subterr\u00e1neas en el t\u00e9rmino municipal de Ar\u00e9valo (\u00c1vila) Expediente ED-0102\/2025).",
+                                            "url_pdf": {
+                                                "szBytes": "210836",
+                                                "szKBytes": "206",
+                                                "pagina_inicial": "49013",
+                                                "pagina_final": "49014",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30170.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30170",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30170"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30171",
+                                            "titulo": "Anuncio de la Confederaci\u00f3n Hidrogr\u00e1fica del Mi\u00f1o-Sil, O.A. de informaci\u00f3n p\u00fablica del expediente de concesi\u00f3n para el aprovechamiento de 0,306 l\/s de agua procedente de un sondeo, situado en la parroquia de San\u00edn (San Pedro), t\u00e9rmino municipal de Ribadavia (Ourense), con destino a abastecimiento de \u00e1rea divulgativa de enolog\u00eda en el mirador de San Cibrao y de autorizaci\u00f3n de vertido de aguas residuales de \u00c1rea divulgativa en Mirador de San Cibrao, en A Groba Santo Andr\u00e9, t\u00e9rmino municipal de Ribadavia (Ourense).",
+                                            "url_pdf": {
+                                                "szBytes": "209373",
+                                                "szKBytes": "204",
+                                                "pagina_inicial": "49015",
+                                                "pagina_final": "49016",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30171.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30171",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30171"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30172",
+                                            "titulo": "Anuncio del Servicio de R\u00e9gimen de Usuarios de la Confederaci\u00f3n Hidrogr\u00e1fica del Duero, O.A. de informaci\u00f3n p\u00fablica sobre la tramitaci\u00f3n de un procedimiento de extinci\u00f3n del derecho a un aprovechamiento de aguas subterr\u00e1neas en el t\u00e9rmino municipal de \u00c1vila (\u00c1vila) Expediente ED-0082\/2025).",
+                                            "url_pdf": {
+                                                "szBytes": "210480",
+                                                "szKBytes": "206",
+                                                "pagina_inicial": "49017",
+                                                "pagina_final": "49018",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30172.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30172",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30172"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30173",
+                                            "titulo": "Anuncio de la Subdirecci\u00f3n General de Dominio P\u00fablico Hidr\u00e1ulico e Infraestructuras de la Direcci\u00f3n General del Agua del Ministerio para la Transici\u00f3n Ecol\u00f3gica y el Reto Demogr\u00e1fico, relativo a la informaci\u00f3n p\u00fablica del \"Proyecto de Construcci\u00f3n del Tanque de Tormentas y EDAR de Camu\u00f1as (Toledo)\" y de la relaci\u00f3n de bienes y derechos afectados. Clave: 04.345-0211\/2112.",
+                                            "url_pdf": {
+                                                "szBytes": "245464",
+                                                "szKBytes": "240",
+                                                "pagina_inicial": "49019",
+                                                "pagina_final": "49022",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30173.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30173",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30173"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30174",
+                                            "titulo": "Anuncio de la Confederaci\u00f3n Hidrogr\u00e1fica del Guadalquivir, O.A., de informaci\u00f3n p\u00fablica de procedimiento de modificaci\u00f3n de caracter\u00edsticas y novaci\u00f3n de una concesi\u00f3n de aguas p\u00fablicas para riego y un volumen de 39.100 m\u00b3\/a\u00f1o a captar de aguas subterr\u00e1neas y R\u00edo de las Yeguas en el t\u00e9rmino municipal de Casariche (Sevilla). Expediente 263\/2019.",
+                                            "url_pdf": {
+                                                "szBytes": "203502",
+                                                "szKBytes": "199",
+                                                "pagina_inicial": "49023",
+                                                "pagina_final": "49023",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30174.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30174",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30174"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30175",
+                                            "titulo": "Anuncio de la Comisar\u00eda de Aguas de la Confederaci\u00f3n Hidrogr\u00e1fica del Guadalquivir de informaci\u00f3n p\u00fablica del procedimiento de autorizaci\u00f3n de vertido de aguas residuales a cauce procedentes de la red de saneamiento p\u00fablico del n\u00facleo urbano de Villanueva del Arzobispo (Ja\u00e9n). Expediente de ref.: AY0353\/JA-148 \/2024.",
+                                            "url_pdf": {
+                                                "szBytes": "208888",
+                                                "szKBytes": "204",
+                                                "pagina_inicial": "49024",
+                                                "pagina_final": "49025",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30175.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30175",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30175"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30176",
+                                            "titulo": "Anuncio de la Confederaci\u00f3n Hidrogr\u00e1fica del Duero, O.A, de resoluci\u00f3n de la concesi\u00f3n de un aprovechamiento de aguas subterr\u00e1neas, con destino a riego, en el t\u00e9rmino municipal de Aranc\u00f3n (Soria). Ref. exp.: C-0511\/2025.",
+                                            "url_pdf": {
+                                                "szBytes": "208525",
+                                                "szKBytes": "204",
+                                                "pagina_inicial": "49026",
+                                                "pagina_final": "49027",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30176.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30176",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30176"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30177",
+                                            "titulo": "Anuncio de la Comisar\u00eda de Aguas de Confederaci\u00f3n Hidrogr\u00e1fica del Guadiana sobre solicitud de autorizaci\u00f3n para aprovechamiento de pastos en zona de dominio p\u00fablico hidr\u00e1ulico del arroyo de la Dehesa. T\u00e9rmino municipal de Monesterio.(PAST-15\/26 MSP).",
+                                            "url_pdf": {
+                                                "szBytes": "202525",
+                                                "szKBytes": "198",
+                                                "pagina_inicial": "49028",
+                                                "pagina_final": "49028",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30177.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30177",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30177"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30178",
+                                            "titulo": "Anuncio de la Comisar\u00eda de Aguas de la Confederaci\u00f3n Hidrogr\u00e1fica del Ebro sobre informaci\u00f3n p\u00fablica de una solicitud de concesi\u00f3n de un aprovechamiento de aguas p\u00fablicas en el t\u00e9rmino municipal de Biel (Zaragoza). Expediente 2023-A-99.",
+                                            "url_pdf": {
+                                                "szBytes": "205731",
+                                                "szKBytes": "201",
+                                                "pagina_inicial": "49029",
+                                                "pagina_final": "49029",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30178.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30178",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30178"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30179",
+                                            "titulo": "Anuncio de la Comisar\u00eda de Aguas de la Confederaci\u00f3n Hidrogr\u00e1fica del Ebro sobre informaci\u00f3n p\u00fablica de una solicitud de modificaci\u00f3n de caracter\u00edsticas de la concesi\u00f3n de un aprovechamiento de aguas p\u00fablicas en el t\u00e9rmino municipal de Castejon (Navarra). Expediente 2023-A-252.",
+                                            "url_pdf": {
+                                                "szBytes": "209728",
+                                                "szKBytes": "205",
+                                                "pagina_inicial": "49030",
+                                                "pagina_final": "49031",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30179.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30179",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30179"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30180",
+                                            "titulo": "Anuncio de la Comisar\u00eda de Aguas de la Confederaci\u00f3n Hidrogr\u00e1fica del Ebro sobre informaci\u00f3n p\u00fablica de una solicitud de modificaci\u00f3n de caracter\u00edsticas de la concesi\u00f3n de un aprovechamiento de aguas p\u00fablicas en el t\u00e9rmino municipal de Maella (Zaragoza). Expediente 2025-A-117.",
+                                            "url_pdf": {
+                                                "szBytes": "208125",
+                                                "szKBytes": "203",
+                                                "pagina_inicial": "49032",
+                                                "pagina_final": "49033",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30180.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30180",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30180"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30181",
+                                            "titulo": "Anuncio de la Confederaci\u00f3n Hidrogr\u00e1fica del Guadalquivir, O.A., de informaci\u00f3n p\u00fablica de una solicitud de concesi\u00f3n de aguas superficiales, con destino a uso riego de 15,161 ha, mediante una toma, en el t\u00e9rmino municipal de Cambil (Ja\u00e9n). Expediente 5907\/2019.",
+                                            "url_pdf": {
+                                                "szBytes": "203111",
+                                                "szKBytes": "198",
+                                                "pagina_inicial": "49034",
+                                                "pagina_final": "49034",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30181.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30181",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30181"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30182",
+                                            "titulo": "Anuncio de la Comisar\u00eda de Aguas de la Confederaci\u00f3n Hidrogr\u00e1fica del Guadiana, O.A. de informaci\u00f3n p\u00fablica del procedimiento de autorizaci\u00f3n de vertido de aguas residuales depuradas generadas en una bodega de elaboraci\u00f3n de vinos de crianza y embotellado de vinos de calidad, al terreno (zanjas filtrantes), en el t\u00e9rmino municipal de Villarrobledo (Albacete).",
+                                            "url_pdf": {
+                                                "szBytes": "204664",
+                                                "szKBytes": "200",
+                                                "pagina_inicial": "49035",
+                                                "pagina_final": "49035",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30182.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30182",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30182"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30183",
+                                            "titulo": "Anuncio de la Comisar\u00eda de Aguas de la Confederaci\u00f3n Hidrogr\u00e1fica del Ebro sobre informaci\u00f3n p\u00fablica de una solicitud de concesi\u00f3n de un aprovechamiento de aguas p\u00fablicas en el t\u00e9rmino municipal de Arroniz (Navarra). Expediente 2022-A-178.",
+                                            "url_pdf": {
+                                                "szBytes": "205485",
+                                                "szKBytes": "201",
+                                                "pagina_inicial": "49036",
+                                                "pagina_final": "49036",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30183.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30183",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30183"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "8020",
+                                    "nombre": "COMUNIDAD AUT\u00d3NOMA DE ARAG\u00d3N",
+                                    "item": {
+                                        "identificador": "BOE-B-2026-30184",
+                                        "titulo": "Anuncio del Servicio Provincial de Teruel del actual Departamento de Econom\u00eda, Competitividad y Empleo sobre el otorgamiento del permiso de exploraci\u00f3n denominado Antill\u00f3n, n\u00famero 6.645, ubicado en los t\u00e9rminos municipales de Segura de Ba\u00f1os, Montalb\u00e1n, Vivel del R\u00edo Mart\u00edn, La Hoz de la Vieja y Mart\u00edn del R\u00edo, provincia de Teruel.",
+                                        "url_pdf": {
+                                            "szBytes": "203691",
+                                            "szKBytes": "199",
+                                            "pagina_inicial": "49037",
+                                            "pagina_final": "49037",
+                                            "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30184.pdf"
+                                        },
+                                        "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30184",
+                                        "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30184"
+                                    }
+                                },
+                                {
+                                    "codigo": "310",
+                                    "nombre": "UNIVERSIDADES",
+                                    "item": [
+                                        {
+                                            "identificador": "BOE-B-2026-30185",
+                                            "titulo": "Anuncio de la Facultad de Econom\u00eda y Empresa de la Universidad del Pa\u00eds Vasco\/Euskal Herriko Unibertsitatea sobre extrav\u00edo de t\u00edtulo universitario.",
+                                            "url_pdf": {
+                                                "szBytes": "200295",
+                                                "szKBytes": "196",
+                                                "pagina_inicial": "49038",
+                                                "pagina_final": "49038",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30185.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30185",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30185"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30186",
+                                            "titulo": "Anuncio de la Universidad Pablo de Olavide, de Sevilla sobre extrav\u00edo de t\u00edtulo universitario.",
+                                            "url_pdf": {
+                                                "szBytes": "200003",
+                                                "szKBytes": "195",
+                                                "pagina_inicial": "49039",
+                                                "pagina_final": "49039",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30186.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30186",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30186"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30187",
+                                            "titulo": "Anuncio de la Universidad Pablo de Olavide, de Sevilla sobre extrav\u00edo de t\u00edtulo universitario.",
+                                            "url_pdf": {
+                                                "szBytes": "200062",
+                                                "szKBytes": "195",
+                                                "pagina_inicial": "49040",
+                                                "pagina_final": "49040",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30187.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30187",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30187"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30188",
+                                            "titulo": "Anuncio de la Facultad de Derecho - Secci\u00f3n Bizkaia de la Universidad del Pa\u00eds Vasco \/ Euskal Herriko Unibertsitatea sobre extrav\u00edo de t\u00edtulo universitario.",
+                                            "url_pdf": {
+                                                "szBytes": "200532",
+                                                "szKBytes": "196",
+                                                "pagina_inicial": "49041",
+                                                "pagina_final": "49041",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30188.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30188",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30188"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30189",
+                                            "titulo": "Anuncio de la Facultad de Educaci\u00f3n de la Universidad Pontificia de Salamanca sobre extrav\u00edo de t\u00edtulo universitario.",
+                                            "url_pdf": {
+                                                "szBytes": "200039",
+                                                "szKBytes": "195",
+                                                "pagina_inicial": "49042",
+                                                "pagina_final": "49042",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30189.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30189",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30189"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30190",
+                                            "titulo": "Anuncio de la Facultad de Comunicaci\u00f3n y Relaciones Internacionales Blanquerna de la Universidad Ramon Llull sobre extrav\u00edo de t\u00edtulo universitario.",
+                                            "url_pdf": {
+                                                "szBytes": "200297",
+                                                "szKBytes": "196",
+                                                "pagina_inicial": "49043",
+                                                "pagina_final": "49043",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30190.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30190",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30190"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30191",
+                                            "titulo": "Anuncio de la Facultad de Derecho de la Universidad Nacional de Educaci\u00f3n a Distancia sobre extrav\u00edo de t\u00edtulo universitario.",
+                                            "url_pdf": {
+                                                "szBytes": "199971",
+                                                "szKBytes": "195",
+                                                "pagina_inicial": "49044",
+                                                "pagina_final": "49044",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30191.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30191",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30191"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30192",
+                                            "titulo": "Anuncio de la Facultad de Ciencias Jur\u00eddicas, Educaci\u00f3n y Humanidades de la Universidad Europea de Madrid sobre extrav\u00edo de t\u00edtulo universitario.",
+                                            "url_pdf": {
+                                                "szBytes": "200736",
+                                                "szKBytes": "196",
+                                                "pagina_inicial": "49045",
+                                                "pagina_final": "49045",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30192.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30192",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30192"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "codigo": "9536",
+                                    "nombre": "OTROS ENTES",
+                                    "item": [
+                                        {
+                                            "identificador": "BOE-B-2026-30193",
+                                            "titulo": "Anuncio de la Comunidad de Regantes de La Font de Mela (en constituci\u00f3n) por el que se convoca Asamblea General Constituyente.",
+                                            "url_pdf": {
+                                                "szBytes": "202064",
+                                                "szKBytes": "197",
+                                                "pagina_inicial": "49046",
+                                                "pagina_final": "49046",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30193.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30193",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30193"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30194",
+                                            "titulo": "Anuncio de la Comunidad de Regantes Zona Prats de la Comunidad General del Canal de la Derecha del Ebro sobre convocatoria de Junta General.",
+                                            "url_pdf": {
+                                                "szBytes": "202704",
+                                                "szKBytes": "198",
+                                                "pagina_inicial": "49047",
+                                                "pagina_final": "49047",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30194.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30194",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30194"
+                                        },
+                                        {
+                                            "identificador": "BOE-B-2026-30195",
+                                            "titulo": "Anuncio de la Comunidad de Regantes del Coscollar sobre convocatoria de Junta.",
+                                            "url_pdf": {
+                                                "szBytes": "200311",
+                                                "szKBytes": "196",
+                                                "pagina_inicial": "49048",
+                                                "pagina_final": "49048",
+                                                "texto": "https:\/\/www.boe.es\/boe\/dias\/2026\/09\/18\/pdfs\/BOE-B-2026-30195.pdf"
+                                            },
+                                            "url_html": "https:\/\/www.boe.es\/diario_boe\/txt.php?id=BOE-B-2026-30195",
+                                            "url_xml": "https:\/\/www.boe.es\/diario_boe\/xml.php?id=BOE-B-2026-30195"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
