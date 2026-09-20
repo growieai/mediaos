@@ -1,101 +1,33 @@
-# Architecture — Growie Media OS v0.1
+# Architecture — Milestones 0/1
 
-## Product boundary
-Codex is used to build/review/test the codebase. Codex is not the production runtime orchestrator for Sofía.
+The runtime is a generic typed workflow engine, separate from Codex. The internal Next.js console proxies authenticated requests to FastAPI. SQLAlchemy handles PostgreSQL transactions; Alembic owns schema changes. PostgreSQL is the sole source of truth.
 
-Production runtime is a durable workflow system invoking typed skills through provider adapters.
+The source is submitted manually. A separate authorized reviewer attests that the exact source/evidence is trustworthy. Labels such as OFFICIAL never confer trust automatically. Fixture sources cannot be attested and QA blocks them.
 
-## MVP topology
-
-```text
-Browser
-  |
-Next.js Console
-  |
-FastAPI Control Plane
-  |
-  +--> PostgreSQL (source of truth)
-  +--> Redis (locks/cache)
-  +--> Temporal (durable workflows)
-  +--> S3/MinIO (media assets)
-  +--> AI Provider Adapter
-  +--> Research Connectors
-  +--> Social Connectors [feature flagged]
-```
-
-## Production recommendation
-For the Spain pilot, keep data/services in an EU region. Start containerized. Prefer managed PostgreSQL and object storage in production. Use Temporal Cloud or a properly operated Temporal cluster rather than the development auto-setup image.
-
-Suggested production split:
-- `console`: Next.js deployment.
-- `api`: FastAPI stateless service.
-- `worker-research`: network-enabled worker.
-- `worker-content`: text generation worker.
-- `worker-render`: media rendering worker.
-- `worker-community`: comment/DM worker, isolated permissions.
-- Managed PostgreSQL.
-- Managed Redis.
-- S3-compatible storage.
-- Temporal service.
-- Central logs/traces.
-
-## Tenant model
-Every mutable business object must resolve to a tenant.
-
-Initial seed:
-- tenant: `growie`
-- influencer: `sofia_es`
-- mission: Spain SMB authority + qualified Growie demand
-
-External creator onboarding stays behind `ENABLE_EXTERNAL_CREATORS=false` until internal validation gates are met.
-
-## Runtime roles
-- Scout: discovery
-- Researcher: structured evidence
-- Editor: decides what deserves content
-- Creator: writes in character
-- Studio: creates media
-- QA: fact/brand/policy gate
-- Publisher: social delivery
-- Community: comments/DMs
-- Growth Brain: experiments and learning
-
-These are workflow roles. Most concrete actions are versioned skills.
-
-## First production loop
+## Current topology
 
 ```text
-source event
-  -> normalize
-  -> research + citations
-  -> verify
-  -> editorial score
-  -> brief
-  -> carousel copy
-  -> visual render
-  -> QA
-  -> approval
-  -> publish
-  -> ingest metrics
-  -> learning record
+Internal console → FastAPI → restricted PostgreSQL role
+                       ↓
+                 synchronous runner
+                       ↓
+research.extract → research.verify → editor.build_brief → content.carousel → qa.validate
 ```
 
-## Approval policy v0
-Auto-approval is OFF initially.
+All five skills have typed inputs/outputs and persisted attempts. MockAdapter validates strict Pydantic schemas. Real provider adapters remain deferred to Milestone 2. There is no provider credential dependency.
 
-Block on:
-- missing source provenance;
-- unclear eligibility/deadline for grant content;
-- AI identity disclosure failure;
-- character drift;
-- prohibited/deceptive claims;
-- missing tenant ownership.
+Persona, voice, visual policy, brand policy, language, editorial settings and safe non-factual templates are versioned configuration. Markdown under characters/sofia remains canonical source material; seed imports it with runtime.json into immutable character and influencer versions. A changed content hash creates a new version. Existing runs retain their original configuration.
 
-## Model routing
-Keep models environment-configurable.
+## Deliberate boundaries
 
-Suggested default policy:
-- classification/extraction at scale: cost-efficient model;
-- editor/creator: balanced model;
-- difficult verification/QA: strongest reasoning model;
-- never rely on a model for date arithmetic, retries, idempotency, authorization, billing, or state transitions.
+The synchronous runner uses an advisory execution lock and short checkpoint transactions. Approval and revision use a shared workflow row lock. These boundaries can become Temporal activities later. PostgreSQL currently supplies the required locking; Redis is not required for this slice. S3/MinIO becomes necessary when binary assets arrive; this milestone stores structured carousel JSON only. Temporal, Redis and object-storage services remain architectural destinations, not unused mandatory local dependencies.
+
+No external creator UI, signup, marketplace, crawling, image generation, video, publishing, community automation or billing is implemented. Startup rejects enabled out-of-scope flags or real AI mode.
+
+## Production deployment still deferred
+
+Production readiness requires an EU deployment decision, managed PostgreSQL, TLS ingress, an organizational identity/token lifecycle, service-secret distribution and rotation, backup/restore exercises, release/rollback procedures, centralized logs/alerts, resource/concurrency limits, and durable orchestration before unattended execution.
+
+Docker Compose is local development configuration, not a production manifest. It binds ports to localhost. Keep database infrastructure private in production. The privileged migration identity must never be available to API/console workloads.
+
+No connection to Growie production infrastructure is needed or permitted by this setup.

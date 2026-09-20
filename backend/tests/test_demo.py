@@ -1,20 +1,36 @@
-from app.models.schemas import SourceInput
-from app.workflows.sofia_demo import run_sofia_demo
+from conftest import artifact_data, create, decision, headers
 
 
-def test_sofia_demo_closes_loop() -> None:
-    source = SourceInput(
-        source_id="test-source",
-        title="Test official update",
-        source_type="official",
-        market="ES",
-        raw_text="Official test evidence for a Spanish SMB support programme.",
+def test_sofia_demo_closes_loop(client, identities):
+    # Retains the starter's loop regression, now requiring persistence and human approval.
+    identity = identities[0]
+    run = create(client, identity)
+    assert run["state"] == "AWAITING_APPROVAL"
+    data = artifact_data(client, identity, run)
+    assert data["qa_reports"][0]["status"] == "PASS"
+    assert len(data["skill_runs"]) == 5
+    assert all(s["provider"] == "mock" and s["cost"] == 0 for s in data["skill_runs"])
+    approved = client.post(
+        f"/v1/workflow-runs/{run['id']}/approve",
+        headers=headers(identity, "APPROVER"),
+        json=decision(run),
     )
-    run = run_sofia_demo(source)
-
-    assert run.tenant_id == "growie"
-    assert run.influencer_id == "sofia_es"
-    assert run.qa.status == "APPROVE"
-    assert run.status.value == "APPROVED"
-    assert len(run.draft.slides) >= 5
-    assert "IA" in run.draft.disclosure
+    assert approved.status_code == 200, approved.text
+    assert approved.json()["workflow"]["state"] == "APPROVED"
+    stored = artifact_data(client, identity, run)
+    assert len(stored["approval_records"]) == 1
+    audit = client.get(f"/v1/workflow-runs/{run['id']}/audit", headers=headers(identity)).json()
+    states = [a["to_state"] for a in audit if a["event_type"] == "STATE_TRANSITION"]
+    assert states == [
+        "CREATED",
+        "SOURCE_CAPTURED",
+        "RESEARCHING",
+        "RESEARCH_COMPLETE",
+        "BRIEFING",
+        "BRIEF_COMPLETE",
+        "CONTENT_GENERATING",
+        "CONTENT_COMPLETE",
+        "QA_RUNNING",
+        "AWAITING_APPROVAL",
+        "APPROVED",
+    ]

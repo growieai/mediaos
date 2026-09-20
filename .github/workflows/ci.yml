@@ -1,0 +1,64 @@
+name: Milestones 0 and 1
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18.4-bookworm
+        env:
+          POSTGRES_USER: mediaos_admin
+          POSTGRES_PASSWORD: ci-disposable-only
+          POSTGRES_DB: mediaos_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U mediaos_admin -d mediaos_test"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      MIGRATION_DATABASE_URL: postgresql+psycopg://mediaos_admin:ci-disposable-only@127.0.0.1:5432/mediaos_test
+      TEST_MIGRATION_DATABASE_URL: postgresql+psycopg://mediaos_admin:ci-disposable-only@127.0.0.1:5432/mediaos_test
+      TEST_DATABASE_URL: postgresql+psycopg://mediaos_runtime:ci-runtime-only@127.0.0.1:5432/mediaos_test
+      DATABASE_URL: postgresql+psycopg://mediaos_runtime:ci-runtime-only@127.0.0.1:5432/mediaos_test
+      POSTGRES_RUNTIME_PASSWORD: ci-runtime-only
+      POSTGRES_ADMIN_PASSWORD: ci-disposable-only
+      AI_MOCK_MODE: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: apps/console/package-lock.json
+      - run: pip install --require-hashes -r backend/requirements.lock
+      - name: Migrate empty database and configure restricted login
+        working-directory: backend
+        run: python -m app.admin migrate
+      - name: Lint, formatting and type checks
+        working-directory: backend
+        run: |
+          ruff check app tests migrations
+          ruff format --check app tests migrations
+          mypy app
+      - name: Unit and PostgreSQL integration tests (rebuilds disposable schema)
+        working-directory: backend
+        run: pytest -q --tb=short
+      - name: Seed and acceptance simulation
+        working-directory: backend
+        run: |
+          python -m app.seed
+          python -m app.acceptance
+      - name: Frontend build
+        working-directory: apps/console
+        run: |
+          npm ci
+          npm run build
+      - name: Container configuration and builds
+        run: |
+          docker compose config --quiet
+          docker compose build

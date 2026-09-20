@@ -1,60 +1,72 @@
+name: growie-media-os
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:18.4-bookworm
     environment:
-      POSTGRES_USER: growie
-      POSTGRES_PASSWORD: growie
-      POSTGRES_DB: growie_media
+      POSTGRES_USER: mediaos_admin
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?Run python scripts/dev.py setup}
+      POSTGRES_DB: mediaos
     ports:
-      - "5432:5432"
+      - "127.0.0.1:55433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mediaos_postgres:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U growie -d growie_media"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
+      test: ["CMD-SHELL", "pg_isready -U mediaos_admin -d mediaos"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  migrate:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    profiles: ["tools"]
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - minio_data:/data
-
-  temporal:
-    image: temporalio/auto-setup:latest
-    environment:
-      - DB=postgres12
-      - DB_PORT=5432
-      - POSTGRES_USER=growie
-      - POSTGRES_PWD=growie
-      - POSTGRES_SEEDS=postgres
+      MIGRATION_DATABASE_URL: postgresql+psycopg://mediaos_admin:${POSTGRES_ADMIN_PASSWORD}@postgres:5432/mediaos
+      POSTGRES_RUNTIME_PASSWORD: ${POSTGRES_RUNTIME_PASSWORD}
+    command: ["python", "-m", "app.admin", "migrate"]
     depends_on:
       postgres:
         condition: service_healthy
-    ports:
-      - "7233:7233"
-
-  temporal-ui:
-    image: temporalio/ui:latest
+  seed:
+    extends:
+      service: migrate
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    volumes:
+      - ./.local:/workspace/.local
+    command: ["python", "-m", "app.seed"]
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-    depends_on:
-      - temporal
+      DATABASE_URL: postgresql+psycopg://mediaos_runtime:${POSTGRES_RUNTIME_PASSWORD}@postgres:5432/mediaos
+      AI_MOCK_MODE: "true"
+      APP_ENV: development
     ports:
-      - "8080:8080"
-
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/v1/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  console:
+    build:
+      context: .
+      dockerfile: apps/console/Dockerfile
+    environment:
+      INTERNAL_API_URL: http://api:8000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 volumes:
-  postgres_data:
-  minio_data:
+  mediaos_postgres:

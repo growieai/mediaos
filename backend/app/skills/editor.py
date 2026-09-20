@@ -1,20 +1,16 @@
-from hashlib import sha256
-
-from app.models.schemas import ContentBrief, ResearchPack
+from app.models.schemas import CharacterConfig, ContentBrief, ResearchPack
 
 
-def build_brief_mock(research: ResearchPack, influencer_id: str = "sofia_es") -> ContentBrief:
-    digest = sha256(research.research_pack_id.encode()).hexdigest()[:10]
+def build_brief(
+    research: ResearchPack, config: CharacterConfig, mission_objective: str
+) -> ContentBrief:
     return ContentBrief(
-        brief_id=f"cb_{digest}",
-        research_pack_id=research.research_pack_id,
-        influencer_id=influencer_id,
-        franchise="DINERO GRATIS",
-        audience=research.audience,
-        objective="Explain one verified business opportunity clearly enough to earn saves and shares.",
-        hook="If you run a small business in Spain, do not ignore this update.",
-        angle="Useful, practical, anti-bureaucratic, no hype.",
-        growie_association_level=0,
-        format="carousel",
-        cta="Save this and check the official source before applying.",
+        allowed_fact_ids=[f.id for f in research.facts],
+        audience=config.audience,
+        franchise=config.franchise,
+        objective=mission_objective,
+        tone=config.tone,
+        cta_type=config.cta_type,
+        brand_association_level=config.brand_association_level,
+        constraints={"min_slides": config.min_slides, "max_slides": config.max_slides},
     )

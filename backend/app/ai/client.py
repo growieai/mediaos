@@ -1,40 +1,18 @@
-import json
-from typing import TypeVar, Type
+"""Typed adapter boundary. Real provider execution is deferred to Milestone 2."""
 
-from openai import OpenAI
-from pydantic import BaseModel
+from collections.abc import Callable
+from typing import TypeVar
 
-from app.config import get_settings
+from app.models.schemas import StrictModel
 
-T = TypeVar("T", bound=BaseModel)
+T = TypeVar("T", bound=StrictModel)
 
 
-class StructuredAIClient:
-    """Provider adapter for typed model outputs.
+class MockAdapter:
+    provider = "mock"
+    model = "deterministic-v1"
+    version = "mock-v1"
 
-    Runtime code calls this adapter, never OpenAI directly from routes/workflows.
-    """
-
-    def __init__(self) -> None:
-        settings = get_settings()
-        self.settings = settings
-        self.client = OpenAI(api_key=settings.openai_api_key) if settings.openai_api_key else None
-
-    def generate(self, *, model: str, system: str, prompt: str, schema: Type[T]) -> T:
-        if self.settings.ai_mock_mode or self.client is None:
-            raise RuntimeError("StructuredAIClient.generate called while mock mode is enabled")
-
-        response = self.client.responses.create(
-            model=model,
-            instructions=system,
-            input=prompt,
-            text={
-                "format": {
-                    "type": "json_schema",
-                    "name": schema.__name__,
-                    "schema": schema.model_json_schema(),
-                    "strict": True,
-                }
-            },
-        )
-        return schema.model_validate(json.loads(response.output_text))
+    def generate(self, schema: type[T], operation: Callable[[], T]) -> T:
+        # JSON validation is strict, while permitting JSON UUID/date strings.
+        return schema.model_validate_json(operation().model_dump_json(), strict=True)

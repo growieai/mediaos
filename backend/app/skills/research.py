@@ -1,30 +1,32 @@
-from hashlib import sha256
+from typing import Literal
+from uuid import NAMESPACE_URL, uuid5
 
-from app.models.schemas import ResearchPack, SourceInput, VerifiedFact
+from app.models.schemas import Fact, ResearchPack, SourceInput
 
 
-def research_source_mock(source: SourceInput) -> ResearchPack:
-    """Deterministic demo implementation.
+def extract(source_id, payload: SourceInput) -> ResearchPack:
+    facts = [
+        Fact(
+            id=uuid5(NAMESPACE_URL, f"{source_id}:{e.start}:{e.end}:{e.statement}"),
+            source_snapshot_id=source_id,
+            start=e.start,
+            end=e.end,
+            statement=e.statement,
+            verification_status="UNVERIFIED",
+            confidence=0.0,
+            fact_type=e.fact_type,
+            grant=e.grant,
+        )
+        for e in payload.evidence
+    ]
+    return ResearchPack(facts=facts, verification_status="UNVERIFIED")
 
-    It intentionally does not invent facts. It treats only the supplied source text as evidence.
-    Replace this skill implementation with live retrieval + structured model extraction later.
-    """
-    digest = sha256(source.raw_text.encode("utf-8")).hexdigest()[:10]
-    evidence = source.raw_text.strip().replace("\n", " ")[:360]
-    fact = VerifiedFact(
-        claim=f"A relevant Spain SMB opportunity/update was identified: {source.title}",
-        evidence=evidence,
-        source_id=source.source_id,
-        confidence=0.96,
-    )
-    return ResearchPack(
-        research_pack_id=f"rp_{digest}",
-        topic=source.title,
-        market=source.market,
-        audience=["Spanish SMB owners", "autónomos"],
-        verified_facts=[fact],
-        uncertain_facts=[],
-        implications=["Potentially useful enough to explain in simple language to SMB owners."],
-        confidence=0.96,
-        publishable=source.source_type in {"official", "manual_test"},
-    )
+
+def verify(pack: ResearchPack, source: dict) -> ResearchPack:
+    verified = source["verification_status"] == "VERIFIED" and not source["is_fixture"]
+    status: Literal["VERIFIED", "UNVERIFIED"] = "VERIFIED" if verified else "UNVERIFIED"
+    facts = [
+        f.model_copy(update={"verification_status": status, "confidence": 1.0 if verified else 0.0})
+        for f in pack.facts
+    ]
+    return ResearchPack(facts=facts, verification_status=status)

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "persona": "loaded from persona.md",
+  "voice": "loaded from voice.md",
+  "visual_policy": "loaded from visual_identity.md",
+  "brand_policy": "loaded from lore.md",
+  "language": "es-ES",
+  "audience": [
+    "Autónomos",
+    "Pequeños negocios en España"
+  ],
+  "franchise": "Información verificada",
+  "objective": "Ofrecer información útil y verificable a pequeños negocios.",
+  "tone": "Práctica y clara",
+  "disclosure": "Sofía es una creadora virtual generada con IA.",
+  "headline": "Para revisar con calma",
+  "cta": "Guarda esta información y consulta la fuente.",
+  "cta_type": "READ_SOURCE",
+  "brand_association_level": 0,
+  "max_brand_association_level": 1,
+  "min_slides": 1,
+  "max_slides": 10,
+  "creative_allowlist": [
+    "Para revisar con calma",
+    "Guarda esta información y consulta la fuente."
+  ]
+}

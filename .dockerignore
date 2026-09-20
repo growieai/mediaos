@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+.local
+backend/.venv
+backend/.pytest_cache
+backend/.mypy_cache
+backend/.ruff_cache
+**/__pycache__
+apps/console/node_modules
+apps/console/.next
+runs
