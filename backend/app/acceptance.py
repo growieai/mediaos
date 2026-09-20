@@ -2,9 +2,12 @@
 
 import copy
 import json
+import os
 from datetime import UTC, datetime
+from urllib.parse import urlsplit
 from uuid import uuid4
 
+import httpx
 from fastapi.testclient import TestClient
 
 from app.config import REPO_ROOT
@@ -12,7 +15,7 @@ from app.main import app
 
 
 def main():
-    credentials = json.loads((REPO_ROOT / ".local/credentials.json").read_text())
+    credentials = json.loads((REPO_ROOT / ".local/credentials.json").read_text(encoding="utf-8"))
     identity = credentials["tenant_id"]
     operator = {
         "Authorization": "Bearer " + credentials["tokens"]["OPERATOR"],
@@ -24,7 +27,7 @@ def main():
     }
     # This is a real internal policy statement, sourced from the repository security document.
     statement = "An OPERATOR cannot approve content."
-    raw = (REPO_ROOT / "docs/SECURITY.md").read_text()
+    raw = (REPO_ROOT / "docs/SECURITY.md").read_text(encoding="utf-8")
     start = raw.index(statement)
     request = {
         "influencer_id": credentials["influencer_id"],
@@ -43,7 +46,23 @@ def main():
         },
     }
     events = []
-    with TestClient(app) as client:
+    target = os.environ.get("ACCEPTANCE_API_URL")
+    if target:
+        parts = urlsplit(target)
+        if (
+            parts.scheme != "http"
+            or parts.hostname not in ("127.0.0.1", "localhost")
+            or parts.username
+            or parts.password
+            or parts.path not in ("", "/")
+            or parts.query
+            or parts.fragment
+        ):
+            raise ValueError("Acceptance credentials may only be sent to a loopback HTTP API")
+    connection = (
+        httpx.Client(base_url=target, timeout=60, trust_env=False) if target else TestClient(app)
+    )
+    with connection as client:
 
         def call(method, path, role=operator, body=None, expected=200):
             response = client.request(method, "/v1/" + path, headers=role, json=body)

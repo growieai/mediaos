@@ -1,5 +1,7 @@
 # Growie Media OS
 
+For the prepared M0–M2 review flow and local startup, see [Testing guide](docs/TESTING.md).
+
 Standalone, multi-tenant internal media workflow. Growie is the first seed tenant and Sofía the first influencer. Character behavior comes from versioned database configuration.
 
 Milestones 0/1 implement:
