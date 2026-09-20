@@ -69,3 +69,11 @@ as versioned configuration. Final appearance still needs your review. The applic
 an AI key to render carousels. As requested, paid model calls stay disabled until you configure them;
 Instagram stays disconnected until you connect an account. The tested structured-output adapter is
 not yet enabled in runtime workflows. See [Build plan](docs/BUILD_PLAN.md) for dependency gates.
+
+## Delivery rehearsal (partial M6)
+
+After migrating and seeding, an operator can run **Delivery preflight** below an approved render in
+the console. It validates the exact approved caption and PNG files, then saves a `DRY_RUN_COMPLETE`
+receipt. No account is connected and nothing is posted. A previous receipt does not authorize a
+future post. Run `python scripts/dev.py delivery-acceptance` for the persisted acceptance simulation.
+See [Delivery testing](docs/DELIVERY_TESTING.md) for the controls, limits and remaining dependencies.

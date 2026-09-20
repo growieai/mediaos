@@ -56,10 +56,12 @@ def main():
         run(PYTHON, "-m", "app.acceptance", cwd=BACKEND)
     elif action == "visual-acceptance":
         run(PYTHON, "-m", "app.rendering.acceptance", cwd=BACKEND)
+    elif action == "delivery-acceptance":
+        run(PYTHON, "-m", "app.delivery.acceptance", cwd=BACKEND)
     elif action == "down":
         run("docker", "compose", "down")
     else:
-        print("Commands: setup, up, migrate, seed, test, check, dev, acceptance, visual-acceptance, down")
+        print("Commands: setup, up, migrate, seed, test, check, dev, acceptance, visual-acceptance, delivery-acceptance, down")
 
 
 if __name__ == "__main__":

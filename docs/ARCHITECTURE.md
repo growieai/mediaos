@@ -65,3 +65,17 @@ Authenticated endpoints deliver PNG previews and a guarded ZIP export. No public
 The console fetches binary previews using bearer headers and revokes temporary browser object URLs.
 Export revalidates content and visual approvals under the same locks used for revisions and source
 changes. A future social adapter must repeat this guard at dispatch; a ZIP download is not publishing.
+
+## Internal delivery preflight (partial M6)
+
+A generic delivery adapter consumes the checked render package behind the existing export guard.
+The only implementation is `dry-run-v1`; it constructs no HTTP client and records no external post.
+The guard holds the current workflow/source/configuration locks while the service verifies PNG bytes,
+constructs an exact typed plan, validates the receipt and commits it. PostgreSQL separately checks
+the plan against the pinned manifest and approval records. The receipt records a historical internal
+check, not Instagram compatibility or future permission to publish.
+
+Delivery state and attempts are persisted separately. WorkflowRun remains APPROVED; a simulation
+cannot advance it to a publishing state. Future live delivery requires a separate reviewed extension
+with durable dispatch intent, unknown-outcome reconciliation, account permissions and secret storage.
+Never convert a saved dry-run row into a live delivery or blindly retry an uncertain external post.

@@ -91,3 +91,23 @@ Changing content requires the existing new QA/content approval flow and a new re
 Changing canonical visual configuration or creating a newer render makes older exports invalid.
 An interrupted render that becomes stale is marked FAILED. A failed visual check never advances
 the content workflow to APPROVED, and a pre-existing content approval never bypasses visual review.
+
+## Delivery preflight (partial M6)
+
+`CREATED → VALIDATING → DRY_RUN_COMPLETE | BLOCKED | RETRY_WAIT | FAILED`.
+A due RETRY_WAIT may enter VALIDATING again. Maximum attempts: three; transient local failures
+schedule 1s/2s backoff. Early execution returns the saved waiting state. Policy/freshness failures
+are BLOCKED; damaged packages and malformed adapter output fail without retry. Interrupted RUNNING
+SkillRuns become INTERRUPTED on resume. A session advisory lock prevents concurrent execution, and
+the existing one-success-per-step constraint prevents duplicate committed success.
+
+- `GET /v1/delivery-targets` lists owned target revisions.
+- `POST /v1/renders/{id}/deliveries` takes only target_id, idempotency_key and optional mode=DRY_RUN.
+- `GET /v1/workflow-runs/{id}/deliveries` lists saved requests/receipts.
+- `GET /v1/deliveries/{id}` returns the request and its SkillRun attempts.
+- `POST /v1/deliveries/{id}/execute` executes/resumes an eligible saved request.
+
+Writes require OPERATOR. The current exact content and visual approvals are checked on start,
+claim and completion; actual bytes are checked before receipt commit. A changed request under the
+same tenant/key conflicts. Identical replay returns the historical result; it does not perform a
+new check. A terminal failure needs correction and an explicit new request. Nothing is posted.

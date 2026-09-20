@@ -91,7 +91,7 @@ That adapter is **not wired into the persisted workflow** and no live OpenAI cal
 | Database | Migration from an empty disposable database through 0003 passed; the standalone development database was migrated and seeded. |
 | In-process visual acceptance | Passed with persisted separate operator/approver API simulation, checked export, stale-revision denial and blocked-content denial. |
 | Console-proxy HTTP acceptance | Current machine-readable report records **PASS / CONSOLE_PROXY_HTTP**, completed `2026-09-20T19:39:44.166963+00:00`. It exercised authenticated JSON, PNG and ZIP through the console proxy. |
-| Hosted CI for the M3 branch | **Pending first push and run.** Earlier M2 CI does not verify these new changes. |
+| Hosted CI for the M3 branch | **Passed** for commit `8827816`: [run 35533385755](https://github.com/growieai/mediaos/actions/runs/35533385755), completed `2026-09-20T19:49:02Z`. This includes clean migrations, all 188 tests, quality checks, frontend build, Docker startup and persisted acceptance through the console proxy. |
 
 New tests exercise deterministic rendering, actual file hashes, newline coverage, overflow, missing disclosure, contrast/glyph checks, invalid references, immutable revisions, protected runtime writes, cross-tenant operations, exact approval linkage, rejection, stale configuration/content, concurrent idempotency, interruption recovery, tampered files and model selection boundaries. Normal tests do not require a live government site, AI account or publishing platform.
 

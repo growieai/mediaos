@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import DeliveryPreflight from "./DeliveryPreflight";
 
 type Workflow = {
   id: string;
@@ -297,6 +298,7 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
         </fieldset>}
         {visualDecision && <p>Decision recorded at {new Date(visualDecision.created_at).toLocaleString()} by {visualDecision.approver_id}.{visualDecision.comment ? ` Comment: ${visualDecision.comment}` : ""}</p>}
         <p><button disabled={busy || !contentApproved || status !== "PASS" || visualDecision?.decision !== "APPROVE" || stale} onClick={() => action(download)}>Download approved carousel ZIP</button></p>
+        <DeliveryPreflight key={`${tenant}:${run.id}:${current.id}`} token={token} tenant={tenant} workflowId={run.id} renderId={current.id} allowed={operator && contentApproved && status === "PASS" && visualDecision?.decision === "APPROVE" && !stale} />
       </>}
     </>}
     {!loading && collection.renders.length === 0 && <p>No saved renders for this workflow.</p>}

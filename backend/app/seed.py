@@ -120,6 +120,9 @@ def main():
     else:
         tokens = {role: secrets.token_urlsafe(32) for role in ("OPERATOR", "APPROVER", "ADMIN")}
     ids = seed(engine, "growie", "Growie", "Sofía", "Spain SMB Growth", config, tokens)
+    from app.delivery.seed import seed_delivery_targets
+
+    seed_delivery_targets(engine, ids["tenant_id"])
     from app.rendering.seed import seed_visual_config
 
     reference_metadata_path = root / "references/v1/metadata.json"

@@ -68,3 +68,15 @@ PNG previews require tenant authentication; credentials never enter URLs. The pr
 JSON, PNG and ZIP response types, sanitizes attachment names, and sets no-store/nosniff headers.
 Local storage must be replaced by durable private object storage and backup/retention procedures
 before multi-host production operation. No social publishing is enabled by visual approval.
+
+## Delivery preflight boundary
+
+Migration 0004 forces tenant RLS and restricts direct writes to target/run tables. Only guarded
+start/claim/complete/fail functions are callable by authenticated operators. Completion validates
+same-tenant exact approvals, latest enabled target and current export eligibility, plus exact caption,
+ordered media hashes and a typed no-network receipt. Target insertion and execution serialize on the
+same tenant/target lock. Existing workflow/source/configuration locks remain authoritative.
+
+The only accepted mode is DRY_RUN. Requests cannot provide media URLs, captions, access tokens or
+post IDs. No social client is instantiated. Auto-publish, auto-reply, video, external creators and
+paid model execution remain disabled server-side. An internal receipt is not an approval to dispatch.

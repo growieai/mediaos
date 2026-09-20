@@ -71,7 +71,7 @@ def verified_zip(content: bytes, rendered: dict, directory: Path) -> dict:
     return {"zip_sha256": hashlib.sha256(content).hexdigest(), "slides": slide_checks}
 
 
-def exercise(client, credentials: dict, report: dict, directory: Path) -> None:
+def exercise(client, credentials: dict, report: dict, directory: Path, delivery=False) -> None:
     operator = {
         "Authorization": "Bearer " + credentials["tokens"]["OPERATOR"],
         "X-Tenant-ID": credentials["tenant_id"],
@@ -173,6 +173,16 @@ def exercise(client, credentials: dict, report: dict, directory: Path) -> None:
     report["initial_render_id"] = rendered["id"]
     report["initial_manifest_hash"] = rendered["manifest_hash"]
     report["initial_artifacts"] = decision(run)
+    delivery_request: dict = {}
+    if delivery:
+        targets = call("GET", "delivery-targets")
+        require(bool(targets), "Seed a dry-run delivery target first")
+        target = max(targets, key=lambda item: item["version"])
+        require(
+            target["mode"] == "DRY_RUN" and target["enabled"], "Target must be enabled for dry run"
+        )
+        delivery_request = {"target_id": target["id"], "idempotency_key": str(uuid4())}
+        call("POST", f"renders/{rendered['id']}/deliveries", body=delivery_request, expected=409)
     preview = request("GET", f"renders/{rendered['id']}/slides/1")
     require(
         hashlib.sha256(preview.content).hexdigest() == rendered["manifest"]["slides"][0]["sha256"],
@@ -219,6 +229,43 @@ def exercise(client, credentials: dict, report: dict, directory: Path) -> None:
         "unauthorized_tenant_context_rejected": True,
     }
 
+    if delivery:
+        saved = call("POST", f"renders/{rendered['id']}/deliveries", body=delivery_request)
+        require(saved["status"] == "DRY_RUN_COMPLETE", "Delivery preflight did not complete")
+        receipt = saved["receipt"]
+        require(
+            receipt["mode"] == "DRY_RUN"
+            and receipt["network_performed"] is False
+            and receipt["post_id"] is None
+            and receipt["published_at"] is None,
+            "Delivery receipt must report no publishing",
+        )
+        repeated_delivery = call(
+            "POST", f"renders/{rendered['id']}/deliveries", body=delivery_request
+        )
+        require(
+            repeated_delivery["id"] == saved["id"], "Repeated delivery duplicated the saved receipt"
+        )
+        require(len(saved["attempts"]) == 1, "Delivery attempt was not persisted exactly once")
+        attempt = saved["attempts"][0]
+        require(
+            attempt["status"] == "SUCCEEDED"
+            and attempt["provider"] == "mock"
+            and attempt["is_mock"]
+            and float(attempt["cost"]) == 0,
+            "Dry-run delivery usage metadata is invalid",
+        )
+        call("GET", f"deliveries/{saved['id']}", foreign_context, expected=401)
+        report["delivery"] = {
+            "id": saved["id"],
+            "status": saved["status"],
+            "receipt": receipt,
+            "skill_run_id": attempt["id"],
+            "idempotency_passed": True,
+            "approval_required": True,
+            "unauthorized_tenant_rejected": True,
+        }
+
     # A real, safe text change uses an existing allowed creative template. The
     # historical approval and ZIP remain evidence of an earlier revision only.
     revised_draft = copy.deepcopy(draft)
@@ -227,6 +274,14 @@ def exercise(client, credentials: dict, report: dict, directory: Path) -> None:
     changed = call("POST", f"workflow-runs/{run['id']}/revisions", body=revised_draft)
     require(changed["qa_report_id"] is None, "Revision did not invalidate old QA")
     call("GET", f"renders/{rendered['id']}/export", expected=409)
+    if delivery:
+        call(
+            "POST",
+            f"renders/{rendered['id']}/deliveries",
+            body={**delivery_request, "idempotency_key": str(uuid4())},
+            expected=409,
+        )
+        report["delivery"]["stale_render_rejected"] = True
     call("POST", f"workflow-runs/{run['id']}/approve", approver, decision(run), expected=409)
     fresh = call("POST", f"workflow-runs/{run['id']}/execute")
     require(
@@ -344,7 +399,7 @@ def exercise(client, credentials: dict, report: dict, directory: Path) -> None:
     }
 
 
-def main() -> None:
+def main(*, delivery=False) -> None:
     target = os.environ.get("ACCEPTANCE_API_URL")
     via_console = os.environ.get("ACCEPTANCE_VIA_CONSOLE") == "true"
     if via_console and not target:
@@ -396,7 +451,7 @@ def main() -> None:
     )
     try:
         with connection as client:
-            exercise(client, credentials, report, directory)
+            exercise(client, credentials, report, directory, delivery=delivery)
         report["status"] = "PASS"
     except Exception as exc:
         report["status"] = "FAILED"
@@ -404,12 +459,16 @@ def main() -> None:
         raise
     finally:
         report["completed_at"] = datetime.now(UTC).isoformat()
-        (REPO_ROOT / ".local/visual-acceptance-report.json").write_text(
+        report_path = (
+            "delivery-acceptance-report.json" if delivery else "visual-acceptance-report.json"
+        )
+        (REPO_ROOT / ".local" / report_path).write_text(
             json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8"
         )
     print(
-        "Visual acceptance passed. Approvals were simulated; nothing was published. "
-        "Report: .local/visual-acceptance-report.json. A fresh render awaits your own review."
+        f"{'Delivery preflight' if delivery else 'Visual'} acceptance passed. "
+        "Approvals were simulated; nothing was published. "
+        f"Report: .local/{report_path}. A fresh render awaits your own review."
     )
 
 

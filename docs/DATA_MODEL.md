@@ -68,3 +68,19 @@ New content, QA, visual configuration or render revisions cannot inherit an earl
 `visual.render` records a deterministic SkillRun and zero-cost CostEvent. Interrupted attempts are
 preserved. Imported reference images record provider/tool and prompt provenance separately; their
 unreported model/tokens/cost are null. They are not represented as zero-cost runtime model calls.
+
+## Delivery preflight (0004)
+
+`delivery_targets` stores immutable, consecutive configuration versions scoped by tenant and logical
+target key. Only DRY_RUN mode and the typed dry-run adapter configuration are accepted. New versions
+can disable a target; execution requires its latest enabled version. There are no credentials here.
+
+`delivery_runs` pins the exact render manifest, target version, workflow, asset/research/QA revisions,
+content approval and visual approval. Composite foreign keys enforce ownership and approval lineage.
+Tenant/key uniqueness plus a canonical request hash make creation idempotent. State, attempt count,
+retry timestamp, errors and timestamps persist before work. A terminal successful run stores immutable
+schema-versioned plan and receipt payloads with canonical hashes. No external post exists.
+
+Both tables force RLS and grant runtime SELECT only. Guarded functions perform writes. Terminal
+deliveries and all target versions are immutable. `delivery.dry_run` SkillRun attempts and CostEvents
+explicitly record provider=mock, zero tokens and zero cost; audit events record each transition.

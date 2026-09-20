@@ -114,3 +114,16 @@ The opt-in live acceptance command uses current official responses and writes `.
 Internal APIs: GET intelligence/sources, GET intelligence/audiences, POST intelligence/ingestions, GET intelligence/ingestions/{id}, POST intelligence/ingestions/{id}/execute, GET intelligence/opportunities, GET intelligence/opportunities/{id}, POST intelligence/opportunities/{id}/evaluate, POST intelligence/opportunities/{id}/workflow, all under /v1. All require authenticated tenant context; writes require OPERATOR.
 
 M0/M1 invariants and the M2 tests now pass in [hosted CI](https://github.com/growieai/mediaos/actions/runs/35529691067), including container builds, startup, migration, seed and approval acceptance through the running API. The Windows host still uses native PostgreSQL; its local launcher and prepared human-review flow are documented in TESTING.md. Live-source availability and programme windows can change; acceptance must fail rather than fabricate a qualifying opportunity.
+
+## Visual and delivery testing
+
+M3's [hosted verification](https://github.com/growieai/mediaos/actions/runs/35533385755) passed with
+188 tests, clean migrations, frontend build, Docker startup and visual approval/export through the
+console proxy. The Windows host continues to use the standalone native PostgreSQL instance.
+
+Run migrate and seed again for migration 0004 and the local DRY_RUN target, then build/restart the
+API and console. `python scripts/dev.py delivery-acceptance` exercises the content/visual approval
+flow and the saved delivery rehearsal. No additional package, AI key or social account is required.
+The report is `.local/delivery-acceptance-report.json`; approval requests in this harness are
+simulations, and it leaves a fresh content/render revision for the user's review. See
+[DELIVERY_TESTING.md](DELIVERY_TESTING.md) for manual and console-proxy instructions.

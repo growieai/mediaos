@@ -5,7 +5,10 @@ M3 is visual production.** The old ingestion/visual sections below are historica
 additional completed milestones. M0/M1 remains frozen at `a021ac1`; M2 implementation and
 verification are recorded in `MILESTONE_2_IMPLEMENTATION_REPORT.md`.
 
-Current branch: `milestone-3-visual-production`. M3 adds a proposed versioned character pack,
+M3 is committed at `8827816` on `milestone-3-visual-production`, with passing hosted CI including Docker.
+Current work continues on `milestone-6-delivery-preflight`: the original M6's internal delivery rehearsal,
+without live account connection or public posting. This is partial M6, not a completed Instagram integration.
+M3 adds a proposed versioned character pack,
 deterministic 1080×1350 rendering, immutable private PNG files/manifests, visual QA, separate
 guarded visual approval, and checked ZIP export. Its one-screen preview also delivers the
 starter's Milestone 5 preview capability. Human review is required before treating Sofía's
@@ -16,7 +19,7 @@ The remaining roadmap proceeds one verified loop at a time:
 | Capability | Independent work | Live dependency / completion gate |
 | --- | --- | --- |
 | Typed model skills | Strict fact/template selection adapter and mock transport tests | User chose mock mode until credentials are configured. Persist real attempts/usage/cost semantics before enabling the adapter; no live API result is claimed. |
-| Visual approval | Exact file preview, QA findings, human decision and private ZIP export | New PostgreSQL negative tests, inspected images, browser acceptance and CI must pass. Durable object storage is required for production. |
+| Visual approval | Exact file preview, QA findings, human decision and private ZIP export; 188 tests and hosted Docker/console-proxy acceptance passed for M3 | User review of proposed character appearance; durable object storage is required for production. |
 | Instagram (original M6) | Dry-run adapter, persisted intent, idempotency and reconciliation | User will connect an account later. Permissions, token storage, HTTPS media delivery and explicit dispatch authorization are required for a real post. |
 | Metrics (M7) | Typed metric snapshots and content/post lineage | Actual connected post and verified insights access. Missing metrics remain unknown, never zero. |
 | Community (M8) | Idempotent events, classifications and reviewed reply drafts | Webhooks, account permissions and explicit send authorization. Automatic comments/DMs remain disabled. |

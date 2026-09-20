@@ -80,6 +80,8 @@ def metadata():
             "visual_config_versions",
             "render_runs",
             "visual_approval_records",
+            "delivery_targets",
+            "delivery_runs",
         ],
     )
     return meta
