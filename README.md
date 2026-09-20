@@ -9,7 +9,7 @@ Milestones 0/1 implement:
 
 Every step, attempt, artifact and state change is persisted in PostgreSQL. M2 adds bounded official-source discovery, immutable raw snapshots, opportunity versions, verification, audience scoring and sourced drafts. Live workflows use deterministic typed skills with zero model cost; manual mock workflows remain available. There is no rendering or publishing.
 
-Baseline `a021ac1` is frozen as **M0/M1 — Code Complete / Environment Verification Pending**. Docker and hosted CI remain operational checks until actually executed. M2 development is isolated on `milestone-2-spain-intelligence`.
+Baseline `a021ac1` remains frozen. Its M0/M1 invariants now pass in the M2 integration suite, including [hosted CI and container startup/approval acceptance](https://github.com/growieai/mediaos/actions/runs/35529691067). M2 development is isolated on `milestone-2-spain-intelligence`; Cámara access permission remains outstanding.
 
 ## Quick start
 

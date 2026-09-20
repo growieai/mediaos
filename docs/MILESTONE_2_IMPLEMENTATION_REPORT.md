@@ -2,7 +2,7 @@
 
 Branch: `milestone-2-spain-intelligence`. Baseline: `a021ac1`, frozen as **M0/M1 — Code Complete / Environment Verification Pending**.
 
-The live BDNS-to-Sofía pipeline has been demonstrated through protected approval. Full M2 sign-off is not claimed while Cámara automated access remains disabled pending permission. Docker and hosted CI are operational follow-ups and are not represented as run locally.
+The live BDNS-to-Sofía pipeline has been demonstrated through protected approval and is ready for internal testing. Full three-source M2 sign-off is not claimed while Cámara automated access remains disabled pending permission. Docker builds and runtime acceptance now pass in hosted Linux CI; this Windows machine runs the equivalent native PostgreSQL setup.
 
 ## Implementation
 
@@ -91,10 +91,12 @@ The M1 state machine remains SOURCE_CAPTURED → RESEARCHING → RESEARCH_COMPLE
 - Extraction and scoring are deterministic. Unknown legal conditions, relative dates, unparsed PDFs and incomplete eligibility require human review. Documents exceeding the typed 100-fact limit are retained as raw evidence with a recorded extraction failure. Structured semantic/model extraction is not required for the demonstrated official structured fields and is not implemented.
 - Conflicts are immutable and unresolved until a future explicit review/resolution mechanism. There is no automatic merge or conflict dismissal.
 - Mission policies/source definitions are maintenance-seeded data. There is no public creator/configuration UI or production scheduler. Government Retry-After cooldowns are shared in PostgreSQL. Minimum request spacing and concurrency locks are process-local; a distributed production worker fleet would also need shared request-slot allocation.
-- Docker is unavailable on this host; local container execution remains unverified. Hosted CI has not run because the repository has no configured remote. An empty public `growieai/mediaos` repository was found, and destination/publication confirmation is pending before source is pushed. Deployment hardening, backup/restore exercises, secret rotation and production service rollout remain deferred.
+- Docker is unavailable on this Windows host, so local container execution is not claimed. Hosted Linux CI has verified container builds and runtime acceptance. Both milestone branches were pushed to public `growieai/mediaos` after explicit user authorization. Deployment hardening, backup/restore exercises, secret rotation and production service rollout remain deferred.
 - M3 visual identity/reference packs, rendering, image generation and visual QA remain untouched. Video, social publishing, comments/DMs, audit products, marketplace, external signup/creator UI and billing remain deferred.
 
 ## Run locally
+
+For the already prepared local console, credentials location, start/stop launcher and approval test, use [TESTING.md](TESTING.md). A fresh revision of workflow `b740e4b4-0162-44ed-8c1d-b8db6a35ded5` now waits for the user's own approval; the historical acceptance record above still describes its earlier revision.
 
 ```bash
 python scripts/dev.py setup
@@ -124,3 +126,13 @@ Normal tests do not access government sites. The acceptance command explicitly d
 - [Cámara electronic-office access conditions](https://sede.camara.es/sede/html/titularidad)
 
 Recorded fixture URLs, capture times and SHA-256 values are in backend/tests/fixtures/official/manifest.json. Git preserves their bytes across platforms.
+
+## Testing handoff follow-up
+
+On 2026-09-21 local time, [hosted run 35529691067](https://github.com/growieai/mediaos/actions/runs/35529691067) passed the complete 102-test suite, lint/format/types, frontend build, Docker builds, container startup, migration and seed, console HTTP check, and persisted acceptance through the running container API. An earlier run verified the original M2 commit as well. No government website is required by these CI jobs.
+
+The local native API also passed acceptance over real HTTP. The console proxy was verified with authenticated requests through port 3000. The Windows launcher was checked for startup, authenticated readiness and repeated-start process reuse. It starts only loopback services, stores no credentials in command arguments, and logs under the ignored .local directory. The console tab is open for testing; credentials remain in the local seed file and must be pasted by the reviewer.
+
+The prepared live workflow has asset revision `9a54d50f-c3c5-4f64-96b8-8896afb3d458`, QAReport `9e8b5160-09dd-44da-a732-9a11783bad55`, QA PASS and AWAITING_APPROVAL. Unsupported-claim workflow `41a74282-f2b4-4c04-bce0-9f457154d279` remains BLOCKED. These are in standalone mediaos_dev, which normal tests do not reset.
+
+The testing-handoff changes received an additional Codex review. Its one material finding, preserving the console process record during partial API recovery, was fixed and checked by terminating only the verified API tree, restarting it, and confirming both service records and authenticated readiness. Windows PowerShell 5.1 repeated-start array handling was also corrected and verified.

@@ -39,11 +39,10 @@ $services = @(
     @{ name='api'; port=8000; executable=$pythonPath; directory=(Join-Path $projectRoot 'backend'); arguments=@('-m','uvicorn','app.main:app','--host','127.0.0.1','--port','8000','--no-access-log') },
     @{ name='console'; port=3000; executable=$nodePath; directory=(Join-Path $projectRoot 'apps/console'); arguments=@(('"' + $nextPath + '"'),'start','--hostname','127.0.0.1','--port','3000') }
 )
-$started = @()
+$started = @($records | Where-Object { Get-OwnedProcess $_ })
 foreach ($service in $services) {
     $existing = @($records | Where-Object { $_.name -eq $service.name })
     if ($existing.Count -gt 0 -and (Get-OwnedProcess $existing[0])) {
-        $started += $existing[0]
         continue
     }
     $socket = New-Object System.Net.Sockets.TcpClient

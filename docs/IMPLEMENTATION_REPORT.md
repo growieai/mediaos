@@ -2,6 +2,8 @@
 
 Frozen baseline: **a021ac1 — M0/M1 — Code Complete / Environment Verification Pending**. The results below describe that baseline. Docker execution and hosted CI were not verified at baseline and must not be represented as complete without an actual run. Milestone 2 continues separately on `milestone-2-spain-intelligence`; see its implementation report.
 
+Verification follow-up, 2026-09-21 local time: all 60 baseline tests pass within the 102-test M2 suite. [Hosted CI](https://github.com/growieai/mediaos/actions/runs/35529691067) successfully built and started the Docker services, migrated an empty standalone container database, seeded it and ran the persisted approval/stale-revision/blocked-claim acceptance through its HTTP API. This resolves the container/hosted-CI follow-up for the integrated M0–M2 branch; the historical results below remain unchanged.
+
 Repository: C:/mediaos/growie-media-os-starter. The starter was imported into Git with baseline commit f7a8061.
 
 ## Files changed
