@@ -76,9 +76,17 @@ The receipt records `network_performed=false`, null post/publish IDs and timesta
 and media hashes, mock provider and zero cost. Its previous approval remains historical after the
 controlled content revision. Use current IDs from `.local/delivery-acceptance-report.json` if rerun.
 
-Hosted CI for this branch is pending its first push/run. M3's inherited hosted check is separately
-confirmed: [run 35533385755](https://github.com/growieai/mediaos/actions/runs/35533385755) passed for
-`8827816`, including Docker/console-proxy acceptance. It does not verify 0004.
+Implementation commit: `5b567d5`. The final full rerun passed **234 tests** in 235.39 seconds,
+with only the pre-existing Starlette/AnyIO deprecation warning. Lint, formatting and mypy passed.
+
+Hosted CI for this branch is pending. Automatic approval review rejected its public Git push
+because the existing explicit publication permission named only the M0/M1 and M2 branches.
+Explicit permission to publish `milestone-6-delivery-preflight` to `growieai/mediaos` is required;
+the local commit, migrated app and tests are complete. No workaround publication was attempted.
+
+M3's inherited hosted check is separately confirmed:
+[run 35533385755](https://github.com/growieai/mediaos/actions/runs/35533385755) passed for `8827816`,
+including Docker/console-proxy acceptance. It does not verify 0004.
 
 The delivery tests cover exact approved package/caption hashes, no HTTP calls, permission and RLS
 denial, direct SQL bypass attempts, wrong-tenant references, missing approvals, stale content and
