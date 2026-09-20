@@ -8,7 +8,7 @@ $pythonPath = Join-Path $projectRoot 'backend/.venv/Scripts/python.exe'
 $nextPath = Join-Path $projectRoot 'apps/console/node_modules/next/dist/bin/next'
 $records = @()
 if (Test-Path -LiteralPath $processFile) {
-    $records = @(Get-Content -LiteralPath $processFile -Raw | ConvertFrom-Json)
+    $records = Get-Content -LiteralPath $processFile -Raw | ConvertFrom-Json
 }
 
 function Get-OwnedProcess($entry) {
