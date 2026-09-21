@@ -6,8 +6,11 @@ additional completed milestones. M0/M1 remains frozen at `a021ac1`; M2 implement
 verification are recorded in `MILESTONE_2_IMPLEMENTATION_REPORT.md`.
 
 M3 is committed at `8827816` on `milestone-3-visual-production`, with passing hosted CI including Docker.
-Current work continues on `milestone-6-delivery-preflight`: the original M6's internal delivery rehearsal,
-without live account connection or public posting. This is partial M6, not a completed Instagram integration.
+The original M6's internal delivery rehearsal is published on `milestone-6-delivery-preflight`,
+with passing hosted CI through `a45c29a`. It has no live account connection or public posting;
+this is partial M6, not a completed Instagram integration. Current work continues on
+`milestone-7-metrics-foundation`: manual/fixture observations and descriptive comparisons.
+It is partial M7; verified platform insights remain dependent on an account and actual posts.
 M3 adds a proposed versioned character pack,
 deterministic 1080×1350 rendering, immutable private PNG files/manifests, visual QA, separate
 guarded visual approval, and checked ZIP export. Its one-screen preview also delivers the
@@ -21,7 +24,7 @@ The remaining roadmap proceeds one verified loop at a time:
 | Typed model skills | Strict fact/template selection adapter and mock transport tests | User chose mock mode until credentials are configured. Persist real attempts/usage/cost semantics before enabling the adapter; no live API result is claimed. |
 | Visual approval | Exact file preview, QA findings, human decision and private ZIP export; 188 tests and hosted Docker/console-proxy acceptance passed for M3 | User review of proposed character appearance; durable object storage is required for production. |
 | Instagram (original M6) | Dry-run adapter, persisted intent, idempotency and reconciliation | User will connect an account later. Permissions, token storage, HTTPS media delivery and explicit dispatch authorization are required for a real post. |
-| Metrics (M7) | Typed metric snapshots and content/post lineage | Actual connected post and verified insights access. Missing metrics remain unknown, never zero. |
+| Metrics (M7) | Immutable manual/fixture metric snapshots, exact historical render lineage and descriptive comparisons | Actual connected post and verified insights access. Missing metrics remain unknown, never zero; manual reports never become platform-verified data. |
 | Community (M8) | Idempotent events, classifications and reviewed reply drafts | Webhooks, account permissions and explicit send authorization. Automatic comments/DMs remain disabled. |
 | Conversion (M9) | Consent-aware requests, attribution and dry-run handoff contract | Explicitly chosen destination and credentials. Existing Growie production services/database remain out of bounds. |
 | Reels (M10) | Begin only after carousel/source QA and measured metrics are stable | Final character selection, video provider, suitable voice rights, durable storage and audiovisual QA. A storyboard stub is not completed video production. |

@@ -127,3 +127,12 @@ flow and the saved delivery rehearsal. No additional package, AI key or social a
 The report is `.local/delivery-acceptance-report.json`; approval requests in this harness are
 simulations, and it leaves a fresh content/render revision for the user's review. See
 [DELIVERY_TESTING.md](DELIVERY_TESTING.md) for manual and console-proxy instructions.
+
+## Manual metrics foundation
+
+Migration 0005 adds immutable metric subjects, snapshots and descriptive learning reports. No new
+runtime package or external account is needed. Run migrate, seed, build and restart using the same
+standalone infrastructure. `python scripts/dev.py metrics-acceptance` runs the existing approval,
+render and delivery simulation followed by synthetic metric observations. Its report is
+`.local/metrics-acceptance-report.json`. It never contacts a social platform, and does not label
+fixture observations as real performance. [METRICS_TESTING.md](METRICS_TESTING.md) describes manual use.

@@ -77,3 +77,12 @@ the console. It validates the exact approved caption and PNG files, then saves a
 receipt. No account is connected and nothing is posted. A previous receipt does not authorize a
 future post. Run `python scripts/dev.py delivery-acceptance` for the persisted acceptance simulation.
 See [Delivery testing](docs/DELIVERY_TESTING.md) for the controls, limits and remaining dependencies.
+
+## Reported metrics (partial M7)
+
+The console can attach manual self-reported observations or explicitly synthetic fixtures to an
+exact historically approved render. Counts remain immutable; unavailable values stay Unknown.
+Two observations with matching definitions can produce a saved descriptive comparison, including
+reported decreases. This does not fetch Instagram insights, infer causes or update editorial policy.
+Run `python scripts/dev.py metrics-acceptance` after migration/seed to exercise the entire local
+flow with clearly labelled fixture observations. See [Metrics testing](docs/METRICS_TESTING.md).

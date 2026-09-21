@@ -82,6 +82,9 @@ def metadata():
             "visual_approval_records",
             "delivery_targets",
             "delivery_runs",
+            "metric_subjects",
+            "metric_snapshots",
+            "learning_reports",
         ],
     )
     return meta

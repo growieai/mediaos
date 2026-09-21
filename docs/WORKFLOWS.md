@@ -111,3 +111,30 @@ Writes require OPERATOR. The current exact content and visual approvals are chec
 claim and completion; actual bytes are checked before receipt commit. A changed request under the
 same tenant/key conflicts. Identical replay returns the historical result; it does not perform a
 new check. A terminal failure needs correction and an explicit new request. Nothing is posted.
+
+## Historical metrics workflow (partial M7)
+
+`historically approved render → MANUAL/SELF_REPORTED or FIXTURE subject → immutable observations
+→ descriptive comparison`. This flow leaves the original WorkflowRun state and editorial policy
+unchanged. It does not require current export eligibility: an expired source or newer asset revision
+does not invalidate the historical association. It cannot grant permission for a new dispatch.
+
+- `POST/GET /v1/workflow-runs/{id}/metric-subjects` registers or lists historical associations.
+- `GET /v1/metric-subjects/{id}` returns the subject and its saved observations/reports.
+- `POST /v1/metric-subjects/{id}/snapshots` imports a typed, explicitly manual or fixture observation.
+- `POST/GET /v1/metric-subjects/{id}/learning-reports` creates or lists descriptive comparisons.
+
+Writes require OPERATOR and authenticated tenant context. Observation provenance is inherited from
+the immutable subject. Learning accepts only two snapshots of that subject with matching scope and
+definitions and strictly increasing UTC times. It subtracts reported counters without turning
+unknowns into zeros. Negative differences remain visible as possible corrections; neither positive
+nor negative differences establish what caused an outcome. There is no cross-post ranking or
+automatic policy update.
+
+Each operation uses a tenant-scoped key and canonical input hash. An identical replay returns the
+saved row; changed input conflicts. The learning function computes and commits the report, completed
+`learning.describe` attempt, zero-cost telemetry and audit event in one SQL transaction. Validation
+rejection or transaction failure rolls back the entire operation; it does not fabricate persisted
+failed-attempt history. After an operational interruption or uncertain response, retry the same
+request/key to recover the committed result or execute an uncommitted operation once. There is no
+external side effect, background retry scheduler or live insights fetch in this slice.

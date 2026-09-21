@@ -11,6 +11,7 @@ from app.config import get_settings
 from app.delivery.routes import router as delivery_router
 from app.intelligence.http import SourcePolicyError, SourceUnavailable
 from app.intelligence.routes import router as intelligence_router
+from app.metrics.routes import router as metrics_router
 from app.observability import configure_logging, request_id
 from app.rendering.routes import router as rendering_router
 from app.services.workflows import ConflictError, SkillFailed
@@ -130,6 +131,7 @@ app.include_router(router)
 app.include_router(intelligence_router)
 app.include_router(rendering_router)
 app.include_router(delivery_router)
+app.include_router(metrics_router)
 
 
 @app.exception_handler(SourceUnavailable)

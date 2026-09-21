@@ -80,3 +80,23 @@ same tenant/target lock. Existing workflow/source/configuration locks remain aut
 The only accepted mode is DRY_RUN. Requests cannot provide media URLs, captions, access tokens or
 post IDs. No social client is instantiated. Auto-publish, auto-reply, video, external creators and
 paid model execution remain disabled server-side. An internal receipt is not an approval to dispatch.
+
+## Historical metrics boundary (partial M7)
+
+Migration 0005 uses forced tenant RLS, composite ownership/lineage constraints and immutable tables.
+Runtime has SELECT access only; authenticated OPERATOR calls to guarded functions create subjects,
+observations and comparisons. PostgreSQL validates canonical input hashes, exact payload keys,
+nonnegative integer-or-null counters, UTC observation times and same-subject comparison references.
+It computes comparison output itself rather than accepting caller-written conclusions.
+
+MANUAL values remain SELF_REPORTED even when an operator supplies an external reference. FIXTURE
+values remain synthetic and cannot acquire an external reference or be relabelled in place. Original
+evidence text and exact hashes are retained. References and evidence are data: no URL is fetched and
+no platform client is invoked. Callers should supply only the aggregate counts and non-secret
+supporting information needed for review; raw credentials and private audience records are not needed.
+
+Subject registration requires exact historical content and visual APPROVE records. It deliberately
+does not call the current export guard because historical measurement is separate from publishing
+permission. The existing export/approval guards remain unchanged. Reports cannot alter workflow
+state, source verification or mission weights, and cannot claim causation. Learning, SkillRun,
+zero-cost telemetry and audit writes are atomic; idempotent replay prevents duplicate committed work.

@@ -84,3 +84,30 @@ schema-versioned plan and receipt payloads with canonical hashes. No external po
 Both tables force RLS and grant runtime SELECT only. Guarded functions perform writes. Terminal
 deliveries and all target versions are immutable. `delivery.dry_run` SkillRun attempts and CostEvents
 explicitly record provider=mock, zero tokens and zero cost; audit events record each transition.
+
+## Historical metrics foundation (0005, partial M7)
+
+`metric_subjects` pins the workflow, exact content/research/QA revisions, render manifest hash and
+historical content and visual approval records. MANUAL requires an operator-supplied external
+reference and records SELF_REPORTED verification. FIXTURE requires a null external reference and
+retains FIXTURE verification. The server derives ownership and lineage; callers cannot supply
+approval IDs or relabel an existing subject. A manual platform/reference pair is unique per tenant.
+
+`metric_snapshots` retains immutable schema-versioned input, supplied evidence text, metric-definition
+notes, canonical content hash, observation time, receipt time (`created_at`) and creator. Reach,
+saves, shares, comments and follows are explicit nonnegative integers or null; null means unknown,
+whereas zero is a reported value. Counts are capped at the JavaScript safe-integer limit. Timestamps
+must be UTC and cannot be in the future. The only supported scope is LIFETIME_CUMULATIVE. Evidence
+is retained as an operator assertion, not independently verified platform data.
+
+`learning_reports` binds two snapshots through composite foreign keys to the same subject. It stores
+their exact IDs/hashes, the deterministic algorithm version, typed comparisons, provenance and
+limitations. Matching definitions and scope are mandatory; the second observation must be later.
+Missing values produce unknown deltas, and no comparable values yields INSUFFICIENT_DATA. Decreases
+are preserved, not clamped or presented as proven audience loss. Reports explicitly record
+`causal_claim=false` and `policy_updated=false`.
+
+All three tables are immutable, force tenant RLS and allow runtime SELECT only. Guarded functions
+enforce tenant-scoped idempotency and append workflow audit events. A successful learning report,
+its deterministic `learning.describe` SkillRun and its zero-token, zero-cost CostEvent commit in one
+transaction. No model call or paid usage is represented by this computation.

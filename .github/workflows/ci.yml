@@ -1,4 +1,4 @@
-name: Foundation, intelligence, visuals and delivery preflight
+name: Foundation, intelligence, visuals, delivery and metrics
 on: [push, pull_request]
 permissions:
   contents: read
@@ -53,7 +53,7 @@ jobs:
         run: |
           python -m app.seed
           python -m app.acceptance
-          python -m app.delivery.acceptance
+          python -m app.metrics.acceptance
       - name: Frontend build
         working-directory: apps/console
         run: |
@@ -73,7 +73,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/ > /dev/null
           cd backend
           ACCEPTANCE_API_URL=http://127.0.0.1:8000 python -m app.acceptance
-          ACCEPTANCE_API_URL=http://127.0.0.1:3000 ACCEPTANCE_VIA_CONSOLE=true python -m app.delivery.acceptance
+          ACCEPTANCE_API_URL=http://127.0.0.1:3000 ACCEPTANCE_VIA_CONSOLE=true python -m app.metrics.acceptance
       - name: Container diagnostics
         if: failure()
         run: docker compose logs --no-color --tail=100

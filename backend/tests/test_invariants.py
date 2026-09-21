@@ -15,7 +15,7 @@ from app.services.workflows import Runner, create_run
 
 def test_migration_and_runtime_role(database):
     with database.connect() as c:
-        assert c.execute(text("select version_num from alembic_version")).scalar_one() == "0004"
+        assert c.execute(text("select version_num from alembic_version")).scalar_one() == "0005"
         unprotected = c.execute(
             text(
                 "select tablename from pg_tables where schemaname='public' and not rowsecurity and tablename not in ('principals','alembic_version')"

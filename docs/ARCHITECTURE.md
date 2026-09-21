@@ -79,3 +79,21 @@ Delivery state and attempts are persisted separately. WorkflowRun remains APPROV
 cannot advance it to a publishing state. Future live delivery requires a separate reviewed extension
 with durable dispatch intent, unknown-outcome reconciliation, account permissions and secret storage.
 Never convert a saved dry-run row into a live delivery or blindly retry an uncertain external post.
+
+## Historical metrics foundation (partial M7)
+
+Authenticated operators can associate manual observations or explicitly synthetic fixtures with an
+exact historically approved carousel render. MANUAL observations are SELF_REPORTED; an asserted
+external reference is not proof of a platform post. FIXTURE observations have no external reference.
+No account, insights API, scheduled collection or live performance verification is connected.
+
+The metrics service preserves immutable input payloads, supplied evidence text and canonical hashes.
+PostgreSQL computes a descriptive comparison of two observations of the same subject, with matching
+scope and definitions and strictly increasing UTC observation times. Unknown values remain null;
+negative deltas remain visible as possible reporting corrections. The typed service independently
+checks the SQL result. Comparisons make no causal claim and never modify editorial policy.
+
+Historical content and visual approvals establish the association without rerunning today's export
+freshness guard. New revisions or expired evidence do not erase historical measurements. Metrics
+cannot approve content, authorize export, infer that a dry run published anything, or change workflow
+state. Real platform collection and any reviewed policy-learning loop remain future work.

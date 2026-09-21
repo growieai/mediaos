@@ -399,7 +399,7 @@ def exercise(client, credentials: dict, report: dict, directory: Path, delivery=
     }
 
 
-def main(*, delivery=False) -> None:
+def main(*, delivery=False, after_exercise=None, report_prefix=None) -> None:
     target = os.environ.get("ACCEPTANCE_API_URL")
     via_console = os.environ.get("ACCEPTANCE_VIA_CONSOLE") == "true"
     if via_console and not target:
@@ -452,6 +452,8 @@ def main(*, delivery=False) -> None:
     try:
         with connection as client:
             exercise(client, credentials, report, directory, delivery=delivery)
+            if after_exercise is not None:
+                after_exercise(client, credentials, report)
         report["status"] = "PASS"
     except Exception as exc:
         report["status"] = "FAILED"
@@ -459,14 +461,13 @@ def main(*, delivery=False) -> None:
         raise
     finally:
         report["completed_at"] = datetime.now(UTC).isoformat()
-        report_path = (
-            "delivery-acceptance-report.json" if delivery else "visual-acceptance-report.json"
-        )
+        prefix = report_prefix or ("delivery" if delivery else "visual")
+        report_path = f"{prefix}-acceptance-report.json"
         (REPO_ROOT / ".local" / report_path).write_text(
             json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8"
         )
     print(
-        f"{'Delivery preflight' if delivery else 'Visual'} acceptance passed. "
+        f"{prefix.title()} acceptance passed. "
         "Approvals were simulated; nothing was published. "
         f"Report: .local/{report_path}. A fresh render awaits your own review."
     )
