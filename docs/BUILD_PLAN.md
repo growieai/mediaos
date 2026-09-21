@@ -10,6 +10,7 @@ The original M6's internal delivery rehearsal is published on `milestone-6-deliv
 with passing hosted CI through `a45c29a`. It has no live account connection or public posting;
 this is partial M6, not a completed Instagram integration. Current work continues on
 `milestone-7-metrics-foundation`: manual/fixture observations and descriptive comparisons.
+Its implementation `8f24688` passed 308 tests and hosted CI, including Docker and console acceptance.
 It is partial M7; verified platform insights remain dependent on an account and actual posts.
 M3 adds a proposed versioned character pack,
 deterministic 1080×1350 rendering, immutable private PNG files/manifests, visual QA, separate

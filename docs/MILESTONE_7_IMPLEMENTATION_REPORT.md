@@ -1,6 +1,7 @@
 # Milestone 7 metrics foundation implementation report
 
 Branch: `milestone-7-metrics-foundation`, following delivery preflight commit `a45c29a`.
+Implementation commit: `8f24688701feeb46bf458c698701a498a7e28ac5`, published with the user's explicit permission.
 
 **Scope: partial M7, manual/fixture metrics foundation.** This slice records observations against
 an exact historical carousel and computes descriptive differences. It does not connect Instagram,
@@ -115,7 +116,7 @@ This section records observed checks without treating pending runs as successful
 | Initial in-process persisted acceptance | Passed at `2026-09-21T06:19:35Z`; final post-fix acceptance also passed through the running console. |
 | Final console-proxy acceptance | Passed at `2026-09-21T06:24:37Z` with persisted approval, export, dry-run and fixture metrics. |
 | Final Codex review | No actionable regressions; independently reran 34 pure metrics cases, targeted Ruff and TypeScript checks. |
-| Hosted CI for M7 | Pending; inherited checks do not verify 0005. |
+| Hosted CI for M7 | [Run 35568720488](https://github.com/growieai/mediaos/actions/runs/35568720488) passed for `8f24688`, completed `2026-09-21T06:33:20Z`. |
 
 Codex review found a P2 response-integrity issue: schema serialization could normalize an equivalent
 UTC timestamp representation while returning the original payload hash. The service now validates
@@ -131,8 +132,10 @@ directory with approved access. The first integration pass also caught two asser
 where ownership-scoped lookups intentionally return 404; the tests now require that exact 404 and
 verify no record was saved. No tenant or approval guard was weakened.
 
-M6's hosted CI passed through `a45c29a`; this is inherited evidence for the delivery foundation,
-not a claim that M7 or its updated Docker/acceptance jobs passed. The metrics acceptance harness uses
+The M7 hosted run verified empty-database migrations, backend quality checks, all 308 tests, seed,
+acceptance simulations, frontend build, Docker configuration/builds/startup and persisted API and
+console-proxy acceptance. M6's earlier hosted CI separately passed through `a45c29a`.
+The metrics acceptance harness uses
 explicit FIXTURE counters, simulated approval identities and no social-platform call. Its report is
 saved to `.local/metrics-acceptance-report.json`; use that file's IDs after each successful rerun.
 
