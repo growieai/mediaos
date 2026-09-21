@@ -62,10 +62,12 @@ def main():
         run(PYTHON, "-m", "app.metrics.acceptance", cwd=BACKEND)
     elif action == "community-acceptance":
         run(PYTHON, "-m", "app.community.acceptance", cwd=BACKEND)
+    elif action == "video-preview":
+        run(PYTHON, "-m", "app.video_preview.cli", "--spec", "characters/sofia/video_concept.json", cwd=BACKEND)
     elif action == "down":
         run("docker", "compose", "down")
     else:
-        print("Commands: setup, up, migrate, seed, test, check, dev, acceptance, visual-acceptance, delivery-acceptance, metrics-acceptance, community-acceptance, down")
+        print("Commands: setup, up, migrate, seed, test, check, dev, acceptance, visual-acceptance, delivery-acceptance, metrics-acceptance, community-acceptance, video-preview, down")
 
 
 if __name__ == "__main__":

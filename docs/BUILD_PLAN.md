@@ -39,6 +39,11 @@ also require organizational identity/token lifecycle, private infrastructure, TL
 backup/restore checks, alerting, rollback and durable orchestration. CI verifies only the commits
 and flows that actually ran; no deployment to existing Growie services is authorized.
 
+The user's video-direction request adds a separate `video-concept-preview` branch: a local silent
+MP4 motion study with Sofía's proposed portrait, captions and cutaways. The chosen final direction
+is a speaking presenter. This prototype does not enable the runtime video flag or complete M10;
+see `VIDEO_PREVIEW.md` for the actual output and remaining speech/provider dependencies.
+
 ## Historical starter sequence
 
 ## Milestone 0 — repository can run

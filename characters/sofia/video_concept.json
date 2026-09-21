@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "preview_only": true,
+  "publishable": false,
+  "audio": "NONE",
+  "identity_status": "PROPOSED",
+  "subject_name": "Sofía",
+  "title": "Antes de ilusionarnos",
+  "disclosure": "Sofía es una creadora virtual generada con IA.",
+  "width": 1080,
+  "height": 1920,
+  "fps": 24,
+  "portrait_path": "characters/sofia/references/v1/portrait.png",
+  "regular_font_path": "backend/assets/fonts/Inter-Regular.ttf",
+  "bold_font_path": "backend/assets/fonts/Inter-Bold.ttf",
+  "scenes": [
+    {
+      "kind": "PORTRAIT",
+      "duration_seconds": 4,
+      "kicker": "ANTES DE ILUSIONARNOS",
+      "headline": "¿Una ayuda\npara tu negocio?",
+      "supporting": "Primero, tres preguntas.",
+      "caption": "¿Una ayuda para tu negocio? Antes de ilusionarnos, tres preguntas."
+    },
+    {
+      "kind": "QUESTION",
+      "duration_seconds": 4,
+      "kicker": "LA FUENTE",
+      "headline": "¿Quién\nla publica?",
+      "supporting": "Abre la fuente oficial.",
+      "caption": "Primero: ¿quién la publica? Vamos a la fuente oficial."
+    },
+    {
+      "kind": "QUESTION",
+      "duration_seconds": 4,
+      "kicker": "EL PLAZO",
+      "headline": "¿Sigue\nabierta?",
+      "supporting": "Comprueba la fecha.",
+      "caption": "Segundo: ¿sigue abierta? Comprueba la fecha antes de preparar papeles."
+    },
+    {
+      "kind": "QUESTION",
+      "duration_seconds": 5,
+      "kicker": "LOS REQUISITOS",
+      "headline": "¿Encaja\ncontigo?",
+      "supporting": "Revisa a quién va dirigida.",
+      "caption": "Y tercero: ¿encaja con tu negocio? Lee los requisitos y revisa las condiciones."
+    },
+    {
+      "kind": "CLOSING",
+      "duration_seconds": 5,
+      "kicker": "MENOS RUIDO. MÁS CRITERIO.",
+      "headline": "Primero,\nverificar.",
+      "supporting": "Guarda estas tres preguntas.",
+      "caption": "Fuente, plazo y requisitos. Guarda estas tres preguntas para la próxima ayuda."
+    }
+  ]
+}

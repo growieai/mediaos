@@ -32,6 +32,10 @@ Compose binds services to loopback and passes migration credentials only to main
 
 All external-creator, publishing, replies and video flags must remain false; enabling them fails startup. There is no publishing code, even for APPROVED content.
 
+The optional local video concept CLI is an isolated design tool with no database, provider or network
+access. It produces visibly labelled, silent, nonpublishable previews outside approved asset storage.
+Its manifest is not a WorkflowRun, QAReport or approval. See `VIDEO_PREVIEW.md`.
+
 Test data runs only in the explicit disposable mediaos_test database. Fixture markers cannot be removed after source submission and always block QA. Synthetic tests that exercise positive paths are not production content and must never be copied into production.
 
 ## Official-source trust boundary (M2)

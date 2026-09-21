@@ -1,5 +1,9 @@
 # Growie Media OS
 
+For the proposed speaking-presenter direction, see [Video preview](docs/VIDEO_PREVIEW.md).
+`python scripts/dev.py video-preview` creates a local silent MP4 concept with captions and cutaways;
+it does not enable paid AI, speech generation or publishing.
+
 For the prepared M0–M2 review flow and local startup, see [Testing guide](docs/TESTING.md).
 For rendered images and separate visual approval, see [Visual testing](docs/VISUAL_TESTING.md).
 
