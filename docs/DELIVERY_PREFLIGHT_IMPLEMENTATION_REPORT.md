@@ -79,10 +79,12 @@ controlled content revision. Use current IDs from `.local/delivery-acceptance-re
 Implementation commit: `5b567d5`. The final full rerun passed **234 tests** in 235.39 seconds,
 with only the pre-existing Starlette/AnyIO deprecation warning. Lint, formatting and mypy passed.
 
-Hosted CI for this branch is pending. Automatic approval review rejected its public Git push
-because the existing explicit publication permission named only the M0/M1 and M2 branches.
-Explicit permission to publish `milestone-6-delivery-preflight` to `growieai/mediaos` is required;
-the local commit, migrated app and tests are complete. No workaround publication was attempted.
+The user explicitly approved public publication of this branch. Commit `019c3fe` is published on
+`growieai/mediaos`, and [hosted run 35538971128](https://github.com/growieai/mediaos/actions/runs/35538971128)
+passed, completing at `2026-09-20T21:35:08Z`. It verified clean migrations, all 234 tests,
+quality checks, frontend build, Docker builds/startup and persisted console-proxy acceptance.
+The earlier publication gate is resolved. This completes verification of the internal dry run;
+it does not complete live Instagram integration.
 
 M3's inherited hosted check is separately confirmed:
 [run 35533385755](https://github.com/growieai/mediaos/actions/runs/35533385755) passed for `8827816`,
