@@ -1,5 +1,21 @@
 # Security
 
+Media provider secrets are environment-only `SecretStr` values and never part of profiles,
+audit payloads or console responses. Paid execution is off by default. An ADMIN must version
+a rate card and expiring spend policy before the runtime can reserve a paid attempt. A daily
+tenant lock protects concurrent reservations; failure/unknown outcome does not refund them.
+Provider account limits remain necessary because a configured rate card is not billing truth.
+
+New media/conversion tables force tenant RLS, use composite lineage constraints and deny direct
+runtime mutations. Exact human media approval cannot replace content approval. Preview and
+download retain parent/source locks while rechecking the actual files. The media fetcher only
+accepts the documented HeyGen CDN, pins validated public DNS addresses, rejects redirects and
+never forwards API credentials. JSON/MP4 responses are bounded and private; signed provider
+URLs are excluded from workflow/media API payloads. See [media setup](SPEAKING_VIDEO.md).
+
+Conversion consent is explicit and revocable. A prior content/comment approval is not consent.
+Fixtures remain permanently blocked for handoff; exports make no network request.
+
 An OPERATOR cannot approve content.
 
 OPERATOR can submit sources, execute/resume workflows and revise content. APPROVER can attest source evidence and approve/reject current passing revisions. ADMIN includes both permissions. Any internal tenant member can inspect their tenant's workflows. There is no public signup.

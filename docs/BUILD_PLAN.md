@@ -1,5 +1,12 @@
 # Build Plan — First Influencer (roadmap reconciliation)
 
+The `milestone-completion` branch adds M9 consent-aware manual handoff and the persisted M10
+speaking-video foundation. It does not mark all live milestones complete. New provider adapters,
+video QA/review and console controls are described in [SPEAKING_VIDEO.md](SPEAKING_VIDEO.md);
+actual remaining dependencies are in [MILESTONE_COMPLETION_REPORT.md](MILESTONE_COMPLETION_REPORT.md).
+Live speech/video, social dispatch/insights/community, actual conversion delivery and deployment
+remain acceptance gates. No secret, paid policy or externally sent message is seeded automatically.
+
 The user-defined milestones supersede the starter numbering below. **M2 is Spain Intelligence;
 M3 is visual production.** The old ingestion/visual sections below are historical scope, not
 additional completed milestones. M0/M1 remains frozen at `a021ac1`; M2 implementation and
@@ -12,7 +19,7 @@ this is partial M6, not a completed Instagram integration. The
 `milestone-7-metrics-foundation` branch adds manual/fixture observations and descriptive comparisons.
 Its implementation `8f24688` passed 308 tests and hosted CI, including Docker and console acceptance.
 It is partial M7; verified platform insights remain dependent on an account and actual posts.
-Current work continues on `milestone-8-community-review`: internal manual comment classification,
+The `milestone-8-community-review` foundation adds internal manual comment classification,
 evidence-backed reply drafts, QA and separate human review. It has no inbound social integration
 or sending capability. This is partial M8; the live community milestone remains dependent on an
 account, verified inbound events, permissions and a dispatch policy.
@@ -31,8 +38,8 @@ The remaining roadmap proceeds one verified loop at a time:
 | Instagram (original M6) | Dry-run adapter, persisted intent, idempotency and reconciliation | User will connect an account later. Permissions, token storage, HTTPS media delivery and explicit dispatch authorization are required for a real post. |
 | Metrics (M7) | Immutable manual/fixture metric snapshots, exact historical render lineage and descriptive comparisons | Actual connected post and verified insights access. Missing metrics remain unknown, never zero; manual reports never become platform-verified data. |
 | Community (M8) | Idempotent events, classifications and reviewed reply drafts | Webhooks, account permissions and explicit send authorization. Automatic comments/DMs remain disabled. |
-| Conversion (M9) | Consent-aware requests, attribution and dry-run handoff contract | Explicitly chosen destination and credentials. Existing Growie production services/database remain out of bounds. |
-| Reels (M10) | Begin only after carousel/source QA and measured metrics are stable | Final character selection, video provider, suitable voice rights, durable storage and audiovisual QA. A storyboard stub is not completed video production. |
+| Conversion (M9) | Consent-aware versioned requests, attribution, revocation and guarded manual export | Actual consent, chosen destination and confirmed external handoff. Existing Growie production services/database remain out of bounds. |
+| Reels (M10) | Persisted ElevenLabs/HeyGen speaking-video workflow, exact captions/fact cards, bounded spend and separate review; built following the user's expanded video scope | Selected portrait/voice, provider accounts and prices, authorized budget, actual generation and human audiovisual review. Higgsfield runtime cutaways and production media operations remain pending. |
 
 Marketplace, external creator UI/signup and customer billing stay deferred. Production operations
 also require organizational identity/token lifecycle, private infrastructure, TLS, secrets management,

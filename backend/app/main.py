@@ -9,9 +9,12 @@ from sqlalchemy.exc import DBAPIError
 from app.api.routes import router
 from app.community.routes import router as community_router
 from app.config import get_settings
+from app.conversion.routes import router as conversion_router
 from app.delivery.routes import router as delivery_router
 from app.intelligence.http import SourcePolicyError, SourceUnavailable
 from app.intelligence.routes import router as intelligence_router
+from app.media.files import MediaFileError
+from app.media.routes import router as media_router
 from app.metrics.routes import router as metrics_router
 from app.observability import configure_logging, request_id
 from app.rendering.routes import router as rendering_router
@@ -134,6 +137,13 @@ app.include_router(rendering_router)
 app.include_router(delivery_router)
 app.include_router(metrics_router)
 app.include_router(community_router)
+app.include_router(conversion_router)
+app.include_router(media_router)
+
+
+@app.exception_handler(MediaFileError)
+async def media_integrity_error(request: Request, exc: MediaFileError):
+    return JSONResponse({"detail": "Media bytes or format failed validation"}, status_code=409)
 
 
 @app.exception_handler(SourceUnavailable)

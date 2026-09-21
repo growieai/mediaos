@@ -34,3 +34,10 @@ def configure_logging():
     logging.getLogger("mediaos").handlers = [handler]
     logging.getLogger("mediaos").setLevel(logging.INFO)
     logging.getLogger("mediaos").propagate = False
+    # Provider/CDN URLs may carry signed query credentials. Third-party HTTP
+    # diagnostics use the same allowlisted formatter, even if debug is enabled.
+    for name in ("httpx", "httpcore"):
+        logger = logging.getLogger(name)
+        logger.handlers = [handler]
+        logger.setLevel(logging.WARNING)
+        logger.propagate = False

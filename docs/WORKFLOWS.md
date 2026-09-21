@@ -1,5 +1,22 @@
 # Workflow state and recovery
 
+## Speaking video and manual handoff
+
+The content state machine below is unchanged. A separately approved content revision can
+start a media run: `CREATED → SPEECH_READY → IMAGE_READY → ASSETS_READY → AVATAR_PENDING →
+AVATAR_READY → AWAITING_APPROVAL → APPROVED/REJECTED`. `BLOCKED`, `FAILED` and
+`UNKNOWN_OUTCOME` remain distinct. SQL derives narration from selected approved text paths;
+operators cannot introduce unsupported claims through a free-form script.
+
+Media creation is tenant-idempotent. Calls reserve a job/SkillRun/cost before network work;
+receipts recover committed local results, and uncertain submissions are never blindly replayed.
+Provider cooldown and bounded attempts are persisted. Fresh source/content/profile and exact
+manifest checks protect approval/download. See [full semantics](SPEAKING_VIDEO.md).
+
+Conversion requests require explicit separately captured consent, exact approver attestation,
+current revisions and unexpired/unrevoked consent. Export is idempotent and produces a saved
+manual receipt with `delivered=false`; see [conversion workflow](CONVERSION_TESTING.md).
+
 ## State machine
 
 ```text

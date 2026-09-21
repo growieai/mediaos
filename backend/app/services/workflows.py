@@ -542,4 +542,26 @@ def artifacts(repo, run_id):
         "cost_events",
         "workflow_opportunities",
     )
-    return {name: repo.all(name, workflow_run_id=run_id) for name in names}
+    result = {name: repo.all(name, workflow_run_id=run_id) for name in names}
+    for attempt in result["skill_runs"]:
+        if attempt["skill_identifier"].startswith("media.") and isinstance(attempt["output"], dict):
+            attempt["output"] = {k: v for k, v in attempt["output"].items() if k != "output_url"}
+        if attempt["skill_identifier"] == "conversion.export" and isinstance(
+            attempt["output"], dict
+        ):
+            # Historical operational evidence is visible, but retrieving a handoff
+            # requires current consent/role checks on the dedicated export endpoint.
+            allowed = {
+                "schema_version",
+                "export_id",
+                "request_id",
+                "content_hash",
+                "request_hash",
+                "mode",
+                "status",
+                "delivered",
+                "network_performed",
+                "audit_completed",
+            }
+            attempt["output"] = {k: v for k, v in attempt["output"].items() if k in allowed}
+    return result

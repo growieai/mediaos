@@ -89,6 +89,16 @@ def metadata():
             "community_reviews",
             "community_reply_claims",
             "community_decisions",
+            "media_profiles",
+            "media_spend_policies",
+            "media_runs",
+            "media_jobs",
+            "media_approval_records",
+            "conversion_destinations",
+            "conversion_requests",
+            "conversion_attestations",
+            "conversion_revocations",
+            "conversion_exports",
         ],
     )
     return meta

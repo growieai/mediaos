@@ -1,5 +1,18 @@
 # Architecture — Milestones 0/1
 
+## Current media and conversion additions
+
+Migrations 0007/0008 add isolated media and consent/handoff services; see
+[speaking video](SPEAKING_VIDEO.md) and [conversion](CONVERSION_TESTING.md). Provider transport
+adapters do not own state or approval. Media jobs commit an exact input, attempt and budget
+reservation before network work, then checkpoint validated output in a separate transaction.
+The local compositor keeps bytes private and reuses verified speech for final audio. Content
+approval and perceptual video approval remain separate. Current text generation stays mock;
+media execution is disabled unless its independent flag, credentials and budget are configured.
+
+Conversion is a consent-reviewed manual export, not a call to an existing Growie service.
+Its historical content attribution does not confer consent or imply audit completion.
+
 The runtime is a generic typed workflow engine, separate from Codex. The internal Next.js console proxies authenticated requests to FastAPI. SQLAlchemy handles PostgreSQL transactions; Alembic owns schema changes. PostgreSQL is the sole source of truth.
 
 The source is submitted manually. A separate authorized reviewer attests that the exact source/evidence is trustworthy. Labels such as OFFICIAL never confer trust automatically. Fixture sources cannot be attested and QA blocks them.

@@ -115,6 +115,7 @@ def main():
     secret_path = REPO_ROOT / ".local" / "credentials.json"
     secret_path.parent.mkdir(exist_ok=True)
     (secret_path.parent / "renders").mkdir(mode=0o700, exist_ok=True)
+    (secret_path.parent / "media").mkdir(mode=0o700, exist_ok=True)
     if secret_path.exists():
         tokens = json.loads(secret_path.read_text())["tokens"]
     else:

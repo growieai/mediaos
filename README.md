@@ -1,5 +1,10 @@
 # Growie Media OS
 
+The current branch adds [speaking-video setup and review](docs/SPEAKING_VIDEO.md) and
+[consent-aware manual handoff](docs/CONVERSION_TESTING.md). The video console reports missing
+credentials and budgets explicitly. See [completion status](docs/MILESTONE_COMPLETION_REPORT.md)
+for what is locally verified and what still needs live accounts. Paid calls remain disabled by default.
+
 For the proposed speaking-presenter direction, see [Video preview](docs/VIDEO_PREVIEW.md).
 `python scripts/dev.py video-preview` creates a local silent MP4 concept with captions and cutaways;
 it does not enable paid AI, speech generation or publishing.
@@ -12,7 +17,7 @@ Standalone, multi-tenant internal media workflow. Growie is the first seed tenan
 Milestones 0/1 implement:
 `SourceSnapshot → ResearchPack → ContentBrief → CAROUSEL revision → QA → AWAITING_APPROVAL → human approval → APPROVED`.
 
-Every step, attempt, artifact and state change is persisted in PostgreSQL. M2 adds bounded official-source discovery, immutable raw snapshots, opportunity versions, verification, audience scoring and sourced drafts. M3 adds deterministic PNG rendering, visual QA, exact human visual approval and private ZIP export. Runtime workflows remain deterministic/mock with zero model cost. Nothing is published to social platforms.
+Every step, attempt, artifact and state change is persisted in PostgreSQL. M2 adds bounded official-source discovery, immutable raw snapshots, opportunity versions, verification, audience scoring and sourced drafts. M3 adds deterministic PNG rendering, visual QA, exact human visual approval and private ZIP export. Text workflows remain deterministic/mock with zero model cost; optional media providers require explicit configuration and budgets, with unknown actual charges recorded as unknown. Nothing is published to social platforms.
 
 Baseline `a021ac1` remains frozen. Its M0/M1 invariants now pass in the M2 integration suite, including [hosted CI and container startup/approval acceptance](https://github.com/growieai/mediaos/actions/runs/35529691067). M2 development is isolated on `milestone-2-spain-intelligence`; Cámara access permission remains outstanding.
 

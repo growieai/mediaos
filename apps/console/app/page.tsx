@@ -3,10 +3,29 @@
 import { useState } from "react";
 import VisualReview from "./VisualReview";
 import CommunityReview from "./CommunityReview";
+import MediaPanel from "./MediaPanel";
+import ConversionPanel from "./ConversionPanel";
 
 type Run = { id: string; state: string; source_snapshot_id: string; asset_version_id: string | null; research_version_id: string | null; qa_report_id: string | null };
 type Identity = { memberships: { roles: string[] }[]; influencers: { id: string; name: string }[]; missions: { id: string; name: string }[] };
 type Artifact = { id: string; payload?: Record<string, unknown>; [key: string]: unknown };
+
+function mediaTextChoices(artifacts: Record<string, Artifact[]>, run: Run) {
+  const payload = artifacts.content_asset_versions?.find(row => row.id === run.asset_version_id)?.payload;
+  if (!payload) return [];
+  const choices: { path: string; text: string; kind: string }[] = [];
+  function add(path: string, value: unknown) {
+    if (!value || typeof value !== "object") return;
+    const block = value as Record<string, unknown>;
+    if (typeof block.text === "string" && typeof block.kind === "string") choices.push({ path, text: block.text, kind: block.kind });
+  }
+  if (Array.isArray(payload.slides)) payload.slides.forEach((slide, index) => {
+    if (!slide || typeof slide !== "object") return;
+    add(`slides.${index}.headline`, slide.headline); add(`slides.${index}.body`, slide.body);
+  });
+  add("caption", payload.caption); add("cta", payload.cta);
+  return choices;
+}
 
 function replyFacts(artifacts: Record<string, Artifact[]>, run: Run) {
   const claimed = new Set<string>();
@@ -148,7 +167,9 @@ export default function Home() {
       {approver && <><button disabled={busy || !waiting} onClick={() => action(() => decision("approve"))}>Approve exact revisions</button>{" "}
       <button disabled={busy || !waiting} onClick={() => action(() => decision("reject"))}>Reject</button></>}
       <VisualReview key={`${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} refresh={id => action(() => refresh(id))} />
+      <MediaPanel key={`media:${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} choices={mediaTextChoices(artifacts, run)} />
       <CommunityReview key={`community:${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} facts={replyFacts(artifacts, run)} />
+      <ConversionPanel key={`conversion:${tenant}:${run.id}`} token={token} tenant={tenant} workflowId={run.id} />
       {Object.entries(artifacts).map(([name, rows]) => <details key={name} open={["content_asset_versions", "qa_reports"].includes(name)}>
         <summary>{name} ({rows.length})</summary>
         <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", background: "#fff", padding: 12 }}>{JSON.stringify(rows, null, 2)}</pre>

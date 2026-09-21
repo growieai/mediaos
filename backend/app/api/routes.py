@@ -68,7 +68,7 @@ def readiness(ctx: Annotated[Context, Depends(authenticated)]):
             if row.current_user != "mediaos_runtime" or row.rolsuper or row.rolbypassrls:
                 return Response(status_code=503)
             repo.all("workflow_runs")
-        return {"status": "ready", "database": "ready", "schema": "0006", "mode": "deterministic"}
+        return {"status": "ready", "database": "ready", "schema": "0008", "mode": "deterministic"}
     except DBAPIError:
         return Response(status_code=503)
 

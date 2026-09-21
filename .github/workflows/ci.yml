@@ -1,4 +1,4 @@
-name: Foundation, intelligence, visuals, delivery, metrics and community review
+name: Media OS verification
 on: [push, pull_request]
 permissions:
   contents: read
@@ -36,6 +36,8 @@ jobs:
           cache: npm
           cache-dependency-path: apps/console/package-lock.json
       - run: pip install --require-hashes -r backend/requirements.lock
+      - name: Install local media encoder for offline composition tests
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Migrate empty database and configure restricted login
         working-directory: backend
         run: python -m app.admin migrate
@@ -61,6 +63,7 @@ jobs:
           npm run build
       - name: Container configuration and builds
         run: |
+          mkdir -p .local/media
           docker compose config --quiet
           docker compose build
       - name: Container startup and persisted API acceptance

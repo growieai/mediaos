@@ -1,4 +1,5 @@
 FROM python:3.12.14-slim-bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
 WORKDIR /workspace/backend
 COPY backend/requirements.lock /tmp/requirements.lock
 RUN pip install --no-cache-dir -r /tmp/requirements.lock

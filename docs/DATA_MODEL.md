@@ -1,5 +1,17 @@
 # Data model
 
+Migration 0007 adds `media_profiles`, `media_spend_policies`, `media_runs`, `media_jobs` and
+`media_approval_records`. Profiles pin an influencer/visual revision, authorized voice and
+dated rate card. Media runs pin exact content/research/QA/approval lineage. Jobs pin hashes,
+provider attempts and expected-cost reservations; actual paid cost remains nullable when
+unknown. Approval pins the exact final manifest and independent human quality attestations.
+
+Migration 0008 adds `conversion_destinations`, `conversion_requests`,
+`conversion_attestations`, `conversion_revocations`, `conversion_exports`. Opaque subject
+references and explicit consent evidence are distinct from content attribution. Consent
+expiry, series revocation, exact hashes and current destination/request revisions are checked
+at review/export. These ten tables have forced tenant RLS and guarded runtime writes.
+
 All entity primary keys are UUIDs. Tenant-owned rows have tenant_id and UNIQUE(tenant_id,id). Composite foreign keys preserve ownership and lineage independently of application filters. Timestamps are timezone-aware; business date rules use UTC. Audit events also have an ordered sequence because several transitions can commit in one transaction.
 
 ## Tables

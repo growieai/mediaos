@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     max_skill_attempts: int = Field(default=3, ge=1, le=5)
     intelligence_tokens: SecretStr | None = None
     asset_storage_path: Path = REPO_ROOT / ".local" / "renders"
+    media_storage_path: Path = REPO_ROOT / ".local" / "media"
+    media_live_enabled: bool = False
+    elevenlabs_api_key: SecretStr | None = None
+    heygen_api_key: SecretStr | None = None
+    hf_api_key_id: SecretStr | None = None
+    hf_api_key_secret: SecretStr | None = None
 
     @model_validator(mode="after")
     def milestone_scope(self):
@@ -36,7 +42,9 @@ class Settings(BaseSettings):
                 self.enable_video,
             )
         ):
-            raise ValueError("Milestone 1 supports only internal deterministic carousel workflows")
+            raise ValueError(
+                "Text mock mode and public integration feature gates must stay enabled/off respectively"
+            )
         return self
 
 

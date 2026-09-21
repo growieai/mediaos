@@ -43,11 +43,19 @@ services:
       DATABASE_URL: postgresql+psycopg://mediaos_runtime:${POSTGRES_RUNTIME_PASSWORD}@postgres:5432/mediaos
       AI_MOCK_MODE: "true"
       APP_ENV: development
+      MEDIA_LIVE_ENABLED: ${MEDIA_LIVE_ENABLED:-false}
+      ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:-}
+      HEYGEN_API_KEY: ${HEYGEN_API_KEY:-}
     volumes:
       - ./.local/ingestion-credentials.json:/workspace/.local/ingestion-credentials.json:ro
       - type: bind
         source: ./.local/renders
         target: /workspace/.local/renders
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./.local/media
+        target: /workspace/.local/media
         bind:
           create_host_path: false
     ports:

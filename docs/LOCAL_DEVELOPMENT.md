@@ -1,5 +1,18 @@
 # Local development
 
+The current schema head is 0008. Run migrate and seed after updating this branch, then rebuild
+and restart the API/console. Seed creates `.local/media` for a private bind mount; no paid
+profile or budget is seeded. On this prepared Windows host the standalone PostgreSQL service
+uses port 55432 and `mediaos_dev`; the Docker example uses port 55433 and database `mediaos`.
+These are different standalone environments. Keep the environment URLs consistent with the
+chosen one and never substitute an existing Growie production URL.
+
+For the speaking-video setup, keys, voice/rate profile, budgets and manual test sequence, see
+[SPEAKING_VIDEO.md](SPEAKING_VIDEO.md). Keep `MEDIA_LIVE_ENABLED=false` until paid execution is
+authorized. Pure provider tests use recorded HTTP responses; media-file tests use a local
+synthetic clip. They do not prove a real provider's lip sync. FFmpeg/FFprobe are needed for
+media encoding; Docker installs them. Normal mock text workflows still need no AI credentials.
+
 For M3 rendering, run migration and seed after pulling the visual-production branch. Setup/seed create
 `.local/renders` as the current user; Compose refuses to auto-create that bind mount as root.
 Run `python scripts/dev.py visual-acceptance` for persisted render/approval/ZIP checks. See
