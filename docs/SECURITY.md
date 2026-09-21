@@ -18,6 +18,23 @@ Fixtures remain permanently blocked for handoff; exports make no network request
 
 An OPERATOR cannot approve content.
 
+The connected-provider extension retains these boundaries. A dedicated SOCIAL principal has no
+OPERATOR role and can perform only guarded connector writes. Tokens are encrypted with an external
+vault key in a private database table; only the tenant connector can retrieve them. The database
+prevents one provider account from being attached to multiple tenants. OAuth state is signed,
+purpose-bound, short-lived and single-use; initiating ADMIN membership is rechecked at completion.
+
+Public dispatch requires current content and visual approval plus a separate exact JPEG/caption/
+account decision. The final POST holds current-source/revision/account locks. Ambiguous writes
+stop in UNKNOWN_OUTCOME; changing a request key cannot duplicate them. Reconciliation records an
+approver's assertion and a provider-read attempt before checking exact ownership/content. Signed
+webhooks confer comment provenance only for owned confirmed posts; they never authorize replies.
+See [social integration](SOCIAL_INTEGRATION.md) for dispatch and secret-recovery requirements.
+
+Access logs discard request targets, queries, headers and exception text, including OAuth codes,
+webhook tokens and short-lived media capabilities. Configure upstream proxy/CDN logs equivalently.
+Capability URLs are secret bearer access to one exact JPEG and must not enter analytics or logs.
+
 OPERATOR can submit sources, execute/resume workflows and revise content. APPROVER can attest source evidence and approve/reject current passing revisions. ADMIN includes both permissions. Any internal tenant member can inspect their tenant's workflows. There is no public signup.
 
 ## Authentication and RLS
@@ -46,7 +63,10 @@ API and console proxy enforce a 256 KiB request cap. Source text and typed field
 
 Compose binds services to loopback and passes migration credentials only to maintenance jobs. Do not reuse development credentials in production, expose database services publicly, or connect this product to Growie's existing infrastructure.
 
-All external-creator, publishing, replies and video flags must remain false; enabling them fails startup. There is no publishing code, even for APPROVED content.
+External-creator and automatic publishing/reply feature flags remain unsupported and fail startup.
+Manual media/social integrations use separate opt-in flags and guarded human decisions; APPROVED
+content alone never enables a paid call or public dispatch. Real text generation requires its own
+versioned budget policy in addition to configuration and credentials.
 
 The optional local video concept CLI is an isolated design tool with no database, provider or network
 access. It produces visibly labelled, silent, nonpublishable previews outside approved asset storage.
@@ -64,7 +84,7 @@ Government-host Retry-After cooldowns persist across tenants and new request key
 
 Raw response checksums and exact raw snapshots are database-validated. All normalized data and source observations are immutable and restricted to INGESTOR writes. Fixture flags persist through every projection and workflow; neither schema validity nor a score can make a fixture approvable. An original fixture record is never relabelled as live.
 
-The old QA/approval guards remain intact. The additional approval trigger locks the current opportunity and checks conflicts, versions, source eligibility and expiry. Binding expiry is capped against actual source observations and the mission policy in PostgreSQL, so an operator cannot extend freshness by fabricating a relevance-score expiry. An approved historical revision may later become stale; future publishing must revalidate evidence at dispatch. Publishing is absent in this milestone.
+The old QA/approval guards remain intact. The additional approval trigger locks the current opportunity and checks conflicts, versions, source eligibility and expiry. Binding expiry is capped against actual source observations and the mission policy in PostgreSQL, so an operator cannot extend freshness by fabricating a relevance-score expiry. An approved historical revision may later become stale; connected publishing revalidates evidence at dispatch.
 
 Cámara states that its electronic-office conditions prohibit automation. Its source registry is disabled and its connector rejects live discovery pending permission: https://sede.camara.es/sede/html/titularidad . No access-control bypass is implemented. `CAMARA_ACCESS_REQUEST.md` contains a request for an approved access route; no request has been sent by the application.
 

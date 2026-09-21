@@ -41,13 +41,32 @@ services:
       dockerfile: backend/Dockerfile
     environment:
       DATABASE_URL: postgresql+psycopg://mediaos_runtime:${POSTGRES_RUNTIME_PASSWORD}@postgres:5432/mediaos
-      AI_MOCK_MODE: "true"
+      AI_MOCK_MODE: ${AI_MOCK_MODE:-true}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       APP_ENV: development
       MEDIA_LIVE_ENABLED: ${MEDIA_LIVE_ENABLED:-false}
       ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:-}
       HEYGEN_API_KEY: ${HEYGEN_API_KEY:-}
+      SOCIAL_CONNECT_ENABLED: ${SOCIAL_CONNECT_ENABLED:-false}
+      SOCIAL_PUBLISH_ENABLED: ${SOCIAL_PUBLISH_ENABLED:-false}
+      SOCIAL_REPLY_ENABLED: ${SOCIAL_REPLY_ENABLED:-false}
+      SOCIAL_APP_ID: ${SOCIAL_APP_ID:-}
+      SOCIAL_APP_SECRET: ${SOCIAL_APP_SECRET:-}
+      SOCIAL_API_VERSION: ${SOCIAL_API_VERSION:-}
+      SOCIAL_REDIRECT_URI: ${SOCIAL_REDIRECT_URI:-}
+      SOCIAL_PUBLIC_BASE_URL: ${SOCIAL_PUBLIC_BASE_URL:-}
+      SOCIAL_VAULT_KEY: ${SOCIAL_VAULT_KEY:-}
+      SOCIAL_WEBHOOK_VERIFY_TOKEN: ${SOCIAL_WEBHOOK_VERIFY_TOKEN:-}
+      SOCIAL_SERVICE_TOKENS: ${SOCIAL_SERVICE_TOKENS:-}
+      SOCIAL_STORAGE_PATH: /workspace/.local/social
     volumes:
       - ./.local/ingestion-credentials.json:/workspace/.local/ingestion-credentials.json:ro
+      - type: bind
+        source: ./.local/social-credentials.json
+        target: /workspace/.local/social-credentials.json
+        read_only: true
+        bind:
+          create_host_path: false
       - type: bind
         source: ./.local/renders
         target: /workspace/.local/renders
@@ -56,6 +75,11 @@ services:
       - type: bind
         source: ./.local/media
         target: /workspace/.local/media
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./.local/social
+        target: /workspace/.local/social
         bind:
           create_host_path: false
     ports:

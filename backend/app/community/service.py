@@ -85,6 +85,9 @@ def review_details(repo: Repository, review_id: UUID):
 
 def event_details(repo: Repository, event_id: UUID):
     row = _event(repo.one("community_events", id=event_id))
+    row["platform_links"] = (
+        repo.all("social_comment_links", event_id=event_id) if row["mode"] == "PLATFORM" else []
+    )
     row["reviews"] = [
         review_details(repo, review["id"])
         for review in repo.all("community_reviews", event_id=event_id)

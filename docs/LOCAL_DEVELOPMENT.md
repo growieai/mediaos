@@ -1,7 +1,7 @@
 # Local development
 
-The current schema head is 0008. Run migrate and seed after updating this branch, then rebuild
-and restart the API/console. Seed creates `.local/media` for a private bind mount; no paid
+The current schema head is 0015. Run migrate and seed after updating this branch, then rebuild
+and restart the API/console. Seed creates `.local/media` and `.local/social` for private bind mounts; no paid
 profile or budget is seeded. On this prepared Windows host the standalone PostgreSQL service
 uses port 55432 and `mediaos_dev`; the Docker example uses port 55433 and database `mediaos`.
 These are different standalone environments. Keep the environment URLs consistent with the
@@ -12,6 +12,12 @@ For the speaking-video setup, keys, voice/rate profile, budgets and manual test 
 authorized. Pure provider tests use recorded HTTP responses; media-file tests use a local
 synthetic clip. They do not prove a real provider's lip sync. FFmpeg/FFprobe are needed for
 media encoding; Docker installs them. Normal mock text workflows still need no AI credentials.
+
+For opt-in real text see [real model execution](REAL_MODEL_EXECUTION.md); for connected Instagram
+setup see [social integration](SOCIAL_INTEGRATION.md). Keep all external flags off for local
+fixture tests. The seed writes a separate server-only `.local/social-credentials.json`; never
+paste that connector credential into the console. [Operations](OPERATIONS.md) covers an isolated
+backup/restore rehearsal with PostgreSQL client tools and all application writers stopped.
 
 For M3 rendering, run migration and seed after pulling the visual-production branch. Setup/seed create
 `.local/renders` as the current user; Compose refuses to auto-create that bind mount as root.
@@ -102,6 +108,18 @@ Tests require TEST_DATABASE_URL and TEST_MIGRATION_DATABASE_URL, both naming med
 Run migrations before readiness. An unknown token/tenant returns 401; missing role returns 403; invisible tenant resources return 404; invariant/idempotency/stale-revision conflicts return 409.
 
 Python dependency refresh: uv pip compile pyproject.toml --extra dev --universal --generate-hashes -o requirements.lock, then review changes. Frontend uses npm ci with its committed lockfile.
+
+On native Windows, keep rendering-test scratch paths short. Long pytest base paths plus nested
+tenant/render/attempt UUIDs can exceed Windows path limits and surface as a render
+`FileNotFoundError`. Create the parent first, then use a dedicated disposable child directory:
+
+```powershell
+New-Item -ItemType Directory -Path C:\mediaos\.tmp -Force | Out-Null
+# From backend; pytest may clear this dedicated scratch directory on subsequent runs.
+.venv/Scripts/python.exe -m pytest -q --basetemp=C:/mediaos/.tmp/tests
+```
+
+Do not use the repository, `.local`, private asset storage or a backup directory as `--basetemp`.
 
 The acceptance harness writes .local/acceptance-report.json and leaves its workflows persisted for console inspection. It tests a real statement sourced from docs/SECURITY.md; approver API requests are simulated by the harness, not presented as a real person's approval.
 

@@ -1,5 +1,13 @@
 # Choosing Sofía's voice
 
+## Recorded selection
+
+On 2026-09-21 the user selected **Sara Martin**, supplying ElevenLabs voice ID
+`ODO4sbmD3pTjhgRVVRP6`. The choice is recorded in
+[Sofía's voice selection](../characters/sofia/voice_selection.md).
+Account access, pricing and application-generated audio remain unverified. This choice does
+not enable paid generation or create a runtime media profile without its required rate card.
+
 Recommended direction: an adult female voice, approximately early thirties in perceived age,
 with a natural Spanish-from-Spain accent. Medium pitch, warm confidence, clear diction, brisk
 conversational pacing and restrained dry humour match the canonical character. These are
@@ -51,4 +59,4 @@ voice-specific rate before activation. The voice ID is not a secret. API keys ar
 belong only in the ignored `.env` or a secret manager. We still need an approved test budget.
 See [media setup](SPEAKING_VIDEO.md) for the guarded voice profile and execution flow.
 
-No paid audition or final voice selection has been performed yet.
+The user has selected the voice. No paid audition or live application generation has been performed.

@@ -180,4 +180,53 @@ results, not reasons to repeatedly retry. No parent WorkflowRun state is changed
 Creation is tenant/key/hash idempotent. An explicit new key creates a new review revision. Approval
 locks the workflow then its event/review, checks the latest review and pinned parent revisions,
 and reruns the parent evidence QA including official-source conflicts and freshness. It never
-inherits an older decision or allows a fixture through. There is no Send transition or route.
+inherits an older decision or allows a fixture through. A reviewed draft alone cannot be sent.
+
+## Explicit connected-provider flows (0009–0015)
+
+Text creator: `exact current brief → persisted policy/budget reservation → typed provider
+selection → deterministic fact/template materialization → existing content QA`. A rate-limit
+refusal can retry within its saved cap and cooldown. Unknown provider outcomes require review;
+an existing checkpoint cannot silently switch providers. Mock mode stays the default.
+
+Social: `current approved content + visual render → exact JPEG/caption/account plan →
+AWAITING_PUBLISH_APPROVAL → separate APPROVER decision → AUTHORIZED → CHILD/CONTAINER/POLL
+checkpoints → READY → explicit OPERATOR dispatch → PUBLISHING → PUBLISHED`. BLOCKED, FAILED,
+REJECTED and UNKNOWN_OUTCOME remain distinct. No automatic publishing is enabled. Unknown posts
+require a persisted approver attestation plus a persisted read of the matching provider object;
+they cannot be retried by changing the idempotency key. Historical acknowledgements can recover
+from a durable receipt even after current content or connection eligibility changes.
+
+Insights: `confirmed connected post → persisted read attempt → immutable PLATFORM snapshot →
+second matching observation → descriptive learning report`. Unknown counters stay null, decreases
+remain visible, and comparisons never modify policy or confer publication authority.
+
+Community: `signed owned-account comment webhook → immutable PLATFORM event → existing reply
+classification/draft/QA/review → separate AUTHORIZE_REPLY → explicit send → SENT`. The reply is
+rechecked against current parent evidence and exact text while dispatch holds the relevant locks.
+Unknown writes stop for investigation. Manual or fixture events cannot enter platform dispatch.
+
+Workflow provider attempts have persisted telemetry before execution. [Social integration](SOCIAL_INTEGRATION.md)
+and [real model execution](REAL_MODEL_EXECUTION.md) document setup, bounded recovery and endpoints.
+
+Rate-limit cooldowns are stored per tenant/account and survive new keys, exhausted attempts and
+reconnections. Contradictory unknown/retry flags are rejected by PostgreSQL. Workflow locks precede
+account and attempt locks to prevent cycles with audit/evidence constraints. Webhook intake commits
+before linking acquires workflow locks; retries recover any persisted but unlinked event.
+
+Account IDs provide stable historical post/comment identity across connection versions. A new reply
+intent may use the current connection for an existing reviewed comment, but needs new outbound
+authorization. Existing decisions never transfer; a SENT or uncertain reply cannot be repeated by
+reconnecting the account. Historical published media IDs are unique within their tenant/account.
+
+Historical reads reserve and pin the latest compatible connection for the original account,
+influencer and API version. Revoked, incompatible or changed credentials prevent the read;
+an existing durable provider receipt can still recover independently of current credentials.
+An approver may reject a stale AWAITING_PUBLISH_APPROVAL or AUTHORIZED plan only before any
+provider job exists. This releases the undispatched plan for replacement without losing history.
+
+After publication becomes confirmed, saved comments are linked in bounded local batches.
+Immutable links are per-event checkpoints. An interrupted batch can be resumed through
+`POST /v1/social-publishes/{id}/comments/relink`; only an OPERATOR may request it. Relinking
+makes no provider/model call and grants no reply authorization. A relinking failure leaves
+the confirmed post intact and reports RETRY_REQUIRED.

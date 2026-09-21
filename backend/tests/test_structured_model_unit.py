@@ -20,6 +20,11 @@ from app.ai.structured import (
 from app.models.schemas import CharacterConfig, ContentBrief, Fact, ResearchPack
 
 
+@pytest.fixture(scope="session", autouse=True)
+def database():
+    yield None
+
+
 @pytest.fixture
 def inputs():
     facts = [
@@ -259,9 +264,9 @@ def test_response_control_states_fail_closed(inputs, kind):
     "status,retryable",
     [
         (429, True),
-        (500, True),
-        (503, True),
-        (408, True),
+        (500, False),
+        (503, False),
+        (408, False),
         (400, False),
         (401, False),
         (403, False),
@@ -289,13 +294,13 @@ def test_http_error_classification_has_no_automatic_retries(inputs, status, retr
     assert caught.value.execution.input_tokens is None
 
 
-def test_network_error_redacts_exception_and_preserves_retryability(inputs):
+def test_network_error_redacts_exception_and_prevents_blind_paid_retry(inputs):
     def fail(request):
         raise httpx.ReadTimeout("secret unit-test-not-a-real-key", request=request)
 
-    with pytest.raises(ModelSelectionError, match="NETWORK") as caught:
+    with pytest.raises(ModelSelectionError, match="UNKNOWN_OUTCOME") as caught:
         adapter_for(handler=fail).select(*inputs)
-    assert caught.value.retryable
+    assert not caught.value.retryable
     assert "secret" not in str(caught.value)
     assert caught.value.__cause__ is None
 
@@ -335,14 +340,42 @@ def test_input_and_response_sizes_are_bounded(inputs):
     )
     body = envelope(plan_payload(inputs))
     body["irrelevant_padding"] = "x" * 2000
-    with pytest.raises(ModelSelectionError, match="RESPONSE_TOO_LARGE"):
+    with pytest.raises(ModelSelectionError, match="UNKNOWN_OUTCOME"):
         adapter_for(body, settings=settings).select(*inputs)
 
 
-@pytest.mark.parametrize("raw", [b"not JSON", b"[]", b'{"status": "completed", "output": null}'])
-def test_invalid_provider_response_does_not_leak_body(inputs, raw):
-    with pytest.raises(ModelSelectionError, match="INVALID_RESPONSE"):
+@pytest.mark.parametrize(
+    "raw,category",
+    [
+        (b"not JSON", "UNKNOWN_OUTCOME"),
+        (b"[]", "UNKNOWN_OUTCOME"),
+        (b'{"status": "completed", "output": null}', "INVALID_RESPONSE"),
+    ],
+)
+def test_invalid_provider_response_does_not_leak_body(inputs, raw, category):
+    with pytest.raises(ModelSelectionError, match=category):
         adapter_for(handler=lambda request: httpx.Response(200, content=raw)).select(*inputs)
+
+
+def test_prepared_request_must_match_persisted_hash_before_call(inputs):
+    from app.db.repository import canonical_hash
+
+    calls = []
+    adapter = adapter_for(
+        handler=lambda request: calls.append(request)
+        or httpx.Response(200, json=envelope(plan_payload(inputs)))
+    )
+    payload = adapter.prepare(*inputs)
+    assert not calls
+    with pytest.raises(ModelSelectionError, match="INVALID_INPUT"):
+        adapter.select(*inputs, expected_request_hash="0" * 64)
+    assert not calls
+    attempt = uuid4()
+    adapter.select(
+        *inputs, expected_request_hash=canonical_hash(payload), client_request_id=attempt
+    )
+    assert len(calls) == 1
+    assert calls[0].headers["X-Client-Request-Id"] == str(attempt)
 
 
 def test_deterministic_assembly_and_template_identity(inputs):
@@ -360,3 +393,13 @@ def test_secrets_are_not_in_settings_repr():
     )
     assert "unit-test-not-a-real-key" not in repr(settings)
     assert "unit-test-not-a-real-key" not in settings.model_dump_json()
+
+
+def test_reflected_credential_is_never_persisted_as_provider_identifier(inputs):
+    body = envelope(plan_payload(inputs))
+    body["id"] = body["model"] = "unit-test-not-a-real-key"
+    result = adapter_for(body, headers={"x-request-id": "unit-test-not-a-real-key"}).select(*inputs)
+    assert result.execution.request_id is None
+    assert result.execution.response_id is None
+    assert result.execution.response_model is None
+    assert "unit-test-not-a-real-key" not in result.model_dump_json()

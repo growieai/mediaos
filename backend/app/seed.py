@@ -150,6 +150,16 @@ def main():
     ingestion_path.write_text(json.dumps(ingestion_tokens, indent=2), encoding="utf-8")
     if os.name != "nt":
         ingestion_path.chmod(0o600)
+    from app.social.seed import seed_social
+
+    social_path = REPO_ROOT / ".local/social-credentials.json"
+    social_tokens = json.loads(social_path.read_text()) if social_path.exists() else {}
+    social_tokens.setdefault(ids["tenant_id"], secrets.token_urlsafe(32))
+    seed_social(engine, ids["tenant_id"], social_tokens[ids["tenant_id"]])
+    social_path.write_text(json.dumps(social_tokens, indent=2), encoding="utf-8")
+    (secret_path.parent / "social").mkdir(mode=0o700, exist_ok=True)
+    if os.name != "nt":
+        social_path.chmod(0o600)
     secret_path.write_text(json.dumps({**ids, "tokens": tokens}, indent=2), encoding="utf-8")
     if os.name != "nt":
         secret_path.chmod(0o600)

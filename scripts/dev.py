@@ -34,6 +34,7 @@ def main():
         (ROOT / ".local").mkdir(exist_ok=True)
         (ROOT / ".local/renders").mkdir(mode=0o700, exist_ok=True)
         (ROOT / ".local/media").mkdir(mode=0o700, exist_ok=True)
+        (ROOT / ".local/social").mkdir(mode=0o700, exist_ok=True)
         run(sys.executable, "-m", "venv", BACKEND / ".venv")
         run(PYTHON, "-m", "pip", "install", "-r", BACKEND / "requirements.lock")
         run(NPM, "ci", cwd=ROOT / "apps/console")

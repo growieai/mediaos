@@ -14,7 +14,7 @@ def database():
 
 
 def test_http_library_diagnostics_remain_redacted_when_debug_enabled():
-    names = ("mediaos", "httpx", "httpcore")
+    names = ("mediaos", "httpx", "httpcore", "uvicorn.access", "gunicorn.access")
     previous = {
         name: (
             logging.getLogger(name).handlers[:],

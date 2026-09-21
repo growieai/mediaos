@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response
 from sqlalchemy import text
 from sqlalchemy.exc import DBAPIError
 
+from app.config import SCHEMA_REVISION, get_settings
 from app.db.repository import transaction
 from app.models.schemas import (
     ApprovalInput,
@@ -67,8 +68,18 @@ def readiness(ctx: Annotated[Context, Depends(authenticated)]):
             ).one()
             if row.current_user != "mediaos_runtime" or row.rolsuper or row.rolbypassrls:
                 return Response(status_code=503)
+            revision = repo.connection.execute(
+                text("SELECT version_num FROM alembic_version")
+            ).scalar_one()
+            if revision != SCHEMA_REVISION:
+                return Response(status_code=503)
             repo.all("workflow_runs")
-        return {"status": "ready", "database": "ready", "schema": "0008", "mode": "deterministic"}
+        return {
+            "status": "ready",
+            "database": "ready",
+            "schema": revision,
+            "mode": "deterministic" if get_settings().ai_mock_mode else "model-opt-in",
+        }
     except DBAPIError:
         return Response(status_code=503)
 

@@ -143,3 +143,40 @@ draft hash and QA hash. A new reply creates a new review revision, never overwri
 All four tables force tenant RLS and deny direct runtime writes. Guarded functions validate
 ownership, state transitions, typed output, current source eligibility and permission. The optional
 community policy is versioned inside CharacterConfig; older pinned configurations remain unchanged.
+
+## Connected model and social extensions (0009–0015)
+
+`text_ai_policies` holds immutable tenant rates, models, bounded call/spend limits and expiry.
+`text_ai_attempts` pins the exact current research/brief/configuration, request hash and policy
+before a real request. Unreported usage/cost remain null; reserved limits are not actual charges.
+
+`social_oauth_states`, `social_connections` and `social_revocations` capture account lifecycle.
+Encrypted provider tokens live in private, non-readable `social_credentials`; the external vault
+key is never stored in the database. Global account ownership prevents cross-tenant attachment.
+Only the tenant's restricted SOCIAL service identity can decrypt through a guarded function.
+
+`social_publish_runs` pins all original content/visual revisions and approvals plus the exact
+JPEG plan/account. `social_publish_decisions` adds a separate human authorization.
+`social_publish_jobs` stores each reserved provider attempt. Partial uniqueness prevents a new key
+from repeating a pending, uncertain or completed render/account post. `social_reconcile_requests`
+records immutable approver assertions before provider reads. `social_insight_snapshots` retains
+typed metrics and response provenance; `social_learning_reports` holds deterministic comparisons.
+
+`social_webhook_events` preserves signed, normalized inbound comment evidence. `social_comment_links`
+ties that evidence to a confirmed owned post and immutable community event. `social_reply_runs`,
+`social_reply_decisions` and `social_reply_jobs` preserve exact reviewed text, send authorization,
+attempts and acknowledgements. No operator API can label arbitrary manual text as PLATFORM.
+
+Every tenant-owned addition forces RLS and denies direct runtime writes. Composite ownership
+constraints and guarded functions enforce linkage; model/platform telemetry continues to use
+SkillRun, CostEvent and AuditEvent. See [social integration](SOCIAL_INTEGRATION.md).
+
+`private.social_account_cooldowns` stores bounded shared Retry-After state independently of
+caller-selected keys. Migration 0014 derives stable account IDs on existing comment/reply lineage,
+keeps historical connection evidence immutable, and adds account-scoped confirmed-post and
+uncertain/sent-reply uniqueness. It does not rewrite prior approvals or provider acknowledgements.
+
+Migration 0015 pins `read_connection_id` on each INSIGHTS/RECONCILE job. A historical post keeps
+its original account, influencer and API-version provenance while a read may use a compatible
+current connection. Dispatch approvals never transfer. A plan with no provider jobs may receive
+an immutable REJECT after authorization; the prior authorization stays in history.

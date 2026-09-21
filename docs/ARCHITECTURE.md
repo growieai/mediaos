@@ -1,4 +1,24 @@
-# Architecture — Milestones 0/1
+# Architecture — Growie Media OS
+
+## Connected providers and operations
+
+Migrations 0009–0015 extend the frozen content, evidence and approval foundation. The optional
+OpenAI creator selects only configured text and allowed evidence through a strict typed schema;
+its attempts, explicit tenant budget reservations and usage are persisted. Mock mode remains the
+default. See [real model execution](REAL_MODEL_EXECUTION.md).
+
+Instagram has a separate connected-account boundary with encrypted tokens, a restricted SOCIAL
+principal, purpose-bound OAuth state and exact JPEG/caption/account review. A content approval or
+dry-run receipt never authorizes a public post. The final bounded publish call holds the existing
+content/source/configuration locks; persisted receipts can recover a database interruption without
+reposting. Uncertain writes stop in UNKNOWN_OUTCOME. Signed comments can enter the existing
+community review flow; a separate decision authorizes the exact reply. Verified platform insight
+snapshots and descriptive comparisons retain their own provenance. See
+[social integration](SOCIAL_INTEGRATION.md) and [platform learning](PLATFORM_LEARNING.md).
+
+These paths are manually invoked and disabled by default. Local fixture tests do not establish live
+provider acceptance. Production scheduling, organizational identity and durable object storage
+remain deployment work. [Operations](OPERATIONS.md) describes bounded standalone backup/restore.
 
 ## Current media and conversion additions
 
@@ -7,7 +27,7 @@ Migrations 0007/0008 add isolated media and consent/handoff services; see
 adapters do not own state or approval. Media jobs commit an exact input, attempt and budget
 reservation before network work, then checkpoint validated output in a separate transaction.
 The local compositor keeps bytes private and reuses verified speech for final audio. Content
-approval and perceptual video approval remain separate. Current text generation stays mock;
+approval and perceptual video approval remain separate. Default text generation stays mock;
 media execution is disabled unless its independent flag, credentials and budget are configured.
 
 Conversion is a consent-reviewed manual export, not a call to an existing Growie service.
@@ -27,7 +47,7 @@ Internal console → FastAPI → restricted PostgreSQL role
 research.extract → research.verify → editor.build_brief → content.carousel → qa.validate
 ```
 
-All five foundation skills have typed inputs/outputs and persisted attempts. MockAdapter validates strict Pydantic schemas. Live provider execution remains disabled pending configured credentials and persisted usage/cost integration. Local mock operation has no provider credential dependency.
+All five foundation skills have typed inputs/outputs and persisted attempts. MockAdapter validates strict Pydantic schemas. Real creator execution requires an explicit unexpired tenant policy and configured credentials. Local mock operation has no provider credential dependency.
 
 Persona, voice, visual policy, brand policy, language, editorial settings and safe non-factual templates are versioned configuration. Markdown under characters/sofia remains canonical source material; seed imports it with runtime.json into immutable character and influencer versions. A changed content hash creates a new version. Existing runs retain their original configuration.
 
@@ -35,7 +55,7 @@ Persona, voice, visual policy, brand policy, language, editorial settings and sa
 
 The synchronous runner uses an advisory execution lock and short checkpoint transactions. Approval and revision use a shared workflow row lock. These boundaries can become Temporal activities later. PostgreSQL supplies the required locking; Redis is not required locally. M3 adds a private local filesystem boundary for rendered binaries; production needs durable S3-compatible storage. Temporal and Redis remain later operational dependencies.
 
-No external creator UI, signup, marketplace, video, publishing, community automation or billing is implemented. Official ingestion is described below. M3 imports a generated character reference pack and renders fixed carousel templates; it does not expose a live image-generation API. Startup rejects unsupported feature flags or real AI mode.
+External creator UI, signup, marketplace, automatic publishing/replies and billing remain disabled. Manual video/social paths are described above. Official ingestion is described below. M3 imports a generated character reference pack and renders fixed carousel templates; it does not expose a live image-generation API. Startup rejects unsupported automatic feature flags and real text mode without a credential.
 
 ## Production deployment still deferred
 
@@ -53,7 +73,7 @@ The synchronous IngestionRunner commits its request, HTTP attempts, exact raw re
 
 A live-source workflow binds an immutable Opportunity version and editorial decision to the existing M1 workflow. Its ResearchPack carries typed opportunity context and exact allowed facts. The M1 factual-text policy remains strict: claims must equal their referenced evidence excerpts; free factual paraphrasing is not accepted. Content is a structured excerpt carousel with the configured character voice, disclosure and CTA. This implementation makes no LLM calls and does not claim semantic model reasoning.
 
-Only BDNS and BOE public APIs are enabled. Cámara's parser is available for recorded documents; its live connector fails closed pending source permission. There is no production scheduler, external creator surface or social publishing.
+Only BDNS and BOE public APIs are enabled. Cámara's parser is available for recorded documents; its live connector fails closed pending source permission. There is no production scheduler or external creator surface. Manual social dispatch has an independent approval boundary.
 
 ## M3: deterministic visual production
 
@@ -74,10 +94,10 @@ freshness, current revisions, latest visual configuration and latest render. It 
 coverage and manifest hashes; the server verifies actual image bytes and dimensions. PostgreSQL
 does not inspect raster pixels. Human review remains necessary for appearance and semantic visual quality.
 
-Authenticated endpoints deliver PNG previews and a guarded ZIP export. No public media URLs exist.
+Authenticated endpoints deliver PNG previews and a guarded ZIP export. Public JPEG capabilities exist only for separately authorized social plans, expire quickly and cannot expose arbitrary files.
 The console fetches binary previews using bearer headers and revokes temporary browser object URLs.
 Export revalidates content and visual approvals under the same locks used for revisions and source
-changes. A future social adapter must repeat this guard at dispatch; a ZIP download is not publishing.
+changes. The social service repeats this guard at dispatch; a ZIP download is not publishing.
 
 ## Internal delivery preflight (partial M6)
 
@@ -89,7 +109,7 @@ the plan against the pinned manifest and approval records. The receipt records a
 check, not Instagram compatibility or future permission to publish.
 
 Delivery state and attempts are persisted separately. WorkflowRun remains APPROVED; a simulation
-cannot advance it to a publishing state. Future live delivery requires a separate reviewed extension
+cannot advance it to a publishing state. Connected delivery uses a separate reviewed extension
 with durable dispatch intent, unknown-outcome reconciliation, account permissions and secret storage.
 Never convert a saved dry-run row into a live delivery or blindly retry an uncertain external post.
 
@@ -98,7 +118,7 @@ Never convert a saved dry-run row into a live delivery or blindly retry an uncer
 Authenticated operators can associate manual observations or explicitly synthetic fixtures with an
 exact historically approved carousel render. MANUAL observations are SELF_REPORTED; an asserted
 external reference is not proof of a platform post. FIXTURE observations have no external reference.
-No account, insights API, scheduled collection or live performance verification is connected.
+This historical manual path never becomes platform-verified. Connected insights use the separate social path; scheduled collection remains absent.
 
 The metrics service preserves immutable input payloads, supplied evidence text and canonical hashes.
 PostgreSQL computes a descriptive comparison of two observations of the same subject, with matching
@@ -109,7 +129,7 @@ checks the SQL result. Comparisons make no causal claim and never modify editori
 Historical content and visual approvals establish the association without rerunning today's export
 freshness guard. New revisions or expired evidence do not erase historical measurements. Metrics
 cannot approve content, authorize export, infer that a dry run published anything, or change workflow
-state. Real platform collection and any reviewed policy-learning loop remain future work.
+state. Connected platform collection is separate; automatic policy learning remains absent.
 
 ## Internal community review (partial M8)
 
@@ -117,7 +137,8 @@ Manual comment intake is a separate review flow attached to a source-backed Work
 not change the originating carousel's state. The pinned immutable CharacterConfig may contain a
 typed community policy. Deterministic skills classify exact configured phrases, build a reply from
 configured creative text and exact selected factual excerpts, then validate it. Unknown input or a
-missing policy requires human review. No model, social client, webhook or sending endpoint is used.
+missing policy requires human review. This review engine makes no provider calls. The social bridge
+adds signed inbound comments and separately authorized dispatch without weakening its QA.
 
 Each stage persists a SkillRun before execution and commits its checkpoint with successful output,
 zero-cost telemetry and audit. SQL independently validates expected output; a caller cannot submit

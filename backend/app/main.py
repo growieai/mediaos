@@ -6,6 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import DBAPIError
 
+from app.ai.routes import router as ai_router
 from app.api.routes import router
 from app.community.routes import router as community_router
 from app.config import get_settings
@@ -19,6 +20,10 @@ from app.metrics.routes import router as metrics_router
 from app.observability import configure_logging, request_id
 from app.rendering.routes import router as rendering_router
 from app.services.workflows import ConflictError, SkillFailed
+from app.social.learning_routes import router as social_learning_router
+from app.social.reply_routes import router as reply_router
+from app.social.routes import router as social_router
+from app.social_provider import SocialProviderError
 
 configure_logging()
 
@@ -139,6 +144,21 @@ app.include_router(metrics_router)
 app.include_router(community_router)
 app.include_router(conversion_router)
 app.include_router(media_router)
+app.include_router(ai_router)
+app.include_router(social_router)
+app.include_router(reply_router)
+app.include_router(social_learning_router)
+
+
+@app.exception_handler(SocialProviderError)
+async def social_provider_error(request: Request, exc: SocialProviderError):
+    return JSONResponse(
+        {
+            "detail": "Social provider rejected or could not confirm the operation",
+            "category": exc.category,
+        },
+        status_code=409,
+    )
 
 
 @app.exception_handler(MediaFileError)

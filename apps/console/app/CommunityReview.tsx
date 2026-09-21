@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import SocialReplyPanel from "./SocialReplyPanel";
 
 type Workflow = { id: string; state: string; asset_version_id: string | null; research_version_id: string | null; qa_report_id: string | null };
 type Fact = { id: string; statement: string };
@@ -99,7 +100,7 @@ export default function CommunityReview({ token, tenant, run, operator, approver
 
   return <section aria-label="Community reply review" style={{ borderTop: "1px solid #ccc", marginTop: 20 }}>
     <h2>Comment reply review</h2>
-    <p><strong>Draft only — nothing sent.</strong> Manually submitted comments are not verified platform events. Fixture comments are synthetic and cannot be approved. Ambiguous requests require human review; no eligibility or consent is inferred.</p>
+    <p><strong>Draft approval never sends a reply.</strong> Verified platform comments have separate outbound authorization controls. Manual comments remain internal drafts; fixtures are synthetic and cannot be approved. Ambiguous requests require human review; no eligibility or consent is inferred.</p>
     <button disabled={busy} onClick={() => action(async () => { await load(); await loadDetail(); })}>Refresh comment reviews</button>
     <p role="status">{busy ? "Working on saved reply review…" : message}</p>
     {operator && <details><summary>Submit a comment for internal review</summary><fieldset disabled={busy}>
@@ -116,7 +117,7 @@ export default function CommunityReview({ token, tenant, run, operator, approver
     </fieldset></details>}
     {events.length === 0 ? <p>No comments saved for this workflow.</p> : <p><label>Saved comment <select disabled={busy} value={selected} onChange={e => setSelected(e.target.value)}>{events.map(row => <option key={row.id} value={row.id}>{row.mode} · {row.id}</option>)}</select></label></p>}
     {detail && detail.id === selected && <>
-      <p><strong>{detail.mode === "FIXTURE" ? "SYNTHETIC FIXTURE" : "OPERATOR-SUPPLIED COMMENT"}</strong> · {detail.origin}</p>
+      <p><strong>{detail.mode === "FIXTURE" ? "SYNTHETIC FIXTURE" : detail.mode === "PLATFORM" ? "VERIFIED PLATFORM COMMENT" : "OPERATOR-SUPPLIED COMMENT"}</strong> · {detail.origin}</p>
       <blockquote style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{detail.comment_text}</blockquote>
       {operator && <fieldset disabled={busy || !parentApproved}><legend>Prepare a reply review</legend>
         <p>Select up to five source excerpts for a source request. Acknowledgements use only the configured creative response and require no facts.</p>
@@ -127,7 +128,7 @@ export default function CommunityReview({ token, tenant, run, operator, approver
       {!parentApproved && <p>Reply preparation and approval require current approved parent content. Historical reviews remain visible.</p>}
       {reviews.map(review => {
         const exact = review.asset_version_id === run.asset_version_id && review.research_version_id === run.research_version_id && review.qa_report_id === run.qa_report_id;
-        const canDecide = approver && review.id === latest?.id && parentApproved && exact && review.status === "AWAITING_REVIEW" && review.qa?.status === "PASS" && detail.mode === "MANUAL";
+        const canDecide = approver && review.id === latest?.id && parentApproved && exact && review.status === "AWAITING_REVIEW" && review.qa?.status === "PASS" && ["MANUAL", "PLATFORM"].includes(detail.mode);
         const reviewIdentity = `${review.id}:${review.draft_hash}:${review.qa_hash}`;
         return <article key={review.id} style={{ border: "1px solid #ddd", padding: 12, marginTop: 12 }}>
           <h3>Review {review.revision} · {review.status}</h3>
@@ -143,6 +144,7 @@ export default function CommunityReview({ token, tenant, run, operator, approver
             {(["approve", "reject"] as const).map(decision => <button key={decision} disabled={acknowledged !== reviewIdentity} onClick={() => action(async () => { await request(`community-reviews/${review.id}/${decision}`, "POST", { draft_hash: review.draft_hash, qa_hash: review.qa_hash, comment: reviewComment || null }); await loadDetail(); setAcknowledged(null); })}>{decision === "approve" ? "Approve exact draft (no sending)" : "Reject reply draft"}</button>)}
           </fieldset>}
           {review.decisions?.map(row => <p key={row.id}>Human decision: {row.decision} · {row.comment ?? "No comment"}</p>)}
+          {detail.mode === "PLATFORM" && <SocialReplyPanel key={`dispatch:${review.id}`} tenant={tenant} token={token} reviewId={review.id} eligible={review.id === latest?.id && parentApproved && exact && review.status === "REVIEWED_DRAFT" && review.qa?.status === "PASS"} operator={operator} approver={approver} />}
           <details><summary>Attempts and exact revisions</summary><pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{JSON.stringify({ asset_version_id: review.asset_version_id, research_version_id: review.research_version_id, qa_report_id: review.qa_report_id, draft_hash: review.draft_hash, qa_hash: review.qa_hash, attempts: review.attempts }, null, 2)}</pre></details>
         </article>;
       })}

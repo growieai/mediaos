@@ -1,11 +1,13 @@
 # Build Plan — First Influencer (roadmap reconciliation)
 
-The `milestone-completion` branch adds M9 consent-aware manual handoff and the persisted M10
-speaking-video foundation. It does not mark all live milestones complete. New provider adapters,
-video QA/review and console controls are described in [SPEAKING_VIDEO.md](SPEAKING_VIDEO.md);
-actual remaining dependencies are in [MILESTONE_COMPLETION_REPORT.md](MILESTONE_COMPLETION_REPORT.md).
-Live speech/video, social dispatch/insights/community, actual conversion delivery and deployment
-remain acceptance gates. No secret, paid policy or externally sent message is seeded automatically.
+The `milestone-completion` branch includes M9 consent-aware manual handoff, the persisted M10
+speaking-video path, opt-in real text execution, and connected Instagram publishing, platform
+metrics and comment/reply paths. These paths have separate persisted authorization and remain
+disabled until configured. It does not mark unperformed live acceptance complete. See
+[SPEAKING_VIDEO.md](SPEAKING_VIDEO.md), [SOCIAL_INTEGRATION.md](SOCIAL_INTEGRATION.md),
+[REAL_MODEL_EXECUTION.md](REAL_MODEL_EXECUTION.md), and the actual verification/dependency record
+in [MILESTONE_COMPLETION_REPORT.md](MILESTONE_COMPLETION_REPORT.md).
+No credential, paid policy or externally sent message is seeded automatically.
 
 The user-defined milestones supersede the starter numbering below. **M2 is Spain Intelligence;
 M3 is visual production.** The old ingestion/visual sections below are historical scope, not
@@ -21,8 +23,9 @@ Its implementation `8f24688` passed 308 tests and hosted CI, including Docker an
 It is partial M7; verified platform insights remain dependent on an account and actual posts.
 The `milestone-8-community-review` foundation adds internal manual comment classification,
 evidence-backed reply drafts, QA and separate human review. It has no inbound social integration
-or sending capability. This is partial M8; the live community milestone remains dependent on an
-account, verified inbound events, permissions and a dispatch policy.
+or sending capability in that historical foundation. The current branch adds the connected bridge
+and separate dispatch authorization; live community acceptance still requires an account and a real
+signed inbound event followed by an explicitly authorized reply.
 M3 adds a proposed versioned character pack,
 deterministic 1080×1350 rendering, immutable private PNG files/manifests, visual QA, separate
 guarded visual approval, and checked ZIP export. Its one-screen preview also delivers the
@@ -33,13 +36,13 @@ The remaining roadmap proceeds one verified loop at a time:
 
 | Capability | Independent work | Live dependency / completion gate |
 | --- | --- | --- |
-| Typed model skills | Strict fact/template selection adapter and mock transport tests | User chose mock mode until credentials are configured. Persist real attempts/usage/cost semantics before enabling the adapter; no live API result is claimed. |
+| Typed model skills | Strict fact/template selection runtime, persisted reservations/attempts/usage, explicit tenant caps and typed tests | User chose mock mode until credentials are configured; real-call acceptance remains pending. |
 | Visual approval | Exact file preview, QA findings, human decision and private ZIP export; 188 tests and hosted Docker/console-proxy acceptance passed for M3 | User review of proposed character appearance; durable object storage is required for production. |
-| Instagram (original M6) | Dry-run adapter, persisted intent, idempotency and reconciliation | User will connect an account later. Permissions, token storage, HTTPS media delivery and explicit dispatch authorization are required for a real post. |
-| Metrics (M7) | Immutable manual/fixture metric snapshots, exact historical render lineage and descriptive comparisons | Actual connected post and verified insights access. Missing metrics remain unknown, never zero; manual reports never become platform-verified data. |
-| Community (M8) | Idempotent events, classifications and reviewed reply drafts | Webhooks, account permissions and explicit send authorization. Automatic comments/DMs remain disabled. |
+| Instagram (original M6) | Separate connected-account OAuth/token vault, exact JPEG plan review, guarded dispatch, durable attempts/receipts and reconciliation | User will connect an account later; permissions, public HTTPS media access and an explicit real post are needed for live acceptance. |
+| Metrics (M7) | Immutable manual/fixture and distinct verified-platform snapshots, exact post lineage and descriptive comparisons | Actual connected post and two real insights observations. Missing metrics remain unknown; manual reports never become platform-verified data. |
+| Community (M8) | Signed comment bridge, classifications/reviewed drafts and separately authorized exact reply dispatch | Real signed inbound webhook, account permissions and explicit real reply. Automatic comments/DMs remain disabled. |
 | Conversion (M9) | Consent-aware versioned requests, attribution, revocation and guarded manual export | Actual consent, chosen destination and confirmed external handoff. Existing Growie production services/database remain out of bounds. |
-| Reels (M10) | Persisted ElevenLabs/HeyGen speaking-video workflow, exact captions/fact cards, bounded spend and separate review; built following the user's expanded video scope | Selected portrait/voice, provider accounts and prices, authorized budget, actual generation and human audiovisual review. Higgsfield runtime cutaways and production media operations remain pending. |
+| Reels (M10) | Persisted ElevenLabs/HeyGen speaking-video workflow, exact captions/fact-card cutaways, bounded spend and separate review; Sara Martin selection recorded | Provider accounts and verified prices, authorized budget, actual generation and human audiovisual review. Higgsfield is an optional later illustrative-cutaway path; its transport adapter alone is not a completed generation workflow. |
 
 Marketplace, external creator UI/signup and customer billing stay deferred. Production operations
 also require organizational identity/token lifecycle, private infrastructure, TLS, secrets management,

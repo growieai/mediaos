@@ -4,8 +4,9 @@ This implementation produces a talking presenter from **exact approved content**
 
 `approved carousel excerpts → ElevenLabs speech/alignment → HeyGen photo avatar → local captions/fact-card cutaways/disclosure → media QA → separate human approval`
 
-It does not publish a video. Text skills remain in mock mode. The earlier silent motion concept
-is separate and cannot become an approved media run.
+It does not publish a video. Text skills default to mock mode; the separately configured
+[optional real creator selection](REAL_MODEL_EXECUTION.md) does not enable media generation.
+The earlier silent motion concept is separate and cannot become an approved media run.
 
 ## Dependencies
 

@@ -210,14 +210,15 @@ def _download(url: str, transport: httpx.BaseTransport | None) -> bytes:
         parsed = urlsplit(https_url(url))
         if parsed.hostname != "files.heygen.ai":
             raise ValueError()
-        request_url, headers, extensions = httpx.URL(url), {}, {}
+        request_url, headers, extensions = httpx.URL(url), {"Accept-Encoding": "identity"}, {}
         if not isinstance(transport, httpx.MockTransport):
             addresses = socket.getaddrinfo(parsed.hostname, 443, type=socket.SOCK_STREAM)
             if not addresses or any(not ipaddress.ip_address(a[4][0]).is_global for a in addresses):
                 raise ValueError()
             # Pin the validated address while preserving TLS identity; no second DNS lookup.
             request_url = request_url.copy_with(host=addresses[0][4][0])
-            headers, extensions = {"Host": parsed.hostname}, {"sni_hostname": parsed.hostname}
+            headers["Host"] = parsed.hostname
+            extensions = {"sni_hostname": parsed.hostname}
         started, body = time.monotonic(), bytearray()
         with httpx.Client(
             transport=transport,
@@ -236,9 +237,14 @@ def _download(url: str, transport: httpx.BaseTransport | None) -> bytes:
                         else None
                     )
                     raise MediaRetrievalError(delay)
-                if response.status_code != 200:
+                if (
+                    response.status_code != 200
+                    or response.headers.get("content-encoding", "identity").lower() != "identity"
+                ):
                     raise ValueError()
-                for chunk in response.iter_bytes(65536):
+                # Check small network chunks too, rather than waiting for a
+                # 64 KiB buffer while an expiring CDN response trickles data.
+                for chunk in response.iter_bytes():
                     body.extend(chunk)
                     if len(body) > LIMIT:
                         raise ValueError()

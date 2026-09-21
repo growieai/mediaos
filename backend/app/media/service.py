@@ -50,7 +50,7 @@ def dependencies():
         and present(settings.hf_api_key_secret),
         "ffmpeg_available": bool(shutil.which("ffmpeg")),
         "ffprobe_available": bool(shutil.which("ffprobe")),
-        "text_mode": "mock",
+        "text_mode": "mock" if settings.ai_mock_mode else "model-opt-in",
         "automatic_publishing": False,
         "required": [
             "approved source content",

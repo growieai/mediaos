@@ -69,6 +69,8 @@ class Transport:
             raise ProviderError("INVALID_REQUEST")
         request_id = None
         started = time.monotonic()
+        request_headers = httpx.Headers(headers)
+        request_headers["Accept-Encoding"] = "identity"
         try:
             with httpx.Client(
                 transport=self.transport,
@@ -79,7 +81,7 @@ class Transport:
                 with client.stream(
                     method,
                     f"https://{self.host}{path}",
-                    headers=headers,
+                    headers=request_headers,
                     json=payload,
                     files=files,
                 ) as response:
@@ -120,8 +122,17 @@ class Transport:
                             if re.fullmatch(r"[0-9]{1,8}", retry_after)
                             else None,
                         )
+                    if response.headers.get("content-encoding", "identity").lower() != "identity":
+                        # A decoder may consume arbitrarily many raw chunks
+                        # without yielding bytes to the deadline/size checks.
+                        raise ProviderError(
+                            "UNKNOWN_OUTCOME" if ambiguous else "INVALID_OUTPUT",
+                            request_id=request_id,
+                        )
                     body = bytearray()
-                    for chunk in response.iter_bytes(chunk_size=65536):
+                    # Check each decoded network chunk; buffering 64 KiB lets a
+                    # trickling response evade the total deadline indefinitely.
+                    for chunk in response.iter_bytes():
                         if time.monotonic() - started > 120:
                             raise ProviderError(
                                 "UNKNOWN_OUTCOME" if ambiguous else "NETWORK",

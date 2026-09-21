@@ -500,6 +500,25 @@ class Runner:
             elif state == "CONTENT_GENERATING":
                 assert pack_row is not None
                 pack = typed(ResearchPack, pack_row["payload"])
+                with conn.begin():
+                    repo = Repository(conn, self.tenant_id, self.token)
+                    previous = repo.all(
+                        "skill_runs", workflow_run_id=run_id, step_key="content.carousel"
+                    )
+                real_creator = any(row["provider"] == "openai" for row in previous) or (
+                    not previous
+                    and not get_settings().ai_mock_mode
+                    and type(self.adapter) in {MockAdapter, DeterministicAdapter}
+                )
+                if real_creator:
+                    from app.ai.runtime import execute_creator
+
+                    if not execute_creator(conn, self.tenant_id, self.token, run_id):
+                        with conn.begin():
+                            return Repository(conn, self.tenant_id, self.token).one(
+                                "workflow_runs", id=run_id
+                            )
+                    continue
                 self.attempt(
                     conn,
                     run_id,

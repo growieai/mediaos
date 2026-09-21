@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import make_url
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+SCHEMA_REVISION = "0015"
 
 
 class Settings(BaseSettings):
@@ -28,13 +29,30 @@ class Settings(BaseSettings):
     heygen_api_key: SecretStr | None = None
     hf_api_key_id: SecretStr | None = None
     hf_api_key_secret: SecretStr | None = None
+    openai_api_key: SecretStr | None = None
+    social_connect_enabled: bool = False
+    social_publish_enabled: bool = False
+    social_reply_enabled: bool = False
+    social_app_id: str | None = None
+    social_app_secret: SecretStr | None = None
+    social_api_version: str | None = None
+    social_redirect_uri: str | None = None
+    social_public_base_url: str | None = None
+    social_vault_key: SecretStr | None = None
+    social_webhook_verify_token: SecretStr | None = None
+    social_service_tokens: SecretStr | None = None
+    social_storage_path: Path = REPO_ROOT / ".local" / "social"
 
     @model_validator(mode="after")
     def milestone_scope(self):
         url = make_url(self.database_url.get_secret_value())
         if url.drivername != "postgresql+psycopg" or url.username != "mediaos_runtime":
             raise ValueError("Runtime must use its restricted PostgreSQL role")
-        if not self.ai_mock_mode or any(
+        if not self.ai_mock_mode and not (
+            self.openai_api_key and self.openai_api_key.get_secret_value()
+        ):
+            raise ValueError("Real text mode requires a configured OpenAI key and tenant policy")
+        if any(
             (
                 self.enable_external_creators,
                 self.enable_auto_publish,
@@ -43,7 +61,7 @@ class Settings(BaseSettings):
             )
         ):
             raise ValueError(
-                "Text mock mode and public integration feature gates must stay enabled/off respectively"
+                "External creator and automatic publishing/reply feature gates must remain off"
             )
         return self
 

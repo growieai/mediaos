@@ -10,6 +10,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
   const { path } = await context.params;
   if (path.some(segment => !/^[a-zA-Z0-9-]+$/.test(segment))) return Response.json({ detail: "Invalid API path" }, { status: 400, headers: safeHeaders });
   const videoRoute = request.method === "GET" && path.length === 3 && path[0] === "media-runs" && path[2] === "video";
+  const jpegRoute = request.method === "GET" && path.length === 4 && path[0] === "social-publishes" && /^[0-9a-f-]{36}$/i.test(path[1]) && path[2] === "slides" && /^(?:[1-9]|10)$/.test(path[3]);
   const query = request.nextUrl.searchParams;
   const exportVideo = videoRoute && query.size === 1 && query.get("export") === "true";
   if (query.size && !exportVideo) return Response.json({ detail: "Unsupported internal API query" }, { status: 400, headers: safeHeaders });
@@ -37,7 +38,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
       cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(60000),
     });
     const contentType = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase();
-    if (!contentType || !["application/json", "image/png", "application/zip", "video/mp4"].includes(contentType) || (contentType === "video/mp4" && !videoRoute)) {
+    if (!contentType || !["application/json", "image/png", "image/jpeg", "application/zip", "video/mp4"].includes(contentType) || (contentType === "video/mp4" && !videoRoute) || (contentType === "image/jpeg" && !jpegRoute)) {
       return Response.json({ detail: "Unsupported internal API response" }, { status: 502, headers: safeHeaders });
     }
     const headers: Record<string, string> = { "Content-Type": contentType, ...safeHeaders };
@@ -46,7 +47,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
     if (filename && ((contentType === "application/zip" && filename.endsWith(".zip")) || (contentType === "image/png" && filename.endsWith(".png")) || (contentType === "video/mp4" && exportVideo && filename.endsWith(".mp4")))) {
       headers["Content-Disposition"] = `attachment; filename="${filename}"`;
     }
-    const limit = contentType === "application/json" ? 16 * 1024 * 1024 : maximumMediaBytes;
+    const limit = contentType === "application/json" ? 16 * 1024 * 1024 : contentType === "image/jpeg" ? 8_000_000 : maximumMediaBytes;
     const declared = response.headers.get("content-length");
     if (declared && /^\d+$/.test(declared) && Number(declared) > limit) {
       await response.body?.cancel();

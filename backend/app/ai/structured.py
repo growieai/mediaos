@@ -8,6 +8,7 @@ Retries, tenant access, current evidence checks and approval belong to the calle
 import hashlib
 import json
 import re
+import time
 from typing import Annotated, Any, Literal
 from uuid import UUID
 
@@ -102,6 +103,7 @@ ErrorCategory = Literal[
     "INCOMPLETE",
     "INVALID_OUTPUT",
     "INVALID_SELECTION",
+    "UNKNOWN_OUTCOME",
 ]
 
 
@@ -225,7 +227,9 @@ def _token_count(value: Any) -> int | None:
     return value if type(value) is int and 0 <= value <= 1_000_000_000 else None
 
 
-def _metadata(model: str, request_id: str | None, body: dict[str, Any]) -> ExecutionMetadata:
+def _metadata(
+    model: str, request_id: str | None, body: dict[str, Any], secret: str | None = None
+) -> ExecutionMetadata:
     usage = body.get("usage")
     usage = usage if isinstance(usage, dict) else {}
     input_details, output_details = (
@@ -244,9 +248,9 @@ def _metadata(model: str, request_id: str | None, body: dict[str, Any]) -> Execu
         )
     return ExecutionMetadata(
         model=model,
-        response_model=_safe_id(body.get("model")),
-        request_id=_safe_id(request_id),
-        response_id=_safe_id(body.get("id")),
+        response_model=_safe_id(body.get("model")) if body.get("model") != secret else None,
+        request_id=_safe_id(request_id) if request_id != secret else None,
+        response_id=_safe_id(body.get("id")) if body.get("id") != secret else None,
         input_tokens=_token_count(usage.get("input_tokens")),
         output_tokens=_token_count(usage.get("output_tokens")),
         total_tokens=_token_count(usage.get("total_tokens")),
@@ -296,13 +300,13 @@ class OpenAISelectionAdapter:
         self.model = settings.model
         self._transport = transport
 
-    def select(
+    def prepare(
         self,
         research: ResearchPack,
         brief: ContentBrief,
         config: CharacterConfig,
         influencer_version_id: UUID,
-    ) -> SelectionResult:
+    ) -> dict[str, Any]:
         facts, templates, minimum, maximum = _catalog(research, brief, config)
         context = {
             "brief": brief.model_dump(mode="json"),
@@ -362,7 +366,26 @@ class OpenAISelectionAdapter:
             > self.settings.max_input_bytes
         ):
             raise ModelSelectionError("INPUT_TOO_LARGE")
+        return payload
+
+    def select(
+        self,
+        research: ResearchPack,
+        brief: ContentBrief,
+        config: CharacterConfig,
+        influencer_version_id: UUID,
+        *,
+        expected_request_hash: str | None = None,
+        client_request_id: UUID | None = None,
+    ) -> SelectionResult:
+        payload = self.prepare(research, brief, config, influencer_version_id)
+        digest = hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+        ).hexdigest()
+        if expected_request_hash is not None and digest != expected_request_hash:
+            raise ModelSelectionError("INVALID_INPUT")
         request_id = None
+        started = time.monotonic()
         try:
             with httpx.Client(
                 transport=self._transport,
@@ -378,10 +401,18 @@ class OpenAISelectionAdapter:
                     headers={
                         "Authorization": "Bearer " + self.settings.api_key.get_secret_value(),
                         "Content-Type": "application/json",
+                        "Accept-Encoding": "identity",
                         "User-Agent": "MediaOS/creator-selection-v1",
+                        **(
+                            {"X-Client-Request-Id": str(client_request_id)}
+                            if client_request_id
+                            else {}
+                        ),
                     },
                 ) as response:
                     request_id = _safe_id(response.headers.get("x-request-id"))
+                    if request_id == self.settings.api_key.get_secret_value():
+                        request_id = None
                     execution = _metadata(self.model, request_id, {})
                     if response.status_code != 200:
                         retry = response.headers.get("retry-after", "")
@@ -392,21 +423,28 @@ class OpenAISelectionAdapter:
                         if response.status_code == 429:
                             category = "RATE_LIMIT"
                         elif response.status_code >= 500 or response.status_code == 408:
-                            category = "PROVIDER_UNAVAILABLE"
+                            category = "UNKNOWN_OUTCOME"
                         raise ModelSelectionError(
                             category,
-                            retryable=category in {"RATE_LIMIT", "PROVIDER_UNAVAILABLE"},
+                            retryable=category == "RATE_LIMIT",
                             execution=execution,
                             retry_after_seconds=retry_seconds,
                         )
+                    if response.headers.get("content-encoding", "identity").lower() != "identity":
+                        raise ModelSelectionError("UNKNOWN_OUTCOME", execution=execution)
                     raw = bytearray()
+                    # Do not wait for a fixed-size buffer before enforcing the
+                    # total deadline on a provider that keeps trickling bytes.
                     for chunk in response.iter_bytes():
-                        if len(raw) + len(chunk) > self.settings.max_response_bytes:
-                            raise ModelSelectionError("RESPONSE_TOO_LARGE", execution=execution)
+                        if (
+                            len(raw) + len(chunk) > self.settings.max_response_bytes
+                            or time.monotonic() - started > 120
+                        ):
+                            raise ModelSelectionError("UNKNOWN_OUTCOME", execution=execution)
                         raw.extend(chunk)
         except httpx.HTTPError:
             raise ModelSelectionError(
-                "NETWORK", retryable=True, execution=_metadata(self.model, request_id, {})
+                "UNKNOWN_OUTCOME", execution=_metadata(self.model, request_id, {})
             ) from None
         try:
             body = json.loads(raw)
@@ -414,9 +452,11 @@ class OpenAISelectionAdapter:
                 raise ValueError
         except (ValueError, RecursionError):
             raise ModelSelectionError(
-                "INVALID_RESPONSE", execution=_metadata(self.model, request_id, {})
+                "UNKNOWN_OUTCOME", execution=_metadata(self.model, request_id, {})
             ) from None
-        execution = _metadata(self.model, request_id, body)
+        execution = _metadata(
+            self.model, request_id, body, self.settings.api_key.get_secret_value()
+        )
         output_text = _plan_text(body, execution)
         try:
             plan = CreatorPlan.model_validate_json(output_text, strict=True)

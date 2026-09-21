@@ -1,4 +1,4 @@
-"""Strict, bounded schemas for manual community observations and reviewed drafts."""
+"""Bounded observations; only the trusted webhook bridge can create PLATFORM input."""
 
 from datetime import datetime, timedelta
 from typing import Annotated, Literal
@@ -14,7 +14,7 @@ Digest = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$")]
 
 class CommunityEventPayload(StrictModel):
     schema_version: Literal[1] = 1
-    mode: Literal["MANUAL", "FIXTURE"]
+    mode: Literal["MANUAL", "FIXTURE", "PLATFORM"]
     origin: str = Field(min_length=1, max_length=512)
     participant_reference: str = Field(min_length=1, max_length=128)
     comment_text: str = Field(min_length=1, max_length=4000)
@@ -35,6 +35,7 @@ class CommunityEventPayload(StrictModel):
 
 
 class CommunityEventInput(CommunityEventPayload):
+    mode: Literal["MANUAL", "FIXTURE"]
     idempotency_key: Key
 
 

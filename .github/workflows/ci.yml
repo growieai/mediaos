@@ -63,7 +63,7 @@ jobs:
           npm run build
       - name: Container configuration and builds
         run: |
-          mkdir -p .local/media
+          mkdir -p .local/media .local/social
           docker compose config --quiet
           docker compose build
       - name: Container startup and persisted API acceptance
