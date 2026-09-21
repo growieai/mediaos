@@ -94,6 +94,30 @@ class CreateRun(StrictModel):
     source: SourceInput
 
 
+class CommunityPolicy(StrictModel):
+    schema_version: Literal[1] = 1
+    acknowledgement_phrases: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=200)]
+    ] = Field(min_length=1, max_length=20)
+    source_request_phrases: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=200)]
+    ] = Field(min_length=1, max_length=20)
+    acknowledgement_text: Annotated[str, StringConstraints(min_length=1, max_length=1000)]
+    source_intro: Annotated[str, StringConstraints(min_length=1, max_length=1000)]
+    max_reply_chars: int = Field(ge=50, le=4000)
+
+    @model_validator(mode="after")
+    def exact_phrases(self):
+        phrases = self.acknowledgement_phrases + self.source_request_phrases
+        if any(not phrase.strip(" ") or phrase != phrase.strip(" ") for phrase in phrases):
+            raise ValueError("Community phrases must be nonblank and ASCII-space trimmed")
+        if len(phrases) != len(set(phrases)):
+            raise ValueError("Community classification phrases must be unique and disjoint")
+        if not self.acknowledgement_text.strip() or not self.source_intro.strip():
+            raise ValueError("Community templates cannot be blank")
+        return self
+
+
 class CharacterConfig(StrictModel):
     schema_version: Literal[1] = 1
     persona: str
@@ -114,6 +138,7 @@ class CharacterConfig(StrictModel):
     min_slides: int = Field(ge=1, le=20)
     max_slides: int = Field(ge=1, le=20)
     creative_allowlist: list[str]
+    community_policy: CommunityPolicy | None = None
 
 
 class Fact(StrictModel):

@@ -8,10 +8,14 @@ verification are recorded in `MILESTONE_2_IMPLEMENTATION_REPORT.md`.
 M3 is committed at `8827816` on `milestone-3-visual-production`, with passing hosted CI including Docker.
 The original M6's internal delivery rehearsal is published on `milestone-6-delivery-preflight`,
 with passing hosted CI through `a45c29a`. It has no live account connection or public posting;
-this is partial M6, not a completed Instagram integration. Current work continues on
-`milestone-7-metrics-foundation`: manual/fixture observations and descriptive comparisons.
+this is partial M6, not a completed Instagram integration. The
+`milestone-7-metrics-foundation` branch adds manual/fixture observations and descriptive comparisons.
 Its implementation `8f24688` passed 308 tests and hosted CI, including Docker and console acceptance.
 It is partial M7; verified platform insights remain dependent on an account and actual posts.
+Current work continues on `milestone-8-community-review`: internal manual comment classification,
+evidence-backed reply drafts, QA and separate human review. It has no inbound social integration
+or sending capability. This is partial M8; the live community milestone remains dependent on an
+account, verified inbound events, permissions and a dispatch policy.
 M3 adds a proposed versioned character pack,
 deterministic 1080×1350 rendering, immutable private PNG files/manifests, visual QA, separate
 guarded visual approval, and checked ZIP export. Its one-screen preview also delivers the

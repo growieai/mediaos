@@ -5,6 +5,8 @@ The internal console is at **http://127.0.0.1:3000**. This checkout uses a separ
 The M2-specific review below preserves its original handoff IDs. For the later capabilities, follow
 [visual testing](VISUAL_TESTING.md), [delivery preflight testing](DELIVERY_TESTING.md) and
 [reported metrics testing](METRICS_TESTING.md). Their acceptance reports supply current local IDs.
+The next internal loop is [comment reply review](COMMUNITY_TESTING.md), which saves drafts and
+human decisions without sending messages.
 
 ## Sign in and review
 

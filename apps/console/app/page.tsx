@@ -2,10 +2,26 @@
 
 import { useState } from "react";
 import VisualReview from "./VisualReview";
+import CommunityReview from "./CommunityReview";
 
 type Run = { id: string; state: string; source_snapshot_id: string; asset_version_id: string | null; research_version_id: string | null; qa_report_id: string | null };
 type Identity = { memberships: { roles: string[] }[]; influencers: { id: string; name: string }[]; missions: { id: string; name: string }[] };
 type Artifact = { id: string; payload?: Record<string, unknown>; [key: string]: unknown };
+
+function replyFacts(artifacts: Record<string, Artifact[]>, run: Run) {
+  const claimed = new Set<string>();
+  function visit(value: unknown) {
+    if (Array.isArray(value)) { value.forEach(visit); return; }
+    if (!value || typeof value !== "object") return;
+    const row = value as Record<string, unknown>;
+    if (row.kind === "FACT" && Array.isArray(row.fact_ids)) row.fact_ids.forEach(id => { if (typeof id === "string") claimed.add(id); });
+    Object.values(row).forEach(visit);
+  }
+  visit(artifacts.content_asset_versions?.find(row => row.id === run.asset_version_id)?.payload);
+  const facts = artifacts.research_pack_versions?.find(row => row.id === run.research_version_id)?.payload?.facts;
+  if (!Array.isArray(facts)) return [];
+  return facts.filter((fact): fact is { id: string; statement: string } => !!fact && typeof fact === "object" && typeof fact.id === "string" && typeof fact.statement === "string" && claimed.has(fact.id));
+}
 
 export default function Home() {
   const [tenant, setTenant] = useState("");
@@ -132,6 +148,7 @@ export default function Home() {
       {approver && <><button disabled={busy || !waiting} onClick={() => action(() => decision("approve"))}>Approve exact revisions</button>{" "}
       <button disabled={busy || !waiting} onClick={() => action(() => decision("reject"))}>Reject</button></>}
       <VisualReview key={`${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} refresh={id => action(() => refresh(id))} />
+      <CommunityReview key={`community:${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} facts={replyFacts(artifacts, run)} />
       {Object.entries(artifacts).map(([name, rows]) => <details key={name} open={["content_asset_versions", "qa_reports"].includes(name)}>
         <summary>{name} ({rows.length})</summary>
         <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", background: "#fff", padding: 12 }}>{JSON.stringify(rows, null, 2)}</pre>

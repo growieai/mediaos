@@ -111,3 +111,23 @@ All three tables are immutable, force tenant RLS and allow runtime SELECT only. 
 enforce tenant-scoped idempotency and append workflow audit events. A successful learning report,
 its deterministic `learning.describe` SkillRun and its zero-token, zero-cost CostEvent commit in one
 transaction. No model call or paid usage is represented by this computation.
+
+## Internal community review (0006, partial M8)
+
+`community_events` stores immutable manual/fixture input with origin, opaque participant reference,
+exact comment, capture/receipt timestamps, content hash, creator and tenant-scoped idempotency.
+MANUAL is an operator assertion, not verified platform provenance. FIXTURE is permanent.
+
+`community_reviews` stores consecutive event review revisions, exact parent asset/research/QA/
+content approval and influencer/configuration references, selected facts, policy hash, execution
+state, retry metadata and immutable typed classification/draft/QA checkpoints. Each stage has
+separate persisted SkillRun attempts; failures do not change the parent WorkflowRun.
+
+`community_reply_claims` links reply fact blocks to exact current-parent content_claims and
+brief_facts with composite foreign keys. Factual text is copied verbatim from those fact records.
+`community_decisions` binds an immutable human decision to the exact review, parent revisions,
+draft hash and QA hash. A new reply creates a new review revision, never overwrites a decision.
+
+All four tables force tenant RLS and deny direct runtime writes. Guarded functions validate
+ownership, state transitions, typed output, current source eligibility and permission. The optional
+community policy is versioned inside CharacterConfig; older pinned configurations remain unchanged.

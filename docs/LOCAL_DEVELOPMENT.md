@@ -136,3 +136,12 @@ standalone infrastructure. `python scripts/dev.py metrics-acceptance` runs the e
 render and delivery simulation followed by synthetic metric observations. Its report is
 `.local/metrics-acceptance-report.json`. It never contacts a social platform, and does not label
 fixture observations as real performance. [METRICS_TESTING.md](METRICS_TESTING.md) describes manual use.
+
+## Internal reply review
+
+Migration 0006 adds the separate community review records. Seed versions the optional community
+policy; create a new workflow to use it. Existing workflows retain their original configuration.
+Build/restart as usual. `python scripts/dev.py community-acceptance` composes the visual/delivery/
+metrics acceptance with internal reply-review checks. Its report explicitly distinguishes internal
+operator requests, synthetic controls and simulated approver calls; no external messages are sent.
+No new dependency, secret or service is needed. See [COMMUNITY_TESTING.md](COMMUNITY_TESTING.md).

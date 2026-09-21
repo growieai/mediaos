@@ -86,3 +86,11 @@ Two observations with matching definitions can produce a saved descriptive compa
 reported decreases. This does not fetch Instagram insights, infer causes or update editorial policy.
 Run `python scripts/dev.py metrics-acceptance` after migration/seed to exercise the entire local
 flow with clearly labelled fixture observations. See [Metrics testing](docs/METRICS_TESTING.md).
+
+## Internal comment reply review (partial M8)
+
+Manually submit a comment, select exact approved source excerpts and inspect a deterministic reply
+draft with its own QA and human decision. Unknown requests require human review. Fixture comments,
+unsupported claims and stale parent revisions cannot be approved. Every decision ends at a saved
+draft; nothing is sent. Run `python scripts/dev.py community-acceptance` after migration/seed.
+See [Community testing](docs/COMMUNITY_TESTING.md). No social account or paid AI key is needed.

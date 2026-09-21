@@ -85,6 +85,10 @@ def metadata():
             "metric_subjects",
             "metric_snapshots",
             "learning_reports",
+            "community_events",
+            "community_reviews",
+            "community_reply_claims",
+            "community_decisions",
         ],
     )
     return meta

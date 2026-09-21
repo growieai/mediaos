@@ -23,5 +23,13 @@
   "creative_allowlist": [
     "Para revisar con calma",
     "Guarda esta información y consulta la fuente."
-  ]
+  ],
+  "community_policy": {
+    "schema_version": 1,
+    "acknowledgement_phrases": ["Gracias", "Gracias.", "¡Gracias!"],
+    "source_request_phrases": ["¿Fuente?", "¿Cuál es la fuente?"],
+    "acknowledgement_text": "¡Gracias por leer!",
+    "source_intro": "Este es el texto de la fuente que respalda la publicación:",
+    "max_reply_chars": 2200
+  }
 }

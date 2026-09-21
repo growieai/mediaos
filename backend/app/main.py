@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import DBAPIError
 
 from app.api.routes import router
+from app.community.routes import router as community_router
 from app.config import get_settings
 from app.delivery.routes import router as delivery_router
 from app.intelligence.http import SourcePolicyError, SourceUnavailable
@@ -132,6 +133,7 @@ app.include_router(intelligence_router)
 app.include_router(rendering_router)
 app.include_router(delivery_router)
 app.include_router(metrics_router)
+app.include_router(community_router)
 
 
 @app.exception_handler(SourceUnavailable)

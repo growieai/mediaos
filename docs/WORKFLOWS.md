@@ -138,3 +138,29 @@ rejection or transaction failure rolls back the entire operation; it does not fa
 failed-attempt history. After an operational interruption or uncertain response, retry the same
 request/key to recover the committed result or execute an uncommitted operation once. There is no
 external side effect, background retry scheduler or live insights fetch in this slice.
+
+## Internal reply review (partial M8)
+
+`manual event → CREATED → CLASSIFYING → CLASSIFIED → DRAFTING → DRAFT_COMPLETE → QA_RUNNING
+→ AWAITING_REVIEW → human decision → REVIEWED_DRAFT / REJECTED`.
+Unrecognized input or missing policy ends at HUMAN_REVIEW without a generated reply. Deterministic
+QA branches to BLOCKED or REVISION_REQUIRED. Transient execution failures use RETRY_WAIT; exhausted
+or non-retryable failures become FAILED. These are community states, not new carousel states.
+
+The `community.classify`, `community.draft` and `community.qa` skills have committed attempt rows
+before work begins. Each stage permits three attempts with persisted 1s/2s backoff. Resume marks
+orphan attempts INTERRUPTED; a session lock prevents concurrent execution. Exact successful
+checkpoints are immutable and never committed twice. Unknown intent and QA findings are policy
+results, not reasons to repeatedly retry. No parent WorkflowRun state is changed by this flow.
+
+- `POST/GET /v1/workflow-runs/{id}/community-events` saves/lists observations.
+- `GET /v1/community-events/{id}` includes immutable review history.
+- `POST /v1/community-events/{id}/reviews` creates and executes a review using selected fact IDs.
+- `GET /v1/community-reviews/{id}` returns checkpoints, claims, attempts and decisions.
+- `POST /v1/community-reviews/{id}/execute` resumes a saved review.
+- `POST /v1/community-reviews/{id}/approve` or `/reject` requires exact draft/QA hashes and APPROVER.
+
+Creation is tenant/key/hash idempotent. An explicit new key creates a new review revision. Approval
+locks the workflow then its event/review, checks the latest review and pinned parent revisions,
+and reruns the parent evidence QA including official-source conflicts and freshness. It never
+inherits an older decision or allows a fixture through. There is no Send transition or route.

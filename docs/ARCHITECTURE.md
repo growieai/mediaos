@@ -97,3 +97,17 @@ Historical content and visual approvals establish the association without rerunn
 freshness guard. New revisions or expired evidence do not erase historical measurements. Metrics
 cannot approve content, authorize export, infer that a dry run published anything, or change workflow
 state. Real platform collection and any reviewed policy-learning loop remain future work.
+
+## Internal community review (partial M8)
+
+Manual comment intake is a separate review flow attached to a source-backed WorkflowRun. It does
+not change the originating carousel's state. The pinned immutable CharacterConfig may contain a
+typed community policy. Deterministic skills classify exact configured phrases, build a reply from
+configured creative text and exact selected factual excerpts, then validate it. Unknown input or a
+missing policy requires human review. No model, social client, webhook or sending endpoint is used.
+
+Each stage persists a SkillRun before execution and commits its checkpoint with successful output,
+zero-cost telemetry and audit. SQL independently validates expected output; a caller cannot submit
+an arbitrary reply or QA PASS. Approval is separate from parent content approval and ends only at
+REVIEWED_DRAFT. Parent revisions, source conflicts/expiry and newer reply revisions invalidate old
+approval attempts. Comment text cannot establish factual truth, individual eligibility or consent.

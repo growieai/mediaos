@@ -100,3 +100,18 @@ does not call the current export guard because historical measurement is separat
 permission. The existing export/approval guards remain unchanged. Reports cannot alter workflow
 state, source verification or mission weights, and cannot claim causation. Learning, SkillRun,
 zero-cost telemetry and audit writes are atomic; idempotent replay prevents duplicate committed work.
+
+## Internal community boundary (partial M8)
+
+Manual comments are bounded untrusted data, never prompts to execute or evidence of consent,
+business eligibility or programme facts. Exact phrase classification rejects appended instructions
+and ambiguous requests to HUMAN_REVIEW. Opaque participant references avoid requiring private
+contact data. Origins are retained as text and never fetched; MANUAL does not imply platform
+verification. Fixture markers are immutable and block approval.
+
+Community tables force tenant RLS. Runtime has SELECT only; guarded functions check OPERATOR or
+APPROVER roles for writes. Reply fact references must already belong to the pinned approved
+carousel and its exact brief/research lineage. Creative text and disclosure come from immutable
+configuration. Database validation independently rejects fabricated text or PASS results.
+Approval rechecks current parent evidence and serializes with content/source updates. A reviewed
+draft never authorizes dispatch. Auto-reply, publishing, DMs and external creator flags stay disabled.
