@@ -1,5 +1,25 @@
 # Architecture — Growie Media OS
 
+## Reviewed handoff and standalone pilot
+
+Migration 0016 extends manual conversion export with versioned business identity evidence,
+exact destination transports, separate human outbound decisions and signed receipt history.
+The endpoint and verification key are provisioned with the migration identity; the API cannot
+invent destinations or fabricate recipient receipts. Execution is disabled by default. A
+committed attempt precedes network work, and consent/destination/identity locks cover final
+validation and transmission. Uncertain POSTs are never replayed. See
+[conversion delivery](CONVERSION_DELIVERY.md) for the explicit recipient protocol and limits.
+
+Migration 0017 requires media prices checked within 30 days before each paid reservation,
+while retaining free checkpoint recovery. Failed attempts keep sanitized provider correlation
+IDs. The administrator console can version a voice profile and explicit spending policy;
+configuration does not execute a provider call.
+
+The [standalone pilot scaffold](STANDALONE_DEPLOYMENT.md) separates runtime and maintenance
+credentials, private persistence and TLS ingress. It does not deploy a host or implement
+multi-host orchestration. Local physical erasure of conversion records remains a separate
+requirement; expiry blocks use rather than deleting immutable history.
+
 ## Connected providers and operations
 
 Migrations 0009–0015 extend the frozen content, evidence and approval foundation. The optional

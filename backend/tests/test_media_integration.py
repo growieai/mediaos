@@ -10,6 +10,7 @@ import json
 import secrets
 import time
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from uuid import UUID, uuid4
@@ -356,6 +357,120 @@ def complete(identity, run_id, database):
         synthetic_result(identity, run_id, "COMPOSE"),
     )
     return row(identity, "media_runs", run_id)
+
+
+@contextmanager
+def aged_media_prices(database):
+    # Simulate the passage of the price-review window without modifying immutable
+    # profile history or waiting 30 days. Only the disposable migration role can
+    # replace this private policy constant; runtime callers cannot change it.
+    with database.begin() as conn:
+        conn.execute(
+            text(
+                "CREATE OR REPLACE FUNCTION private.media_price_max_age() RETURNS interval LANGUAGE sql IMMUTABLE SET search_path=pg_catalog AS $$ SELECT interval '0 seconds' $$"
+            )
+        )
+    try:
+        yield
+    finally:
+        with database.begin() as conn:
+            conn.execute(
+                text(
+                    "CREATE OR REPLACE FUNCTION private.media_price_max_age() RETURNS interval LANGUAGE sql IMMUTABLE SET search_path=pg_catalog AS $$ SELECT interval '30 days' $$"
+                )
+            )
+
+
+@pytest.mark.parametrize("offset", [timedelta(days=-31), timedelta(minutes=1)])
+def test_profile_price_review_must_be_recent_and_not_future(media_identities, offset):
+    with pytest.raises(DBAPIError, match="within the last 30 days"):
+        profile(
+            media_identities[0],
+            profile_payload(price_checked_at=(datetime.now(UTC) + offset).isoformat()),
+        )
+
+
+@pytest.mark.parametrize("stage", ["SPEECH", "AVATAR_SUBMIT"])
+def test_paid_reservation_rechecks_price_age_at_every_paid_checkpoint(media_run, database, stage):
+    identity, _, run_id = media_run
+    prepare_until(identity, run_id, database, stage=stage)
+    before = records(identity, "media_jobs", run_id)
+    with aged_media_prices(database):
+        with pytest.raises(DBAPIError, match="within the last 30 days"):
+            reserve(identity, run_id, stage)
+    assert records(identity, "media_jobs", run_id) == before
+    assert row(identity, "media_jobs", reserve(identity, run_id, stage))["status"] == "RUNNING"
+
+
+def test_expired_prices_do_not_prevent_free_poll_compose_or_exact_review(media_run, database):
+    identity, _, run_id = media_run
+    prepare_until(identity, run_id, database, stage="AVATAR_POLL")
+    with database.begin() as conn:
+        conn.execute(
+            text("UPDATE media_runs SET next_poll_at=now()-interval '1 second' WHERE id=:id"),
+            {"id": run_id},
+        )
+    with aged_media_prices(database):
+        for stage in ("AVATAR_POLL", "COMPOSE"):
+            finish(
+                identity,
+                reserve(identity, run_id, stage),
+                synthetic_result(identity, run_id, stage),
+            )
+        decision(identity, run_id)
+    assert row(identity, "media_runs", run_id)["status"] == "APPROVED"
+
+
+def test_runtime_cannot_relax_media_price_age(media_run):
+    identity, _, _ = media_run
+    with pytest.raises(DBAPIError) as rejected:
+        sql(
+            identity,
+            "CREATE OR REPLACE FUNCTION private.media_price_max_age() RETURNS interval LANGUAGE sql IMMUTABLE AS $$ SELECT interval '100 years' $$",
+        )
+    assert getattr(rejected.value.orig, "sqlstate", None) == "42501"
+
+
+@pytest.mark.parametrize("request_id", ["", "x" * 256, "id\nheader", "https://provider.invalid/id"])
+def test_sql_failure_rejects_unbounded_provider_correlation(media_run, request_id):
+    identity, _, run_id = media_run
+    job_id = reserve(identity, run_id, "SPEECH")
+    with pytest.raises(DBAPIError):
+        sql(
+            identity,
+            "SELECT fail_media_job(:job,'UNKNOWN_OUTCOME',false,true,NULL,:rid)",
+            {"job": job_id, "rid": request_id},
+        )
+    assert row(identity, "media_jobs", job_id)["status"] == "RUNNING"
+
+
+def test_provider_failure_correlation_is_tenant_scoped_immutable_and_audited(
+    media_run, media_identities
+):
+    identity, workflow, run_id = media_run
+    job_id = reserve(identity, run_id, "SPEECH")
+    statement = "SELECT fail_media_job(:job,'UNKNOWN_OUTCOME',false,true,NULL,:rid)"
+    values = {"job": job_id, "rid": "provider-request-123"}
+    with pytest.raises(DBAPIError):
+        sql(media_identities[1], statement, values)
+    with pytest.raises(DBAPIError):
+        sql(identity, statement, values, role="APPROVER")
+    sql(identity, statement, values)
+    job = row(identity, "media_jobs", job_id)
+    assert job["failure_request_id"] == values["rid"] and job["status"] == "UNKNOWN_OUTCOME"
+    assert job["actual_cost"] is None and not job["retryable"]
+    with transaction(UUID(identity["tenant_id"]), identity["tokens"]["OPERATOR"]) as repo:
+        events = repo.all("audit_events", workflow_run_id=UUID(workflow["id"]))
+        assert any(event["details"].get("provider_request_id") == values["rid"] for event in events)
+    with pytest.raises(DBAPIError):
+        sql(
+            identity,
+            "UPDATE media_jobs SET failure_request_id='replacement' WHERE id=:job RETURNING id",
+            {"job": job_id},
+        )
+    with pytest.raises(DBAPIError):
+        sql(identity, statement, {**values, "rid": "replacement"})
+    assert row(identity, "media_jobs", job_id)["failure_request_id"] == values["rid"]
 
 
 def test_media_reservations_and_exact_parent_lineage_persist_before_external_work(media_run):

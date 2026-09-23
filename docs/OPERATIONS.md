@@ -1,5 +1,12 @@
 # Standalone backup and restore rehearsal
 
+The separate [standalone deployment runbook](STANDALONE_DEPLOYMENT.md) adds a digest-pinned,
+single-host Compose scaffold, private database networking, TLS ingress, runtime/maintenance secret
+separation, resource limits and a secret-safe readiness/disk/backup-age probe. It includes release,
+rollback and credential-rotation procedures. This scaffold has not deployed a host or established
+production acceptance; local development Compose and the tested backup procedure below remain
+separate. Keep live integrations disabled until their exact acceptance checks pass.
+
 `scripts/backup.py` is a local maintenance tool for this standalone Media OS database and its
 private render/media/social files. It has no application API, scheduler or provider calls.
 It backs up social JPEGs and receipts without contacting the platform or dispatching content.

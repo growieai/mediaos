@@ -1,5 +1,20 @@
 # Security
 
+The signed handoff extension (0016) requires a separately reviewed business identity, existing
+explicit consent, migration-provisioned destination and fresh exact outbound authorization.
+The runtime cannot read the private recipient-verification key or manufacture a successful
+receipt. Outbound credentials are environment-only; destinations accept public HTTPS addresses,
+with DNS validation/address pinning and no redirects. Unknown writes cannot be replayed, even
+with a new key. Receipt reconciliation is a separate persisted read. Revocation uses a separately
+reviewed minimal notice and never implies that downloaded data has been physically erased.
+See [conversion delivery](CONVERSION_DELIVERY.md), including its local retention limitation.
+
+The standalone deployment scaffold keeps database ports private, operator access CIDR-restricted
+and migration secrets separate from workloads. Its initial configuration disables all live
+dispatch. A configured host, TLS, identity lifecycle and operational acceptance are still needed.
+The media administrator UI stores no provider secrets and requires fresh price/budget confirmation;
+the database independently enforces permissions and a 30-day rate-card review window (0017).
+
 Media provider secrets are environment-only `SecretStr` values and never part of profiles,
 audit payloads or console responses. Paid execution is off by default. An ADMIN must version
 a rate card and expiring spend policy before the runtime can reserve a paid attempt. A daily

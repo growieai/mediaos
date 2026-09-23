@@ -1,11 +1,22 @@
 # Local development
 
-The current schema head is 0015. Run migrate and seed after updating this branch, then rebuild
+The current schema head is 0017. Run migrate and seed after updating this branch, then rebuild
 and restart the API/console. Seed creates `.local/media` and `.local/social` for private bind mounts; no paid
 profile or budget is seeded. On this prepared Windows host the standalone PostgreSQL service
 uses port 55432 and `mediaos_dev`; the Docker example uses port 55433 and database `mediaos`.
 These are different standalone environments. Keep the environment URLs consistent with the
 chosen one and never substitute an existing Growie production URL.
+
+`python scripts/dev.py check` includes the offline console behavior tests. An ADMIN can configure
+the selected voice, current provider prices and an explicit expiring budget in **Speaking video →
+Configure voice, verified prices and budget**. Saving settings does not generate a video. Keep
+provider keys in the ignored environment file. The existing selected Sara Martin voice is recorded
+in `characters/sofia/voice_selection.md`; account access still needs verification.
+
+The new [signed handoff](CONVERSION_DELIVERY.md) requires an explicitly provisioned destination,
+reviewed business/consent and separate outbound authorization. Keep `CONVERSION_DELIVERY_ENABLED=false`
+for ordinary local testing. Its normal tests use signed synthetic HTTP responses. The
+[standalone Linux scaffold](STANDALONE_DEPLOYMENT.md) is separate from this development environment.
 
 For the speaking-video setup, keys, voice/rate profile, budgets and manual test sequence, see
 [SPEAKING_VIDEO.md](SPEAKING_VIDEO.md). Keep `MEDIA_LIVE_ENABLED=false` until paid execution is

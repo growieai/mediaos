@@ -1,5 +1,23 @@
 # Data model
 
+## Handoff and media follow-up (0016–0017)
+
+`business_identities` and `business_identity_reviews` preserve exact versioned registry evidence
+and a separate human attestation. This remains reviewed operator evidence, not automatically
+verified identity or consent. `conversion_transports` pins an administrator-provisioned HTTPS
+endpoint/protocol to a destination revision; its HMAC verification key lives in a private table
+unreadable by the runtime role.
+
+`conversion_deliveries`, `conversion_delivery_decisions`, `conversion_delivery_attempts` and
+`conversion_delivery_results` preserve exact SEND/REVOKE payloads, approvals, committed network
+intent and signed receipts. Tenant-composite foreign keys, forced RLS, immutable rows and
+security-definer guards enforce lineage. A new key cannot replay an uncertain/sent request.
+Attempts retain SkillRun, CostEvent and AuditEvent linkage. Expiry bounds permitted use and
+requests remote retention; it does not implement local physical erasure.
+
+Migration 0017 adds nullable bounded `media_jobs.failure_request_id` and guarded media rate
+freshness checks. Terminal failure IDs cannot be changed and confer no retry authorization.
+
 Migration 0007 adds `media_profiles`, `media_spend_policies`, `media_runs`, `media_jobs` and
 `media_approval_records`. Profiles pin an influencer/visual revision, authorized voice and
 dated rate card. Media runs pin exact content/research/QA/approval lineage. Jobs pin hashes,

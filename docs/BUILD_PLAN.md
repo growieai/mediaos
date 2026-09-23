@@ -1,5 +1,12 @@
 # Build Plan — First Influencer (roadmap reconciliation)
 
+September 23 follow-up: the public `42773ea` implementation passed hosted CI, including Docker
+startup and persisted API acceptance. Migrations 0016/0017 add reviewed business identity and
+signed handoff/revocation delivery plus media rate freshness/failure correlation. The console now
+supports exact handoff review and administrator voice/price/budget setup. A standalone pilot
+deployment scaffold and probes are available; no host or live account was provisioned. See the
+[current report](MILESTONE_COMPLETION_REPORT.md) for precise test and live acceptance boundaries.
+
 The `milestone-completion` branch includes M9 consent-aware manual handoff, the persisted M10
 speaking-video path, opt-in real text execution, and connected Instagram publishing, platform
 metrics and comment/reply paths. These paths have separate persisted authorization and remain

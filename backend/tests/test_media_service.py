@@ -13,6 +13,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import DBAPIError
 from test_media_integration import (  # noqa: F401
     HUMAN_CHECKS,
+    aged_media_prices,
     budget,
     complete,
     forbid_media_network,
@@ -166,7 +167,12 @@ def test_provider_failure_is_persisted_without_secret_or_duplicate(
     identity, _, run_id = media_run
 
     def fail(*args):
-        raise ProviderError(category, retryable, retry_after_seconds=120 if retryable else None)
+        raise ProviderError(
+            category,
+            retryable,
+            request_id="safe-provider-correlation-123",
+            retry_after_seconds=120 if retryable else None,
+        )
 
     monkeypatch.setattr(service, "_invoke", fail)
     failed = execute(client, identity, run_id)
@@ -174,6 +180,8 @@ def test_provider_failure_is_persisted_without_secret_or_duplicate(
     jobs = records(identity, "media_jobs", run_id)
     assert len(jobs) == 1
     assert jobs[0]["actual_cost"] is None
+    assert jobs[0]["failure_request_id"] == "safe-provider-correlation-123"
+    assert failed["jobs"][0]["failure_request_id"] == "safe-provider-correlation-123"
     if retryable:
         assert (jobs[0]["retry_at"] - jobs[0]["ended_at"]).total_seconds() >= 120
         assert (
@@ -237,6 +245,22 @@ def test_interrupted_generation_with_receipt_recovers_without_provider_replay(
     service._receipt(directory, job, synthetic_result(identity, run_id, "SPEECH"))
     result = execute(client, identity, run_id)
     assert result["status"] == "SPEECH_READY" and executor == []
+    assert row(identity, "media_jobs", job["id"])["status"] == "SUCCEEDED"
+
+
+def test_expired_prices_preserve_receipt_recovery_without_new_paid_reservations(
+    client, media_run, executor, database
+):
+    identity, _, run_id = media_run
+    job = row(identity, "media_jobs", reserve(identity, run_id, "SPEECH"))
+    directory = service.files.media_directory(
+        service.get_settings().media_storage_path, UUID(identity["tenant_id"]), run_id
+    )
+    service._receipt(directory, job, synthetic_result(identity, run_id, "SPEECH"))
+    with aged_media_prices(database):
+        assert execute(client, identity, run_id)["status"] == "SPEECH_READY"
+    assert executor == []
+    assert len(records(identity, "media_jobs", run_id)) == 1
     assert row(identity, "media_jobs", job["id"])["status"] == "SUCCEEDED"
 
 

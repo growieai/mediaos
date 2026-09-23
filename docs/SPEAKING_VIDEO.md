@@ -59,6 +59,17 @@ An ADMIN posts `/v1/media-spend-policy` with `schema_version:1`, `per_run_usd` a
 as positive decimal strings, `expires_at` as a future UTC timestamp, and `enabled:true`.
 There is no implicit budget. New policies and profiles are immutable versions.
 
+The database enforces a **30-day price review window**, matching the text-AI price-policy
+horizon. A profile cannot be created with older or future-dated prices. Every new paid speech
+or avatar reservation rechecks that window; extending a budget does not refresh a rate card.
+An ADMIN must verify prices and create a new profile when rates expire. A new profile requires
+a new media request with its own exact review; no prior media approval transfers. This fixed
+database policy cannot be changed by the runtime role. It limits stale configured estimates;
+it does not verify an account rate automatically or guarantee the provider's final bill.
+
+Price expiry alone does not stop free status polls, composition, saved-receipt recovery or
+review of already generated output. Existing source, revision and approval guards still apply.
+
 ## Local test flow
 
 1. Open the internal console at `http://127.0.0.1:3000`. Select a verified, current, human-approved
@@ -96,6 +107,11 @@ the external call. Successful local receipts allow recovery after a database che
 A process interruption without a receipt on a submission enters `UNKNOWN_OUTCOME`; no blind
 paid replay is offered. Reconciliation against provider history is a manual administrative
 operation and is not yet automated. Do not create replacement runs until that outcome is known.
+Failed or uncertain calls retain a bounded, sanitized provider correlation ID as
+`media_jobs.failure_request_id` and in the failure audit event when the provider supplies one.
+Missing IDs stay `null`. Credentials, response bodies and signed media URLs are never stored
+in that field. The ID helps an administrator find the original call; it is neither proof of
+completion nor permission to retry, and it becomes immutable with the attempt's outcome.
 
 Retryable failures persist bounded backoff and provider `Retry-After`. Non-poll stages allow
 three attempts; polls allow ninety and at least two seconds between successful polls. Failed

@@ -5,6 +5,7 @@ import io
 import json
 import logging
 import os
+import re
 import shutil
 from datetime import UTC, datetime
 from pathlib import Path
@@ -182,12 +183,41 @@ def _finish(conn, tenant, token, job, result):
         )
 
 
-def _fail(conn, tenant, token, job, category, retryable=False, unknown=False, retry_after=None):
+def _safe_failure_request_id(value: str | None) -> str | None:
+    if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9_.:-]{1,255}", value):
+        return None
+    settings = get_settings()
+    for name in ("elevenlabs_api_key", "heygen_api_key", "hf_api_key_id", "hf_api_key_secret"):
+        secret = getattr(settings, name, None)
+        credential_value = secret.get_secret_value() if secret else None
+        if credential_value and (credential_value in value or value in credential_value):
+            return None
+    return value
+
+
+def _fail(
+    conn,
+    tenant,
+    token,
+    job,
+    category,
+    retryable=False,
+    unknown=False,
+    retry_after=None,
+    provider_request_id=None,
+):
     with conn.begin():
         Repository(conn, tenant, token)
         conn.execute(
-            text("SELECT fail_media_job(:j,:c,:r,:u,:delay)"),
-            {"j": job["id"], "c": category, "r": retryable, "u": unknown, "delay": retry_after},
+            text("SELECT fail_media_job(:j,:c,:r,:u,:delay,:provider_request_id)"),
+            {
+                "j": job["id"],
+                "c": category,
+                "r": retryable,
+                "u": unknown,
+                "delay": retry_after,
+                "provider_request_id": _safe_failure_request_id(provider_request_id),
+            },
         )
     log.warning(
         "media_job_failed",
@@ -383,6 +413,7 @@ def execute(tenant: UUID, token: str, run_id: UUID):
                         exc.retryable,
                         exc.category == "UNKNOWN_OUTCOME",
                         exc.retry_after_seconds,
+                        exc.request_id,
                     )
                 except files.MediaRetrievalError as exc:
                     _fail(

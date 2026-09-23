@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import make_url
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCHEMA_REVISION = "0015"
+SCHEMA_REVISION = "0017"
 
 
 class Settings(BaseSettings):
@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     heygen_api_key: SecretStr | None = None
     hf_api_key_id: SecretStr | None = None
     hf_api_key_secret: SecretStr | None = None
+    conversion_delivery_enabled: bool = False
+    conversion_delivery_credentials: SecretStr | None = None
     openai_api_key: SecretStr | None = None
     social_connect_enabled: bool = False
     social_publish_enabled: bool = False

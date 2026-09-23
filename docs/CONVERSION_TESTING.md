@@ -1,5 +1,10 @@
 # Internal consent-aware request review (partial M9)
 
+The manual-export path below remains unchanged. Migration `0016` adds a separate, disabled-by-default
+[explicitly reviewed signed handoff](CONVERSION_DELIVERY.md), including business-identity review,
+provisioned destinations, immutable outbound intent and signed reception/revocation receipts.
+No real destination has been configured or contacted by the offline implementation tests.
+
 This feature prepares a JSON request for a human to hand off. It does not contact Growie or any
 other destination, identify a business from a comment, perform an audit, send email/DMs, or claim
 a conversion. `delivered=false`, `network_performed=false` and `audit_completed=false` are fixed.

@@ -51,6 +51,9 @@ def main():
         run(PYTHON, "-m", "ruff", "check", "app", "tests", "migrations", cwd=BACKEND)
         run(PYTHON, "-m", "ruff", "format", "--check", "app", "tests", "migrations", cwd=BACKEND)
         run(PYTHON, "-m", "mypy", "app", cwd=BACKEND)
+        run(PYTHON, "-m", "ruff", "check", "--config", BACKEND / "pyproject.toml", "scripts/deployment.py")
+        run(PYTHON, "-m", "ruff", "format", "--check", "--config", BACKEND / "pyproject.toml", "scripts/deployment.py")
+        run(NPM, "test", cwd=ROOT / "apps/console")
         run(NPM, "run", "build", cwd=ROOT / "apps/console")
     elif action == "dev":
         run("docker", "compose", "up", "-d", "--build", "api", "console")

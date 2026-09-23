@@ -1,0 +1,204 @@
+name: mediaos-standalone
+
+x-logging: &bounded-logs
+  driver: local
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-app: &app
+  restart: unless-stopped
+  init: true
+  read_only: true
+  user: "1000:1000"
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:size=512m,mode=1777"]
+  pids_limit: 256
+  logging: *bounded-logs
+
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE:?Supply a verified postgres image digest}
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mediaos_admin
+      POSTGRES_DB: mediaos
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_admin_password
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    secrets: [postgres_admin_password]
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks: [private]
+    security_opt: [no-new-privileges:true]
+    shm_size: 256mb
+    mem_limit: 2g
+    cpus: 2.0
+    pids_limit: 256
+    stop_grace_period: 60s
+    logging: *bounded-logs
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U mediaos_admin -d mediaos"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  migrate:
+    <<: *app
+    image: ${API_IMAGE:?Supply the tested backend image digest}
+    profiles: [maintenance]
+    restart: "no"
+    env_file:
+      - path: ${MAINTENANCE_ENV_FILE:?Supply separate maintenance credentials}
+        format: raw
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+    command: [python, -m, app.admin, migrate]
+    networks: [private]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    mem_limit: 1g
+    cpus: 1.0
+
+  seed:
+    <<: *app
+    image: ${API_IMAGE:?Supply the tested backend image digest}
+    profiles: [maintenance]
+    restart: "no"
+    env_file:
+      - path: ${MAINTENANCE_ENV_FILE:?Supply separate maintenance credentials}
+        format: raw
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+    command: [python, -m, app.seed]
+    volumes:
+      - type: bind
+        source: ${MEDIAOS_STATE_DIR:?Supply a private durable state directory}
+        target: /workspace/.local
+        bind:
+          create_host_path: false
+    networks: [private]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    mem_limit: 1g
+    cpus: 1.0
+
+  api:
+    <<: *app
+    image: ${API_IMAGE:?Supply the tested backend image digest}
+    env_file:
+      - path: ${RUNTIME_ENV_FILE:?Supply restricted runtime credentials}
+        format: raw
+    environment:
+      APP_ENV: production
+      PYTHONDONTWRITEBYTECODE: "1"
+      AI_MOCK_MODE: "true"
+      MEDIA_LIVE_ENABLED: "false"
+      SOCIAL_CONNECT_ENABLED: "false"
+      SOCIAL_PUBLISH_ENABLED: "false"
+      SOCIAL_REPLY_ENABLED: "false"
+      CONVERSION_DELIVERY_ENABLED: "false"
+      ENABLE_AUTO_PUBLISH: "false"
+      ENABLE_AUTO_REPLIES: "false"
+      ENABLE_EXTERNAL_CREATORS: "false"
+      ENABLE_VIDEO: "false"
+      ASSET_STORAGE_PATH: /workspace/.local/renders
+      MEDIA_STORAGE_PATH: /workspace/.local/media
+      SOCIAL_STORAGE_PATH: /workspace/.local/social
+    volumes:
+      - type: bind
+        source: ${MEDIAOS_STATE_DIR:?Supply a private durable state directory}/renders
+        target: /workspace/.local/renders
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MEDIAOS_STATE_DIR:?Supply a private durable state directory}/media
+        target: /workspace/.local/media
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MEDIAOS_STATE_DIR:?Supply a private durable state directory}/social
+        target: /workspace/.local/social
+        bind:
+          create_host_path: false
+    command: [uvicorn, app.main:app, --host, 0.0.0.0, --port, "8000", --workers, "1", --no-access-log]
+    networks: [private, outbound]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    mem_limit: 4g
+    cpus: 2.0
+    stop_grace_period: 180s
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/v1/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  console:
+    <<: *app
+    image: ${CONSOLE_IMAGE:?Supply the tested console image digest}
+    environment:
+      INTERNAL_API_URL: http://api:8000
+      NEXT_TELEMETRY_DISABLED: "1"
+    networks: [private]
+    depends_on:
+      api:
+        condition: service_healthy
+    mem_limit: 768m
+    cpus: 1.0
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  ingress:
+    <<: *app
+    image: ${CADDY_IMAGE:?Supply a verified Caddy image digest}
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?Supply the dedicated Media OS DNS name}
+      ACME_EMAIL: ${ACME_EMAIL:?Supply the certificate operator email}
+      OPS_ALLOWED_CIDRS: ${OPS_ALLOWED_CIDRS:?Supply operator or VPN source CIDRs}
+    ports: ["80:80", "443:443"]
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: "0"
+    volumes:
+      - type: bind
+        source: ./Caddyfile
+        target: /etc/caddy/Caddyfile
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MEDIAOS_TLS_DIR:?Supply a private persistent certificate directory}/data
+        target: /data
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MEDIAOS_TLS_DIR:?Supply a private persistent certificate directory}/config
+        target: /config
+        bind:
+          create_host_path: false
+    networks: [private, outbound]
+    depends_on:
+      console:
+        condition: service_healthy
+    mem_limit: 256m
+    cpus: 0.5
+
+networks:
+  private:
+    internal: true
+  outbound: {}
+
+volumes:
+  postgres_data:
+    external: true
+    name: ${POSTGRES_VOLUME:?Create a dedicated persistent Media OS volume first}
+
+secrets:
+  postgres_admin_password:
+    file: ${POSTGRES_PASSWORD_FILE:?Supply the private bootstrap password file}

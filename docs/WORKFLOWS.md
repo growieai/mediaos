@@ -182,6 +182,24 @@ locks the workflow then its event/review, checks the latest review and pinned pa
 and reruns the parent evidence QA including official-source conflicts and freshness. It never
 inherits an older decision or allows a fixture through. A reviewed draft alone cannot be sent.
 
+## Signed handoff and media follow-up (0016–0017)
+
+Handoff: reviewed business identity + exact reviewed consent → immutable SEND intent →
+AWAITING_AUTHORIZATION → separate APPROVER decision → AUTHORIZED → committed attempt →
+signed RECEIVED or UNKNOWN_OUTCOME. The runtime verifies receipt HMAC independently in PostgreSQL.
+Read reconciliation can recover an old receipt after consent expiry without resending the payload.
+A signed NOT_FOUND result does not authorize a replacement send. Revocation/retention expiry can
+create a separate REVOKE intent with its own review and signed REVOKED acknowledgement.
+
+All records retain tenant ownership and immutable hashes. The parent content approval is unchanged;
+a destination receipt never means a business audit completed. Endpoints, provisioning and exact
+state/recovery semantics are documented in [conversion delivery](CONVERSION_DELIVERY.md).
+
+Voice profiles and budgets can be configured by an ADMIN in the speaking-video panel. Saving
+configuration does not generate media. Paid reservations require prices checked within 30 days;
+free polls/composition/receipt recovery still work when prices age. Failed provider attempts retain
+bounded, sanitized request IDs for investigation without permitting uncertain paid replay.
+
 ## Explicit connected-provider flows (0009–0015)
 
 Text creator: `exact current brief → persisted policy/budget reservation → typed provider

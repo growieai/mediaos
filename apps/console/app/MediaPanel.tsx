@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import MediaSetup from "./MediaSetup";
 
-type Workflow = { id: string; state: string; asset_version_id: string | null; research_version_id: string | null; qa_report_id: string | null };
+type Workflow = { id: string; influencer_id: string; state: string; asset_version_id: string | null; research_version_id: string | null; qa_report_id: string | null };
 type TextChoice = { path: string; text: string; kind: string };
 type Profile = { id: string; version: number; content_hash: string; payload: { voice_id: string; tts_model: string; presenter_provider: string; tts_usd_per_1000_characters: string; avatar_usd_per_second: string; price_reference: string; price_checked_at: string } };
 type Policy = { id: string; version: number; enabled: boolean; per_run_usd: string | number; per_day_usd: string | number; expires_at: string };
@@ -10,7 +11,7 @@ type Job = { id: string; stage: string; status: string; attempt: number; provide
 type MediaRun = { id: string; sequence: number; status: string; profile_id: string; asset_version_id: string; research_version_id: string; qa_report_id: string; script_hash: string; script: { text: string; disclosure: string }; manifest_hash: string | null; manifest: Record<string, unknown> | null; qa_result: { status: string; findings: unknown[] } | null; next_poll_at: string | null; error_category: string | null; jobs: Job[]; approvals: { id: string; decision: string; created_at: string; comment: string | null }[] };
 type Collection = { profiles: Profile[]; spend_policies: Policy[]; dependencies: Record<string, unknown>; runs: MediaRun[] };
 type Checks = { identity: boolean; voice: boolean; lip_sync: boolean; captions: boolean; disclosure: boolean };
-type Props = { tenant: string; token: string; run: Workflow; operator: boolean; approver: boolean; choices: TextChoice[] };
+type Props = { tenant: string; token: string; run: Workflow; operator: boolean; approver: boolean; admin: boolean; choices: TextChoice[] };
 const emptyChecks = (): Checks => ({ identity: false, voice: false, lip_sync: false, captions: false, disclosure: false });
 const empty: Collection = { profiles: [], spend_policies: [], dependencies: {}, runs: [] };
 const maximumVideoBytes = 200 * 1024 * 1024;
@@ -24,7 +25,7 @@ async function failure(response: Response) {
   return new Error(`Media request failed (${response.status}). Refresh saved state before retrying.`);
 }
 
-export default function MediaPanel({ tenant, token, run, operator, approver, choices }: Props) {
+export default function MediaPanel({ tenant, token, run, operator, approver, admin, choices }: Props) {
   const [collection, setCollection] = useState<Collection>(empty);
   const [profileId, setProfileId] = useState("");
   const [selectedPaths, setSelectedPaths] = useState<string[]>([]);
@@ -41,13 +42,13 @@ export default function MediaPanel({ tenant, token, run, operator, approver, cho
   const urls = useRef(new Set<string>());
   const keys = useRef(new Map<string, string>());
 
-  const request = useCallback(async (path: string, method = "GET", body?: unknown) => fetch(`/api/internal/${path}`, {
-    method, cache: "no-store", signal: controller.current?.signal,
+  const request = useCallback(async (path: string, method = "GET", body?: unknown, signal?: AbortSignal) => fetch(`/api/internal/${path}`, {
+    method, cache: "no-store", signal: signal ?? controller.current?.signal,
     headers: { Authorization: `Bearer ${token}`, "X-Tenant-ID": tenant, "Content-Type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
   }), [tenant, token]);
-  const json = useCallback(async <T,>(path: string, method = "GET", body?: unknown): Promise<T> => {
-    const response = await request(path, method, body);
+  const json = useCallback(async <T,>(path: string, method = "GET", body?: unknown, signal?: AbortSignal): Promise<T> => {
+    const response = await request(path, method, body, signal);
     if (!response.ok) throw await failure(response);
     if (response.headers.get("content-type")?.split(";")[0] !== "application/json") throw new Error("Expected a typed media response.");
     return response.json() as Promise<T>;
@@ -119,6 +120,7 @@ export default function MediaPanel({ tenant, token, run, operator, approver, cho
     <p role="status">{busy ? "Working… Saved jobs may continue if a request times out; refresh before resuming." : message}</p>
     <ul>{[["live_enabled", "Paid media execution"], ["elevenlabs_configured", "ElevenLabs credential"], ["heygen_configured", "HeyGen credential"], ["ffmpeg_available", "FFmpeg"], ["ffprobe_available", "FFprobe"]].map(([key, label]) => <li key={key}>{label}: {collection.dependencies[key] === true ? "Ready" : "Not configured / disabled"}</li>)}</ul>
     {policy ? <p>Configured budget v{policy.version}: US${policy.per_run_usd} per video, US${policy.per_day_usd} per day. {policy.enabled ? "Enabled" : "Disabled"}; expires {policy.expires_at}. These are enforced reservation limits using the configured rate card, not a provider billing quote.</p> : <p>An administrator must configure a voice profile with current prices and a spend policy before paid execution. See the media setup documentation; credentials never belong in this console.</p>}
+    {admin && <MediaSetup key={`${tenant}:${run.id}`} workflowId={run.id} influencerId={run.influencer_id} json={json} onSaved={() => load()} />}
     {operator && <details><summary>Prepare a speaking-video request</summary><fieldset disabled={busy || run.state !== "APPROVED"}>
       <p>Preparation saves the script and exact parent revisions; it does not make paid calls. Select the approved excerpts in their desired speaking order. AI disclosure is added by policy.</p>
       <label>Voice / presenter profile <select value={profileId} onChange={event => setProfileId(event.target.value)}><option value="">Choose a configured profile</option>{collection.profiles.map(profile => <option key={profile.id} value={profile.id}>Version {profile.version} · {profile.payload.voice_id} · {profile.payload.presenter_provider}</option>)}</select></label>

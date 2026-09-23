@@ -1,5 +1,10 @@
 # Growie Media OS
 
+The latest follow-up adds [reviewed signed handoff delivery](docs/CONVERSION_DELIVERY.md),
+administrator voice/budget setup and a [standalone deployment scaffold](docs/STANDALONE_DEPLOYMENT.md).
+The earlier `42773ea` completion build passed [hosted tests, Docker and API acceptance](https://github.com/growieai/mediaos/actions/runs/35879186753).
+Live provider/account/deployment acceptance remains separate from these offline checks.
+
 The current branch includes [speaking-video setup and review](docs/SPEAKING_VIDEO.md),
 [consent-aware manual handoff](docs/CONVERSION_TESTING.md), [optional real text generation](docs/REAL_MODEL_EXECUTION.md),
 and [separately authorized Instagram posts, insights and replies](docs/SOCIAL_INTEGRATION.md).

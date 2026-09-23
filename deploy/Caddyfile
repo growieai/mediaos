@@ -1,0 +1,62 @@
+{
+	admin off
+	email {$ACME_EMAIL}
+	# Proxy errors can contain bearer capabilities and OAuth query parameters.
+	# Operational checks use the secret-safe probe; never enable raw access logs.
+	log default {
+		output discard
+	}
+	servers {
+		protocols h1 h2
+		timeouts {
+			read_header 10s
+			read_body 30s
+			write 360s
+			idle 60s
+		}
+	}
+}
+
+{$SITE_DOMAIN} {
+	header {
+		-Server
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+	}
+	request_body {
+		max_size 256KB
+	}
+
+	# Only these provider-facing paths are public. Their existing signatures,
+	# short-lived capabilities, state verification and feature flags still apply.
+	@provider_get {
+		method GET
+		path /v1/social/oauth/callback /v1/social/webhook /v1/social/media/*
+	}
+	handle @provider_get {
+		reverse_proxy api:8000
+	}
+	@provider_post {
+		method POST
+		path /v1/social/webhook
+	}
+	handle @provider_post {
+		reverse_proxy api:8000
+	}
+
+	# Uses the direct peer, not spoofable X-Forwarded-For. Deploy Caddy directly
+	# at the network edge; a CDN/load balancer needs a separate reviewed policy.
+	@operator remote_ip {$OPS_ALLOWED_CIDRS}
+	handle @operator {
+		handle /v1/* {
+			reverse_proxy api:8000
+		}
+		handle {
+			reverse_proxy console:3000
+		}
+	}
+	handle {
+		respond "Not found" 404
+	}
+}

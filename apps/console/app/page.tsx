@@ -169,9 +169,9 @@ export default function Home() {
       <button disabled={busy || !waiting} onClick={() => action(() => decision("reject"))}>Reject</button></>}
       <VisualReview key={`${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} refresh={id => action(() => refresh(id))} />
       <SocialPanel key={`social:${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} admin={roles.includes("ADMIN")} />
-      <MediaPanel key={`media:${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} choices={mediaTextChoices(artifacts, run)} />
+      <MediaPanel key={`media:${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} admin={roles.includes("ADMIN")} choices={mediaTextChoices(artifacts, run)} />
       <CommunityReview key={`community:${tenant}:${run.id}`} token={token} tenant={tenant} run={run} operator={operator} approver={approver} facts={replyFacts(artifacts, run)} />
-      <ConversionPanel key={`conversion:${tenant}:${run.id}`} token={token} tenant={tenant} workflowId={run.id} />
+      <ConversionPanel key={`conversion:${tenant}:${run.id}`} token={token} tenant={tenant} workflowId={run.id} operator={operator} approver={approver} />
       {Object.entries(artifacts).map(([name, rows]) => <details key={name} open={["content_asset_versions", "qa_reports"].includes(name)}>
         <summary>{name} ({rows.length})</summary>
         <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", background: "#fff", padding: 12 }}>{JSON.stringify(rows, null, 2)}</pre>
