@@ -10,6 +10,7 @@ from app.db.repository import transaction
 from app.intelligence.editorial import evaluate, start_opportunity_workflow
 from app.intelligence.ingestion import IngestionRunner, create_ingestion
 from app.intelligence.schemas import DiscoveryRequest, OpportunityWorkflowRequest
+from app.services.workflows import ConflictError
 
 
 def main():
@@ -51,22 +52,36 @@ def main():
         )
     else:
         with transaction(tenant, token) as repo:
+            repo.require("OPERATOR")
             audience = repo.one("audience_segments", code="GENERIC_SMB")
-            choices = (
-                repo.all("opportunities", id=args.opportunity)
-                if args.opportunity
-                else repo.all("opportunities")
+            existing = (
+                repo.all("workflow_runs", idempotency_key=args.key) if args.key is not None else []
             )
-            selected = None
-            for opportunity in choices:
-                result = evaluate(repo, opportunity, UUID(credentials["mission_id"]))
-                if any(
-                    r["audience_segment"]["id"] == audience["id"]
-                    and r["decision"]["decision"] == "CREATE_CONTENT"
-                    for r in result
-                ):
-                    selected = opportunity
-                    break
+            if existing:
+                bindings = repo.all("workflow_opportunities", workflow_run_id=existing[0]["id"])
+                if not bindings:
+                    raise ConflictError("Idempotency key is bound to a different editorial request")
+                # A saved draft now appears in content history. Re-evaluation could
+                # select WATCH or a different opportunity before the replay guard.
+                selected = repo.one("opportunities", id=bindings[0]["opportunity_id"])
+                opportunity_id = args.opportunity or selected["id"]
+            else:
+                choices = (
+                    repo.all("opportunities", id=args.opportunity)
+                    if args.opportunity
+                    else repo.all("opportunities")
+                )
+                selected = None
+                for opportunity in choices:
+                    result = evaluate(repo, opportunity, UUID(credentials["mission_id"]))
+                    if any(
+                        r["audience_segment"]["id"] == audience["id"]
+                        and r["decision"]["decision"] == "CREATE_CONTENT"
+                        for r in result
+                    ):
+                        selected = opportunity
+                        break
+                opportunity_id = selected["id"] if selected else None
         if selected is None:
             raise SystemExit(
                 "No opportunity qualified. Review persisted decisions; no unsupported draft was created."
@@ -77,7 +92,7 @@ def main():
             audience_segment_id=audience["id"],
             idempotency_key=args.key or str(uuid4()),
         )
-        run = start_opportunity_workflow(tenant, token, selected["id"], draft_request, uuid4())
+        run = start_opportunity_workflow(tenant, token, opportunity_id, draft_request, uuid4())
         print(
             json.dumps(
                 {
