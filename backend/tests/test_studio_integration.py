@@ -11,7 +11,7 @@ from app.config import get_settings
 from app.db.repository import transaction
 from app.models.schemas import CharacterConfig
 from app.rendering.schemas import VisualConfig
-from app.studio.schemas import CreateInfluencer, StudioInfluencer
+from app.studio.schemas import CreateInfluencer, OnboardingDrafts, StudioInfluencer
 from app.studio.service import create_influencer
 
 
@@ -240,4 +240,132 @@ def test_readiness_auth_tenant_scope_and_current_qa(client, identities):
     assert (
         client.get(f"/v1/workflow-runs/{run['id']}", headers=headers(identities[0])).json()["state"]
         == "AWAITING_APPROVAL"
+    )
+
+
+def onboarding_payload(**changes):
+    return {"category_id": "education", "language": "en", "tone": "WARM"} | changes
+
+
+def test_onboarding_requires_identity_role_and_matching_tenant(client, identities):
+    endpoint = "/v1/studio/onboarding-drafts"
+    payload = onboarding_payload()
+    assert client.post(endpoint, json=payload).status_code == 401
+    assert (
+        client.post(endpoint, headers=headers(identities[0], "APPROVER"), json=payload).status_code
+        == 403
+    )
+    mismatch = headers(identities[0]) | {"X-Tenant-ID": identities[1]["tenant_id"]}
+    assert client.post(endpoint, headers=mismatch, json=payload).status_code == 401
+    for identity, role in (
+        (identities[0], "OPERATOR"),
+        (identities[0], "ADMIN"),
+        (identities[1], "OPERATOR"),
+    ):
+        result = client.post(endpoint, headers=headers(identity, role), json=payload)
+        assert result.status_code == 200, result.text
+        assert "no-store" in result.headers["cache-control"]
+        typed = OnboardingDrafts.model_validate_json(result.text, strict=True)
+        assert typed.provider == "mock" and typed.mode == "MOCK" and typed.cost == 0
+
+
+def test_onboarding_feature_and_real_mode_fail_closed(client, identities, monkeypatch):
+    settings = get_settings()
+    monkeypatch.setattr(settings, "enable_external_creators", False)
+    result = client.post(
+        "/v1/studio/onboarding-drafts", headers=headers(identities[0]), json=onboarding_payload()
+    )
+    assert result.status_code == 409 and "disabled" in result.text
+    monkeypatch.setattr(settings, "enable_external_creators", True)
+    monkeypatch.setattr(settings, "ai_mock_mode", False)
+    result = client.post(
+        "/v1/studio/onboarding-drafts", headers=headers(identities[0]), json=onboarding_payload()
+    )
+    assert result.status_code == 409 and "mock mode only" in result.text
+
+
+def test_onboarding_does_not_create_artifacts_or_log_freeform_input(client, identities, caplog):
+    identity = identities[0]
+    tables = (
+        "influencers",
+        "influencer_versions",
+        "missions",
+        "character_config_versions",
+        "visual_config_versions",
+        "studio_creations",
+        "workflow_runs",
+        "skill_runs",
+        "cost_events",
+        "audit_events",
+    )
+
+    def counts():
+        with transaction(UUID(identity["tenant_id"]), identity["tokens"]["OPERATOR"]) as repo:
+            return {table: len(repo.all(table)) for table in tables}
+
+    before = counts()
+    payload = onboarding_payload(name="Private preview only", audience=["Private audience context"])
+    result = client.post("/v1/studio/onboarding-drafts", headers=headers(identity), json=payload)
+    assert result.status_code == 200, result.text
+    repeat = client.post("/v1/studio/onboarding-drafts", headers=headers(identity), json=payload)
+    assert repeat.json() == result.json()
+    assert counts() == before
+    assert (
+        "Private preview only" not in caplog.text and "Private audience context" not in caplog.text
+    )
+
+
+def test_onboarding_typed_input_and_disabled_category(client, identities, database):
+    endpoint = "/v1/studio/onboarding-drafts"
+    for payload in (
+        onboarding_payload(category_id="unknown"),
+        onboarding_payload(tenant_id=identities[1]["tenant_id"]),
+        onboarding_payload(audience=["A", "A"]),
+        onboarding_payload(name="\n"),
+        onboarding_payload(provider="openai"),
+    ):
+        assert (
+            client.post(endpoint, headers=headers(identities[0]), json=payload).status_code == 422
+        )
+    with database.begin() as connection:
+        connection.execute(text("UPDATE studio_categories SET enabled=false WHERE id='education'"))
+    try:
+        result = client.post(endpoint, headers=headers(identities[0]), json=onboarding_payload())
+        assert result.status_code == 409 and "not enabled" in result.text
+    finally:
+        with database.begin() as connection:
+            connection.execute(
+                text("UPDATE studio_categories SET enabled=true WHERE id='education'")
+            )
+
+
+def test_chosen_onboarding_draft_persists_only_after_explicit_creation(client, identities):
+    identity = identities[0]
+    result = client.post(
+        "/v1/studio/onboarding-drafts",
+        headers=headers(identity),
+        json=onboarding_payload(
+            category_id="food", language="es", name="Luz", audience=["Cocineros curiosos"]
+        ),
+    )
+    assert result.status_code == 200, result.text
+    selected = result.json()["suggestions"][1]
+    data = studio_payload(
+        category_id="food",
+        language="es",
+        tone="WARM",
+        name=selected["name"],
+        audience=selected["audience"],
+        objective=selected["objective"],
+    )
+    created = register(client, identity, data)
+    saved = client.get(f"/v1/studio/influencers/{created['id']}", headers=headers(identity)).json()
+    for field in ("name", "audience", "objective", "category_id", "language"):
+        assert saved[field] == data[field]
+    assert saved["tone"] == "Cercano y atento"
+    assert (
+        client.get(
+            f"/v1/studio/influencers/{created['id']}", headers=headers(identities[1])
+        ).status_code
+        == 404
     )

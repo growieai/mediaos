@@ -24,10 +24,23 @@ Open `http://127.0.0.1:3000`, select **Open workspace**, and enter the tenant ID
 access key from `.local/credentials.json`. ADMIN can exercise creation and review locally;
 OPERATOR and APPROVER retain their separate permissions. Access stays in page memory.
 
-Choose **Create influencer** to pick a category, name, audience, language, tone and mission.
+Choose **Create new** to pick a category, name, audience, language, tone and mission.
 The new card is backed by PostgreSQL, including immutable initial configuration. Generic
 creators begin with abstract identity artwork; the app does not fabricate a generated portrait.
 Existing configured character references, including Sofía's, remain private authenticated images.
+
+**Suggest with AI** offers three starting points for a name and audience after you choose a
+category. **Draft mission with AI** offers three editable editorial missions based on the current
+category, audience, language and tone. Choose **Use this starting point** or **Use this mission**
+to insert a suggestion, then edit it before the final **Create new** action. Changing inputs or
+steps clears suggestions so an old response cannot overwrite new work. Suggestions never save
+a creator or publish content themselves.
+
+The helper currently supports **mock previews only**, clearly labelled template-based drafts
+with no AI model call or charge. It works without provider credentials. Live onboarding drafting
+is not yet implemented; selecting real text mode does not silently enable it. The existing paid
+content-model adapter is separate. The helper endpoint requires the same tenant membership,
+OPERATOR/ADMIN permission and creator feature flag as creation. No migration is needed.
 
 Choose **Create content** to provide a real source and exact evidence excerpts. An authorized
 reviewer must attest the source before generation. Test evidence stays marked and cannot pass
@@ -90,6 +103,7 @@ See [SOCIAL_DESIGN.md](SOCIAL_DESIGN.md) and [CONTENT_READINESS.md](CONTENT_READ
 - `GET /v1/studio/categories`: typed catalog of eight content categories.
 - `GET /v1/studio/influencers`: current tenant's saved influencer configurations and capability flags.
 - `POST /v1/studio/influencers`: typed, role/feature-gated, tenant-idempotent creator setup.
+- `POST /v1/studio/onboarding-drafts`: typed, bounded mock draft preview; no saved artifacts or provider calls.
 - `GET /v1/studio/influencers/{id}` and `/portrait`: protected detail and validated private image.
 - `GET /v1/studio/overview`: actual workspace counts and the latest 50 workflows with source titles.
 - `GET /v1/studio/workflow-runs/{id}/readiness`: read-only current-revision checklist.
@@ -120,3 +134,20 @@ approval binding and the saved-render review flow. Normal tests do not contact s
 The [implementation report](CREATOR_STUDIO_IMPLEMENTATION_REPORT.md) records actual test,
 build, browser and migration results. [Hosted CI for `a21efc6`](https://github.com/growieai/mediaos/actions/runs/36406451051)
 passed all 1,403 backend and 151 frontend tests, Docker startup/acceptance and the production build.
+
+### Onboarding assistance follow-up — September 28
+
+The **Create new** and draft-assistance follow-up passed 100 focused backend tests, all 184
+frontend tests, full backend lint/format/mypy (111 application files), and the production frontend
+build including TypeScript. Tests exercise duplicate clicks, cancellation, errors, stale selection,
+tenant/token changes, mock-only disclosure, malformed draft rejection, no preview writes and final
+explicit creation. Existing migrations through `0019` passed from an empty disposable database;
+this follow-up adds no migration.
+
+An actual browser rehearsal created **Sage** in the standalone local workspace: Education →
+suggested profile → chosen audience/name → mission suggestions → selected mission → manual edit
+→ **Create new**. A separate authenticated GET verified exactly one saved creator and the exact
+edited mission, audience and versioned configuration. A 390-pixel mobile viewport had no horizontal
+page or dialog overflow. No provider call or social post occurred. Private evidence is retained in
+`.local/onboarding-acceptance-report.json` and the onboarding screenshots; credentials and evidence
+files are not committed. The CI link above describes the earlier baseline, not this follow-up.

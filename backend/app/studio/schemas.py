@@ -13,6 +13,49 @@ CategoryID = Literal[
 ]
 
 
+class OnboardingDraftRequest(StrictModel):
+    category_id: CategoryID
+    language: Literal["en", "es"]
+    tone: Literal["CLEAR", "WARM", "BOLD"]
+    name: Label | None = None
+    audience: list[Label] = Field(default_factory=list, max_length=8)
+
+    @model_validator(mode="after")
+    def bounded_plain_text(self):
+        values = [*self.audience, *([self.name] if self.name is not None else [])]
+        if any(
+            value != value.strip() or any(ord(char) < 32 or ord(char) == 127 for char in value)
+            for value in values
+        ):
+            raise ValueError("Studio text must be trimmed plain text without control characters")
+        if len(self.audience) != len(set(self.audience)):
+            raise ValueError("Audience labels must be unique")
+        return self
+
+
+class OnboardingSuggestion(StrictModel):
+    id: Literal["practical", "explainer", "community"]
+    label: Label
+    name: Label
+    audience: list[Label] = Field(min_length=1, max_length=8)
+    objective: Annotated[str, StringConstraints(min_length=10, max_length=500)]
+
+
+class OnboardingDrafts(StrictModel):
+    schema_version: Literal[1] = 1
+    provider: Literal["mock"] = "mock"
+    mode: Literal["MOCK"] = "MOCK"
+    cost: Literal[0] = 0
+    notice: Annotated[str, StringConstraints(min_length=1, max_length=500)]
+    suggestions: list[OnboardingSuggestion] = Field(min_length=3, max_length=3)
+
+    @model_validator(mode="after")
+    def distinct_directions(self):
+        if {item.id for item in self.suggestions} != {"practical", "explainer", "community"}:
+            raise ValueError("Draft directions must be distinct")
+        return self
+
+
 class CreateInfluencer(StrictModel):
     idempotency_key: Annotated[str, StringConstraints(min_length=1, max_length=128)]
     name: Label

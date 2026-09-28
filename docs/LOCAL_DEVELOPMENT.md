@@ -89,7 +89,9 @@ deployments that have not enabled this feature.
 1. Select **Open workspace** and enter `tenant_id` and a human token from `.local/credentials.json`.
    OPERATOR creates, APPROVER reviews, and ADMIN can exercise both capabilities locally. Never
    use server-only INGESTOR or SOCIAL credentials in the browser.
-2. Choose **Create influencer**, select a category, and enter name, audience, language, tone and mission.
+2. Choose **Create new**, select a category, and enter name, audience, language, tone and mission.
+   **Suggest with AI** and **Draft mission with AI** offer editable mock starter drafts without
+   provider credentials. Choose a suggestion explicitly; only the final **Create new** saves it.
 3. Under **Content studio**, choose **Create content** and submit source text with exact factual excerpts.
 4. Open the saved story. A reviewer verifies the source; an operator generates the draft.
 5. Inspect evidence, each slide, QA and readiness. Approve the exact content revision.

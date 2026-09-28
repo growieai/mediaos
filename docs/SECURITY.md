@@ -13,6 +13,13 @@ The score is read-only, and all actual approvals/exports/posts continue to reche
 No image generator, provider billing permission or automatic social permission is enabled by
 creating an influencer or choosing a category.
 
+Onboarding draft previews require OPERATOR/ADMIN membership and the creator feature flag.
+Inputs and the three returned suggestions are bounded typed schemas. Mock preview constructs
+editorial intentions locally, makes no provider call and writes no creator, workflow or approval
+artifact. Non-mock requests fail explicitly until a separate live drafting adapter is implemented.
+The browser discards suggestions after context changes; inserting a draft requires a separate
+user action, and only the final guarded creator submission persists the reviewed fields.
+
 The signed handoff extension (0016) requires a separately reviewed business identity, existing
 explicit consent, migration-provisioned destination and fresh exact outbound authorization.
 The runtime cannot read the private recipient-verification key or manufacture a successful

@@ -79,7 +79,7 @@ test("category choice opens sign-in and retains only the authorized creator inte
 });
 
 test("cancelling sign-in clears the earlier category intent", () => {
-  const { host } = workspace(); click(host, "Create influencer"); child(host, "WorkspaceLogin").props.onClose(); host.render();
+  const { host } = workspace(); click(host, "Create new"); child(host, "WorkspaceLogin").props.onClose(); host.render();
   connect(host); assert.equal(child(host, "CreatorWizard"), undefined);
 });
 
@@ -87,7 +87,7 @@ for (const mode of ["feature-disabled", "reviewer-only"]) {
   test(`creator form stays inaccessible for ${mode}`, () => {
     const { host } = workspace(); const data = dataset();
     if (mode === "feature-disabled") data.creationEnabled = false; else data.identity.memberships[0].roles = ["APPROVER"];
-    connect(host, session, data); click(host, "Create influencer"); assert.equal(child(host, "CreatorWizard"), undefined);
+    connect(host, session, data); click(host, "Create new"); assert.equal(child(host, "CreatorWizard"), undefined);
     assert.match(text(host.tree), mode === "feature-disabled" ? /not activated/ : /operator or administrator/);
   });
 }
@@ -108,7 +108,7 @@ test("late workspace refresh cannot restore data after logout and another login"
 });
 
 test("old content and creator callbacks cannot open another tenant's modals", async () => {
-  const { host } = workspace(); connect(host); click(host, "Create influencer"); const oldCreator = child(host, "CreatorWizard").props.onCreated;
+  const { host } = workspace(); connect(host); click(host, "Create new"); const oldCreator = child(host, "CreatorWizard").props.onCreated;
   child(host, "CreatorWizard").props.onClose(); host.render(); navigate(host, "Content studio"); click(host, "Create content"); const oldRun = child(host, "SourceComposer").props.onCreated;
   click(host, "Sign out / switch access"); connect(host, secondSession); await oldRun({ ...workflow, title: "Private old callback" }); await oldCreator({ ...creator, name: "Private old creator" }); host.render();
   assert.equal(child(host, "ContentDetail"), undefined); assert.ok(!text(host.tree).includes("Private old"));

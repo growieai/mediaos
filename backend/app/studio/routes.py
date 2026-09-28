@@ -5,10 +5,13 @@ from fastapi import APIRouter, Depends, Request, Response
 
 from app.api.routes import Context, authenticated, body_as
 from app.db.repository import transaction
+from app.studio.onboarding import onboarding_drafts
 from app.studio.schemas import (
     CategoryCatalog,
     CreateInfluencer,
     InfluencerCatalog,
+    OnboardingDraftRequest,
+    OnboardingDrafts,
     StudioInfluencer,
     StudioOverview,
 )
@@ -22,6 +25,13 @@ from app.studio.service import (
 )
 
 router = APIRouter(prefix="/v1/studio", tags=["studio"])
+
+
+@router.post("/onboarding-drafts", response_model=OnboardingDrafts)
+async def suggest_onboarding(request: Request, ctx: Annotated[Context, Depends(authenticated)]):
+    data = await body_as(request, OnboardingDraftRequest)
+    with transaction(ctx.tenant, ctx.token) as repo:
+        return onboarding_drafts(repo, data)
 
 
 @router.get("/overview", response_model=StudioOverview)
