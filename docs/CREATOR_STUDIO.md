@@ -192,4 +192,9 @@ verification returned 409. The saved view provided a fresh replacement-story act
 the page and dialog had no horizontal overflow. Migration `0020` was also applied to the standalone
 dev database and the rebuilt console/API restarted successfully. Private proof is retained in
 `.local/source-draft-acceptance-report.json` and `.local/source-draft-*.png`; no credentials or
-private proof files are committed. Hosted CI for this change is recorded separately when run.
+private proof files are committed. A subsequent simulated API execution of that saved fixture
+reached QA BLOCKED, an exact approval attempt returned 409, and its ten audit events were retrievable.
+
+[Hosted CI for `748e455`](https://github.com/growieai/mediaos/actions/runs/36483787929) passed the
+full backend/PostgreSQL and frontend suites, lint/type checks, clean migrations, persisted
+acceptance, production build, container builds/startup and standalone Compose/ingress validation.
