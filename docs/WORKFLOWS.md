@@ -7,6 +7,13 @@ and OPERATOR/ADMIN role. Concurrent matching requests recover the same identity;
 payload for a used key conflicts. Creating an influencer does not execute any AI provider.
 
 The source form captures exact Unicode code-point evidence spans and a stable request key/time.
+
+When source text is empty, **Generate draft → Use draft** provides an editable mock writing starter.
+Preview is read-only and never selects evidence or attests a fact. Saving preserves generated
+provenance as an immutable internal fixture (migration `0020`); it cannot pass source verification
+or approval. Starting again with real source clears unsaved generated text and excerpts. For a
+saved draft, a replacement story creates a new WorkflowRun with its own original evidence and QA.
+
 Source review, research, brief, content and QA use the existing state machine below. Discovery
 is available only for missions with editorial policy and remains manually bounded/resumable.
 

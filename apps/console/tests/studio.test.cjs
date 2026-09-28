@@ -277,9 +277,9 @@ test("current account list omits revoked and superseded connections without inve
   assert.deepEqual(types.currentConnections({ connections: [], revocations: [] }), []);
 });
 
-function detail(extra = {}, readiness = {}, savedRun = {}) {
+function detail(extra = {}, readiness = {}, savedRun = {}, savedSource = {}) {
   const run = { id: "run-a", influencer_id: creator.id, mission_id: creator.mission_id, state: "AWAITING_APPROVAL", title: "Supported story", source_snapshot_id: "source-a", asset_version_id: "asset-2", research_version_id: "research-3", qa_report_id: "qa-4", ...savedRun };
-  const artifacts = { source_snapshots: [{ id: "source-a", title: "Original source", raw_content: "Evidence", verification_status: "VERIFIED", is_fixture: false }], qa_reports: [{ id: "qa-4", asset_version_id: "asset-2", research_version_id: "research-3", payload: { status: "PASS", findings: [] } }] };
+  const artifacts = { source_snapshots: [{ id: "source-a", title: "Original source", raw_content: "Evidence", verification_status: "VERIFIED", is_fixture: false, ...savedSource }], qa_reports: [{ id: "qa-4", asset_version_id: "asset-2", research_version_id: "research-3", payload: { status: "PASS", findings: [] } }] };
   const props = { session, initialRun: run, creator, roles: ["APPROVER"], onClose() {}, onChange: async () => {}, ...extra };
   return { ...setup("ContentDetail", props, async (_session, endpoint, method) => {
     if (method === "POST") return {};
@@ -411,6 +411,21 @@ test("a verified source enables generation without repeating human source attest
   assert.ok(!elements(host.tree).some(node => node.type === "label" && text(node).startsWith("Review note")));
   click(host, "Generate / resume draft"); await host.settle();
   assert.deepEqual(calls.filter(call => call[2] === "POST").map(call => call[1]), ["workflow-runs/run-a/execute"]);
+});
+
+test("saved generated draft discloses its evidence limit and offers replacement without verification", async () => {
+  let replacements = 0;
+  const { host, calls } = detail({ roles: ["OPERATOR", "APPROVER"], onReplace() { replacements++; } }, {},
+    { state: "SOURCE_CAPTURED", asset_version_id: null, research_version_id: null, qa_report_id: null },
+    { source_type: "GENERATED", is_fixture: true, verification_status: "UNVERIFIED", metadata: { source_draft_policy: "studio-source-draft-v1" } });
+  await host.settle(); assert.match(text(host.tree), /Generated planning draft saved/);
+  assert.match(text(host.tree), /cannot be verified or approved for publication/);
+  const verify = elements(host.tree).find(node => node.type === "button" && text(node).startsWith("Verify source evidence"));
+  if (verify) { assert.equal(verify.props.disabled, true); verify.props.onClick(); await host.settle(); }
+  const generate = elements(host.tree).find(node => node.type === "button" && text(node).startsWith("Generate / resume draft"));
+  if (generate) assert.equal(generate.props.disabled, true);
+  click(host, "Create replacement story"); await host.settle();
+  assert.equal(replacements, 1); assert.equal(calls.filter(call => call[2] === "POST").length, 0);
 });
 
 test("avatar fetch uses tenant authorization and releases its private object URL", async () => {

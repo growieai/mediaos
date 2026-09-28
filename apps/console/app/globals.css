@@ -241,3 +241,5 @@ input[type="checkbox"], input[type="radio"] { width: 15px; height: 15px; accent-
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
 @media (max-width: 800px) { .discovery-controls { grid-template-columns: 1fr 1fr; }.discovery-controls > .button { grid-column: 1 / -1; justify-self: start; } }
 @media (max-width: 560px) { .discovery-controls { grid-template-columns: 1fr; padding: 18px; }.discovery-controls > .button { justify-self: stretch; } }
+
+.source-draft-copy { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; font-size: 13px; line-height: 1.7; }

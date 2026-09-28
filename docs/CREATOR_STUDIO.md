@@ -104,6 +104,7 @@ See [SOCIAL_DESIGN.md](SOCIAL_DESIGN.md) and [CONTENT_READINESS.md](CONTENT_READ
 - `GET /v1/studio/influencers`: current tenant's saved influencer configurations and capability flags.
 - `POST /v1/studio/influencers`: typed, role/feature-gated, tenant-idempotent creator setup.
 - `POST /v1/studio/onboarding-drafts`: typed, bounded mock draft preview; no saved artifacts or provider calls.
+- `POST /v1/studio/source-drafts`: tenant-scoped, OPERATOR/ADMIN mock writing preview from a story title and saved creator; no provider calls or saved artifacts.
 - `GET /v1/studio/influencers/{id}` and `/portrait`: protected detail and validated private image.
 - `GET /v1/studio/overview`: actual workspace counts and the latest 50 workflows with source titles.
 - `GET /v1/studio/workflow-runs/{id}/readiness`: read-only current-revision checklist.
@@ -114,6 +115,25 @@ uses tenant ownership, forced RLS and restricted runtime access. The original wo
 evidence relations, exact approvals, skill/cost logging and social guards are unchanged.
 
 ## Deliberate limits
+
+On **Source → Story**, enter a title, leave **Original source text** empty, then choose
+**Generate draft → Use draft**. The editable starter uses the saved creator's language, audience
+and mission. Mock mode uses local templates and makes no AI call. A preview never overwrites
+existing text, chooses factual excerpts or attests evidence. Changed inputs/access invalidate
+pending previews; a failed preview can be retried without losing writing.
+
+Using the starter fills an explicit generated origin, publisher and internal source relationship.
+It remains test material after edits. Saving requires the same exact-excerpt and claim-classification
+steps; the resulting immutable source has `source_type=GENERATED` and `is_fixture=true`. It cannot
+be verified or approved for publication. **Start again with real source** clears the draft, excerpts
+and source details; a saved draft offers **Create replacement story** to start a separate evidence
+record. Generated writing is not an alternative to factual research.
+
+Migration `0020` enforces generated provenance at the database boundary. A generated type,
+reserved `generated:` origin or `source_draft_policy` metadata requires internal fixture status.
+The existing verification, QA and approval guards continue to reject fixtures. No text classifier
+can identify arbitrary copied or relabelled generated text; reviewers must still establish source
+authenticity. Live source drafting remains unimplemented and fails explicitly outside mock mode.
 
 This is an authenticated workspace, not anonymous public signup or a billing/marketplace product.
 Category selection persists editorial direction; it does not create an AI portrait or a custom
@@ -156,3 +176,20 @@ files are not committed. A full page reload and fresh sign-in also retained Sage
 **1,477 backend tests** (no skips, one existing upstream Starlette/AnyIO warning), **184 frontend
 tests**, quality/type checks, production build, clean migrations, Docker build/startup and
 persisted API acceptance. The earlier CI link describes the pre-onboarding baseline.
+
+### Source drafting follow-up — September 29
+
+Local validation passed 37 new source-draft unit tests, 93 focused PostgreSQL/studio/foundation
+tests with clean migrations through `0020`, all 226 frontend tests, backend Ruff/format/mypy
+(112 application files), and the production frontend build including TypeScript. Two independent
+local reviews found no remaining material issues after fixing response-publisher validation and
+a stale reset handler. Normal tests made no external provider calls.
+
+A browser rehearsal generated a preview for Sage, explicitly inserted it, edited the original
+text, selected an exact test excerpt and saved the source. An independent authenticated API read
+confirmed the exact edited text and generated/internal/fixture provenance; an attempted source
+verification returned 409. The saved view provided a fresh replacement-story action. At 390 × 844,
+the page and dialog had no horizontal overflow. Migration `0020` was also applied to the standalone
+dev database and the rebuilt console/API restarted successfully. Private proof is retained in
+`.local/source-draft-acceptance-report.json` and `.local/source-draft-*.png`; no credentials or
+private proof files are committed. Hosted CI for this change is recorded separately when run.

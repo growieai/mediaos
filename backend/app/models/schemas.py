@@ -56,7 +56,7 @@ class EvidenceInput(StrictModel):
 
 
 class SourceInput(StrictModel):
-    source_type: Literal["MANUAL", "OFFICIAL", "SECONDARY"] = "MANUAL"
+    source_type: Literal["MANUAL", "OFFICIAL", "SECONDARY", "GENERATED"] = "MANUAL"
     origin: Annotated[str, StringConstraints(min_length=1, max_length=2048)]
     canonical_url: str | None = None
     title: ShortText
@@ -70,6 +70,13 @@ class SourceInput(StrictModel):
 
     @model_validator(mode="after")
     def spans(self):
+        generated = (
+            self.source_type == "GENERATED"
+            or self.origin.strip(" ").lower().startswith("generated:")
+            or "source_draft_policy" in self.metadata
+        )
+        if generated and (not self.is_fixture or self.classification != "INTERNAL"):
+            raise ValueError("Generated drafts must remain internal non-publishable fixtures")
         if self.captured_at.tzinfo is None:
             raise ValueError("captured_at must include a timezone")
         seen: set[tuple[int, int]] = set()

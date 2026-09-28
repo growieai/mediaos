@@ -20,6 +20,15 @@ artifact. Non-mock requests fail explicitly until a separate live drafting adapt
 The browser discards suggestions after context changes; inserting a draft requires a separate
 user action, and only the final guarded creator submission persists the reviewed fields.
 
+Source draft previews likewise require OPERATOR/ADMIN and a tenant-owned creator. They use local
+templates only, with strict bounded input/output schemas and no provider/network execution.
+Migration `0020` requires any `GENERATED` source type, reserved `generated:` origin or
+`source_draft_policy` metadata to retain `INTERNAL` classification and `is_fixture=true`.
+The API mirrors the constraint. Immutable snapshots cannot shed the fixture flag; existing source
+attestation, QA and guarded approval reject them. Editing draft text does not remove provenance.
+This protects recorded provenance, not arbitrary copy/paste relabelling: human authenticity
+review remains required for submitted manual sources.
+
 The signed handoff extension (0016) requires a separately reviewed business identity, existing
 explicit consent, migration-provisioned destination and fresh exact outbound authorization.
 The runtime cannot read the private recipient-verification key or manufacture a successful

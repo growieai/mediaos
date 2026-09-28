@@ -1,5 +1,14 @@
 # Data model
 
+## Generated source drafts (0020)
+
+`source_snapshots.source_type` also accepts `GENERATED`. A database CHECK requires generated
+sources, reserved `generated:` origins and `source_draft_policy` metadata to be `INTERNAL`
+fixtures. Existing immutable-source, tenancy, evidence, QA and guarded approval constraints
+remain unchanged. Draft previews create no records; an explicit save uses the existing
+WorkflowRun/source transaction and idempotency key. A new real-source story gets a new snapshot
+and workflow rather than modifying or promoting a generated snapshot.
+
 ## Creator setup and social design (0018–0019)
 
 `studio_creations` is an immutable creation receipt with tenant-composite ownership of the

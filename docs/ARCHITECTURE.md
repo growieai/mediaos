@@ -8,6 +8,12 @@ official discovery reuse existing workflow services. Credentials stay in tab mem
 access clears the workspace and aborts pending requests. Source attestation, QA, content approval,
 visual approval and exact social dispatch remain separate server-protected steps.
 
+The optional source-draft helper creates a typed local-template preview from a tenant-owned
+creator and story title. It performs no research or model call. Explicitly using and saving a
+draft creates an immutable generated fixture source; migration `0020` prevents that recorded
+provenance from being submitted as publishable evidence. The existing workflow and approval
+states are unchanged. See [Creator Studio](CREATOR_STUDIO.md) for the real-evidence replacement flow.
+
 Migration 0018 adds immutable tenant-owned `studio_creations` receipts and guarded atomic
 influencer/configuration/mission creation. `ENABLE_EXTERNAL_CREATORS=true` enables OPERATOR/ADMIN
 creator setup, not public signup, billing or a marketplace. New creators have generic versioned

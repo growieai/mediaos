@@ -17,3 +17,12 @@ The form also checks the selected excerpts for common English and Spanish fundin
 Changing source text, excerpts, claim type, or source relationship clears the operator's declaration. The persisted source metadata records the explicit classification and `evergreen-review-v1` policy. No new approval permission or database transition is introduced.
 
 Offline regressions cover missing selections, human confirmation, English and Spanish grant/date indicators, expired grants, fixture non-bypass, source relationship preservation, exact Unicode spans, and direct invocation of a disabled submit handler.
+
+The optional **Generate draft** helper is available when original text is empty and a title and
+creator are selected. It produces a clearly labelled mock writing starter, not verified source
+material. Explicit **Use draft** fills the text and fixed generated provenance but does not choose
+excerpts or claim declarations. Editing cannot clear the generated marker. Saving uses an immutable
+internal fixture; migration `0020` independently prevents generated type/origin/metadata from
+being recorded as non-fixture evidence. Use **Start again with real source** to clear all draft
+text, excerpts and source details before supplying real evidence, or create a replacement story
+after saving. Existing authentic manual-source checks remain unchanged.

@@ -1,5 +1,11 @@
 # Local development
 
+For the source-draft helper, run `python scripts/dev.py migrate` (migration `0020`), rebuild the
+console and restart the API/console. No package, external service or credential is added. Keep
+`AI_MOCK_MODE=true` to use **Create content → story title → Generate draft → Use draft**. The
+preview uses local templates. Its saved source is always test material and cannot be approved;
+paste real source evidence into a new story for the normal publication workflow.
+
 The current schema head is 0019. Run migrate and seed after updating this branch, then rebuild
 and restart the API/console. Seed creates `.local/media` and `.local/social` for private bind mounts; no paid
 profile or budget is seeded. On this prepared Windows host the standalone PostgreSQL service

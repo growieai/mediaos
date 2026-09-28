@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import make_url
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCHEMA_REVISION = "0019"
+SCHEMA_REVISION = "0020"
 
 
 class Settings(BaseSettings):

@@ -12,6 +12,8 @@ from app.studio.schemas import (
     InfluencerCatalog,
     OnboardingDraftRequest,
     OnboardingDrafts,
+    SourceDraft,
+    SourceDraftRequest,
     StudioInfluencer,
     StudioOverview,
 )
@@ -23,8 +25,16 @@ from app.studio.service import (
     overview,
     portrait,
 )
+from app.studio.source_drafts import source_draft
 
 router = APIRouter(prefix="/v1/studio", tags=["studio"])
+
+
+@router.post("/source-drafts", response_model=SourceDraft)
+async def suggest_source_draft(request: Request, ctx: Annotated[Context, Depends(authenticated)]):
+    data = await body_as(request, SourceDraftRequest)
+    with transaction(ctx.tenant, ctx.token) as repo:
+        return source_draft(repo, data)
 
 
 @router.post("/onboarding-drafts", response_model=OnboardingDrafts)
