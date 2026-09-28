@@ -1,5 +1,21 @@
 # Workflow state and recovery
 
+## Creator Studio entry points
+
+Category → identity/audience → mission creates a persisted influencer behind the creator flag
+and OPERATOR/ADMIN role. Concurrent matching requests recover the same identity; changing the
+payload for a used key conflicts. Creating an influencer does not execute any AI provider.
+
+The source form captures exact Unicode code-point evidence spans and a stable request key/time.
+Source review, research, brief, content and QA use the existing state machine below. Discovery
+is available only for missions with editorial policy and remains manually bounded/resumable.
+
+The story modal separates Content, Design, Video, Publish and Activity. Content and visual
+approval remain separate. The current v2 design can render while content awaits approval;
+visual approval and download still require the existing exact content approval. A new design
+configuration needs a new render and fresh visual review. Content readiness cannot authorize
+publication; stale evidence or revisions are rechecked at the protected transition.
+
 ## Speaking video and manual handoff
 
 The content state machine below is unchanged. A separately approved content revision can

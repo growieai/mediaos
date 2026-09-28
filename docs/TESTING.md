@@ -1,12 +1,22 @@
 # Test the local Media OS loops
 
-The internal console is at **http://127.0.0.1:3000**. This checkout uses a separate native PostgreSQL instance and requires no AI API key. It supports sourced carousel drafts, deterministic PNG rendering, separate content/visual approval, checked ZIP export, delivery dry runs and reported metrics. No social publishing, live insights fetch or runtime image-generation API is enabled.
+The current UI is [Creator Studio](CREATOR_STUDIO.md), replacing the JSON-first console.
+Use **Open workspace**, **Influencers**, **Content studio** and the story's **Content / Design /
+Video / Publish / Activity** tabs. Historical instructions below describe earlier handoffs.
+The schema head is now `0019`; migrate, seed and rebuild after updating. Creator creation is
+explicitly enabled with `ENABLE_EXTERNAL_CREATORS=true` in the local environment.
 
-The M2-specific review below preserves its original handoff IDs. For the later capabilities, follow
+Baseline commit `484ce5f` has now passed [hosted CI](https://github.com/growieai/mediaos/actions/runs/36044067134).
+That result does not substitute for validation of later Creator Studio changes.
+
+The internal console is at **http://127.0.0.1:3000**. This checkout uses a separate native PostgreSQL instance and requires no AI API key for its mock and deterministic loops. It supports sourced carousel drafts, deterministic PNG rendering, separate content/visual approval, checked ZIP export, delivery dry runs and reported metrics. Opt-in real text, speaking video, connected Instagram/insights/replies and signed conversion handoff are implemented, but live integration flags remain disabled and provider/account credentials are not configured.
+
+On September 25, 2026, the preserved local database was migrated through `0017`, the frontend production build passed, and the content/render/delivery/metrics/community acceptance rehearsal passed through the running console proxy. This rehearsal uses simulated approvals and observations; it does not prove real voice/video generation, posting or delivery. See the [completion report](MILESTONE_COMPLETION_REPORT.md) for exact release and hosted CI results.
+
+The M2-specific review below preserves its historical handoff IDs, not a promise that those artifacts remain fresh. For the later capabilities, follow
 [visual testing](VISUAL_TESTING.md), [delivery preflight testing](DELIVERY_TESTING.md) and
 [reported metrics testing](METRICS_TESTING.md). Their acceptance reports supply current local IDs.
-The next internal loop is [comment reply review](COMMUNITY_TESTING.md), which saves drafts and
-human decisions without sending messages.
+The internal [comment reply review](COMMUNITY_TESTING.md) saves drafts and human decisions without sending messages. The separately configured [connected social integration](SOCIAL_INTEGRATION.md) adds account linking, exact publication/reply authorization and explicit dispatch; connecting or approving content alone never sends anything.
 
 ## Sign in and review
 
@@ -17,7 +27,13 @@ human decisions without sending messages.
 5. Review the exact current revisions, enter a comment, then choose **Approve exact revisions** or **Reject**. Approval must produce APPROVED and an immutable record; rejection must require revision. Nothing is published.
 6. Open blocked workflow `41a74282-f2b4-4c04-bce0-9f457154d279`. It contains an unsupported-claim control from the local acceptance simulation. Approval must remain unavailable. The API also rejects a direct approval attempt.
 
-The current handoff IDs are also in `.local/testing-handoff.json`. Live evidence expires under the mission policy. If you test after expiry, refresh official ingestion and generate current research; stale approval rejection is expected behavior.
+The historical M2 handoff IDs are also in `.local/testing-handoff.json`. Later acceptance reports under `.local` identify their own newly created runs. Live evidence expires under the mission policy. If you test after expiry, refresh official ingestion and generate current research; stale approval rejection is expected behavior.
+
+## Speaking video and conversion review
+
+Select a workflow and open **Speaking video**. With `tokens.ADMIN`, expand **Configure voice, verified prices and budget** to inspect or create versioned setup. Sofía's selected Sara Martin voice ID is `ODO4sbmD3pTjhgRVVRP6`; authenticated account access, current prices and an explicit spending limit still need verification. Keep credentials in the ignored server environment, never these forms. Saving a profile or policy does not generate media. An OPERATOR prepares a request from exact current approved content, then executes separately only when providers and the live flag are configured. An APPROVER reviews the resulting exact video. Follow [SPEAKING_VIDEO.md](SPEAKING_VIDEO.md) and [VOICE_SELECTION.md](VOICE_SELECTION.md). No actual speaking sample is available from the offline tests.
+
+Open **Consent and manual handoff requests** to inspect a saved conversion request, then its **External handoff** view. The view shows business evidence, provisioned transport, exact intent and authorization/receipt history. Review and explicit dispatch are separate actions. See [CONVERSION_TESTING.md](CONVERSION_TESTING.md) for manual export and [CONVERSION_DELIVERY.md](CONVERSION_DELIVERY.md) for signed handoff setup. No real recipient is configured; no external delivery is claimed. Fixture consent/identities cannot be promoted into a live handoff.
 
 ## Discover another opportunity
 
@@ -57,18 +73,21 @@ The optional URL makes acceptance use the actual running HTTP API, including Doc
 Run `.venv/Scripts/python.exe -m app.intelligence.acceptance` separately for live government-source acceptance. It uses bounded public requests and controlled, explicitly marked negative fixtures in a separate verification tenant. Its approver calls are simulations; the prepared review above is for your own decision.
 
 The later local acceptance commands are `python scripts/dev.py visual-acceptance`,
-`python scripts/dev.py delivery-acceptance` and `python scripts/dev.py metrics-acceptance`, run from
+`python scripts/dev.py delivery-acceptance`, `python scripts/dev.py metrics-acceptance` and
+`python scripts/dev.py community-acceptance`, run from
 the repository root after migration and seed. The metrics harness includes the visual and dry-run
 delivery checks, then imports explicitly synthetic observations and saves a descriptive comparison.
-These simulations neither publish a post nor prove real audience performance.
+The community harness also verifies classification, sourced reply drafts and separate human-review simulation. These simulations neither publish a post or reply nor prove real audience performance. Normal tests use only the disposable database; do not run two PostgreSQL pytest sessions concurrently.
 
 ## Dependencies and remaining limits
 
 - **Ready locally:** Python 3.12, Node 24, standalone PostgreSQL, seeded internal credentials and the built console.
-- **Docker Desktop:** optional for this native setup; required to run containers on this Windows machine. Hosted CI also verifies containers on Linux.
+- **Docker Desktop:** optional for this native setup; required to run containers on this Windows machine. Hosted Linux CI has demonstrated containers for earlier commits; consult the [completion report](MILESTONE_COMPLETION_REPORT.md) for the exact current release status.
 - **Cámara:** automated access remains disabled until the source owner permits it. Its recorded parser tests are available; BDNS and BOE are enabled.
-- **AI/model provider:** no key is needed for current deterministic extraction, scoring, drafting or rendering. A strict model-selection adapter has isolated tests, but it is not enabled in the persisted workflow; mock mode remains selected.
+- **AI/model provider:** no key is needed for deterministic extraction, scoring, mock drafting or rendering. [Optional real creator selection](REAL_MODEL_EXECUTION.md) is wired into persisted workflows with strict typed selection, reservations and usage records. Mock mode remains selected; real calls require credentials, an explicit model and a current priced tenant policy.
 - **Visuals:** deterministic PNG rendering, exact visual approval and ZIP export are available. Sofía's proposed reference images still need the user's appearance review. The runtime does not generate new images.
-- **Delivery and metrics:** saved dry-run receipts and immutable MANUAL/SELF_REPORTED or FIXTURE observations are available. Instagram remains disconnected; no post or verified insights are claimed. Unknown counters remain unknown.
+- **Delivery, metrics and community:** saved dry-run receipts and immutable MANUAL/SELF_REPORTED or FIXTURE observations are available. Connected publishing, platform observations and signed inbound comments/separately authorized replies are implemented. Instagram remains disconnected; a real post, insights observations, inbound comment and reply remain unverified. Unknown counters remain unknown.
+- **Speaking video:** persisted ElevenLabs/HeyGen generation, caption/cutaway composition and separate audiovisual review are implemented. Provider credentials, voice access, verified rates/budget and the first real sample are pending. No video publishing is implemented.
+- **Conversion:** exact consent review, manual export and separately authorized signed delivery/revocation are implemented. A real recipient and consent/handoff acceptance remain pending; local physical retention/purge is not implemented.
 - **Long legal material:** the BOE parser retains documents exceeding its 100-fact bound as raw snapshots with an extraction failure rather than truncating legal conditions.
-- Video, voice, live social publishing, automatic comments/DMs, external signup/creator UI and marketplace remain deferred. Reels require a stable carousel and measured metrics loop first.
+- Runtime image generation, optional Higgsfield cutaways, automatic social actions/DMs, public signup and marketplace remain deferred. Authenticated, feature-gated creator setup is now available in Creator Studio. Production deployment needs a chosen standalone host and its own acceptance; it is not established by the local rehearsal.

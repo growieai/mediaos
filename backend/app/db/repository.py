@@ -40,6 +40,8 @@ def metadata():
             "tenants",
             "tenant_memberships",
             "influencers",
+            "studio_categories",
+            "studio_creations",
             "influencer_versions",
             "missions",
             "character_config_versions",

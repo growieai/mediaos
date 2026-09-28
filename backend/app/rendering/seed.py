@@ -8,7 +8,21 @@ from sqlalchemy.dialects.postgresql import insert
 
 from app.config import REPO_ROOT
 from app.db.repository import canonical_hash
-from app.rendering.schemas import VisualConfig
+from app.rendering.schemas import VisualConfig, VisualPalette
+
+
+def default_visual_config(display_name, disclosure):
+    """A new seed is a new immutable template revision; old payloads stay v1."""
+    return VisualConfig(
+        template_version="social-editorial-v2",
+        display_name=display_name,
+        required_disclosure=disclosure,
+        regular_font_path="backend/assets/fonts/Inter-Regular.ttf",
+        bold_font_path="backend/assets/fonts/Inter-Bold.ttf",
+        headline_font_size=72,
+        body_font_size=48,
+        palette=VisualPalette(background="#F7F5EF", text="#132A2A", accent="#285850"),
+    )
 
 
 def seed_visual_config(
@@ -21,12 +35,7 @@ def seed_visual_config(
     reference_metadata=None,
 ):
     tenant_id, influencer_id = UUID(str(tenant_id)), UUID(str(influencer_id))
-    config = VisualConfig(
-        display_name=display_name,
-        required_disclosure=disclosure,
-        regular_font_path="backend/assets/fonts/Inter-Regular.ttf",
-        bold_font_path="backend/assets/fonts/Inter-Bold.ttf",
-    )
+    config = default_visual_config(display_name, disclosure)
     payload = config.model_dump(mode="json")
     font_hashes = {
         style: hashlib.sha256((REPO_ROOT / payload[f"{style}_font_path"]).read_bytes()).hexdigest()

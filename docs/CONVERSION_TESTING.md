@@ -5,7 +5,7 @@ The manual-export path below remains unchanged. Migration `0016` adds a separate
 provisioned destinations, immutable outbound intent and signed reception/revocation receipts.
 No real destination has been configured or contacted by the offline implementation tests.
 
-This feature prepares a JSON request for a human to hand off. It does not contact Growie or any
+The manual-export feature prepares a JSON request for a human to hand off. That path does not contact Growie or any
 other destination, identify a business from a comment, perform an audit, send email/DMs, or claim
 a conversion. `delivered=false`, `network_performed=false` and `audit_completed=false` are fixed.
 No provider credentials or network access are needed. Existing Growie production infrastructure
@@ -86,7 +86,7 @@ record, and retrieving it again requires the guarded endpoint's current role and
 - POST `/revoke` with `{"reason":"Subject withdrew this request."}` as OPERATOR/APPROVER.
   Revocation applies to the entire request-reference series and blocks old export replays and
   new revisions of that series. Revocation does not undo bytes that were already downloaded or
-  prove that a human has recalled an external manual handoff; no external delivery is tracked.
+  prove that a human has recalled an external manual handoff; the manual-export path does not track external delivery. Separately dispatched signed handoffs have their own receipt and revocation history.
 - Creation, revision, review, revocation and export serialize through common series/destination
   locks. Concurrent same-key exports cannot duplicate a receipt or SkillRun. Expiry is checked
   with database time. Historical content revisions do not erase attribution: no content claims
@@ -114,9 +114,15 @@ recreated only the disposable test schema and migrated from empty through 0008; 
 0007 in the migration chain. After the receipt-history privacy fix, 32 pure tests passed; three
 additional PostgreSQL regressions are included in the final aggregate verification. Ruff
 check/format and mypy for the four conversion modules passed.
-Hosted CI and a real external handoff have not been demonstrated by this bounded implementation.
+Those figures describe the historical manual-export slice. The current local database is at `0017`; the September 25, 2026 console acceptance rehearsal passed with live integrations disabled. See the [completion report](MILESTONE_COMPLETION_REPORT.md) for exact aggregate tests, commit-specific hosted CI and Docker verification. A real external handoff has not been demonstrated.
 
-This is partial M9. A real conversion loop additionally requires a chosen authorized destination,
-identity/contact minimization and retention policy, real subject consent, an externally confirmed
-handoff, and its own delivery/revocation reconciliation. A business audit is a separate scoped
+## Signed handoff console and tests
+
+At `http://127.0.0.1:3000`, select the workflow, open **Consent and manual handoff requests**, and select a saved request to show **External handoff**. The current console can inspect matching business evidence and a provisioned transport, record separate APPROVER identity/intent review, and expose explicit OPERATOR dispatch and receipt recovery. Preparing or authorizing an intent does not send it. Authorization never transfers to a replacement or modified request.
+
+Request/consent and business-identity creation use the documented APIs; transport endpoint/signing-key provisioning is a separate privileged operation. Follow [CONVERSION_DELIVERY.md](CONVERSION_DELIVERY.md) for the exact contract and configuration. Provider keys and signing secrets never belong in the console. The current local live flag is false and no real recipient is provisioned. Use fixture data for offline negative checks; do not relabel it as genuine consent to enable a positive live path.
+
+The additional focused suites are `tests/test_conversion_delivery_unit.py` and `tests/test_conversion_delivery_integration.py`. They cover bounded transport, receipt signatures, immutable exact authorization, tenancy, uncertain outcomes and concurrent dispatch/reconciliation with synthetic responses. They make no real handoff and do not establish recipient acceptance.
+
+This is partial M9. Business identity review and signed delivery/revocation reconciliation are implemented; their real acceptance requires a chosen authorized recipient, actual consent and a confirmed exact handoff. Local physical retention/purge remains unimplemented, so identity/contact minimization, retention and erasure still need a production policy and implementation. Expiry blocks further sending but does not erase stored records. A business audit is a separate scoped
 product and is not implemented by this request. Existing Growie production systems remain excluded.

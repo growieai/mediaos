@@ -16,7 +16,7 @@ class VisualPalette(StrictModel):
 
 class VisualConfig(StrictModel):
     schema_version: Literal[1] = 1
-    template_version: Literal["editorial-v1"] = "editorial-v1"
+    template_version: Literal["editorial-v1", "social-editorial-v2"] = "editorial-v1"
     display_name: NonEmptyText
     required_disclosure: NonEmptyText
     regular_font_path: NonEmptyText

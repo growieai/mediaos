@@ -24,6 +24,8 @@ from app.social.learning_routes import router as social_learning_router
 from app.social.reply_routes import router as reply_router
 from app.social.routes import router as social_router
 from app.social_provider import SocialProviderError
+from app.studio.readiness_routes import router as readiness_router
+from app.studio.routes import router as studio_router
 
 configure_logging()
 
@@ -148,6 +150,8 @@ app.include_router(ai_router)
 app.include_router(social_router)
 app.include_router(reply_router)
 app.include_router(social_learning_router)
+app.include_router(studio_router)
+app.include_router(readiness_router)
 
 
 @app.exception_handler(SocialProviderError)

@@ -161,6 +161,16 @@ streams, unlisted files, malformed manifests and checksum mismatches fail closed
 
 ## Verification and remaining production work
 
+On **2026-09-25**, the rehearsal was repeated at schema **0017** after stopping the local API and
+console. Backup verification and restore into the new `mediaos_restore_handoff_20260925b` database
+passed for **63 private files**, migration metadata, forced RLS, restricted roles and function
+ownership. Read-only API checks against that isolated restore passed for authenticated readiness,
+the live BDNS workflow, artifacts and audit; unauthenticated and wrong-tenant reads were rejected.
+The source database was preserved and its API/console restarted. Evidence is stored privately in
+`.local/restored-0017-api-smoke-report.json` and the backup/restore manifests. The initial sandboxed
+attempt failed on filesystem access; its incomplete output was retained, and the successful
+attempt used new destinations. This is a local recovery rehearsal, not an off-site production test.
+
 Pure tests mock all PostgreSQL subprocesses and require no database or provider access:
 
 ```powershell

@@ -6,25 +6,30 @@ from pathlib import Path
 from uuid import UUID
 
 import pytest
-from PIL import Image
+from PIL import Image, ImageChops
 from pydantic import ValidationError
 
 from app.models.schemas import CarouselDraft, CarouselSlide, TextBlock
 from app.rendering.renderer import render_carousel
 from app.rendering.schemas import VisualConfig, VisualPalette
+from app.rendering.seed import default_visual_config
+from app.rendering.social_template import social_regions
 
 
-@pytest.fixture
-def visual():
+@pytest.fixture(params=["editorial-v1", "social-editorial-v2"])
+def visual(request):
     root = Path(__file__).resolve().parents[1]
     fonts = root / "assets" / "fonts"
     regular, bold = fonts / "Inter-Regular.ttf", fonts / "Inter-Bold.ttf"
     assert regular.exists() and bold.exists(), "Install the repository's pinned font bundle"
     return VisualConfig(
+        template_version=request.param,
         display_name="Creadora de prueba",
         required_disclosure="Contenido creado por una identidad virtual con IA.",
         regular_font_path=str(regular),
         bold_font_path=str(bold),
+        headline_font_size=72 if request.param == "social-editorial-v2" else 58,
+        body_font_size=48 if request.param == "social-editorial-v2" else 38,
     )
 
 
@@ -215,3 +220,88 @@ def test_unavailable_glyph_does_not_silently_become_a_box(tmp_path, draft, visua
     assert manifest.status == "BLOCKED"
     assert any(f.code == "MISSING_GLYPH" for f in manifest.findings)
     assert not list(tmp_path.glob("*.png"))
+
+
+def test_new_seed_template_is_explicit_and_old_configuration_stays_legacy():
+    current = default_visual_config("Any creator", "A virtual AI creator.")
+    assert current.template_version == "social-editorial-v2"
+    assert current.headline_font_size == 72
+    assert current.body_font_size == 48
+    assert current.palette.background == "#F7F5EF"
+    assert current.palette.text == "#132A2A"
+    legacy = current.model_dump(exclude={"template_version"})
+    assert VisualConfig.model_validate(legacy).template_version == "editorial-v1"
+    invalid = current.model_dump() | {"template_version": "unreviewed-v3"}
+    with pytest.raises(ValidationError):
+        VisualConfig.model_validate(invalid)
+
+
+@pytest.mark.parametrize("margin", [64, 72, 96])
+def test_social_regions_have_disjoint_text_and_portrait_safe_zones(visual, margin):
+    visual.margin = margin
+    for index in (1, 2, 3):
+        regions = social_regions(visual, index, 3)
+        for position, (left, top, right, bottom) in enumerate(regions):
+            assert margin <= left < right <= 1080 - margin
+            assert 64 <= top < bottom <= 1304
+            for other in regions[position + 1 :]:
+                assert (
+                    right <= other[0] or left >= other[2] or bottom <= other[1] or top >= other[3]
+                )
+        if index == 1:
+            # Large portrait lives between identity and evidence, to the right
+            # of the entire measured headline (no text over a face).
+            portrait = (736, 184, 1080 - margin, 524)
+            for left, top, right, bottom in regions:
+                assert (
+                    right <= portrait[0]
+                    or left >= portrait[2]
+                    or bottom <= portrait[1]
+                    or top >= portrait[3]
+                )
+
+
+def test_social_cover_evidence_and_closing_keep_exact_text_and_distinct_layouts(
+    tmp_path, draft, visual
+):
+    visual.template_version = "social-editorial-v2"
+    draft.slides = [draft.slides[0].model_copy(update={"index": i}, deep=True) for i in (1, 2, 3)]
+    result = render_carousel(draft, visual, tmp_path)
+    assert result.status == "PASS", result.findings
+    assert len({slide.sha256 for slide in result.slides}) == 3
+    for slide in result.slides:
+        assert [item.bounds for item in slide.text_coverage] == social_regions(
+            visual, slide.index, 3
+        )
+        assert slide.text_coverage[1].text == draft.slides[slide.index - 1].headline.text
+        assert slide.text_coverage[2].text == draft.slides[slide.index - 1].body.text
+        assert slide.text_coverage[2].fact_ids == [str(draft.slides[0].body.fact_ids[0])]
+        assert slide.text_coverage[3].text == draft.cta.text
+        assert slide.text_coverage[4].text == draft.disclosure
+
+
+def test_social_headline_does_not_shrink_or_truncate_to_fit_a_cover(tmp_path, draft, visual):
+    visual.template_version = "social-editorial-v2"
+    draft.slides[0].headline.text = "Un titular con demasiado texto. " * 20
+    result = render_carousel(draft, visual, tmp_path)
+    assert result.status == "REVISION_REQUIRED"
+    assert not list(tmp_path.glob("*.png"))
+    headline = result.slides[0].text_coverage[1]
+    assert headline.font_size == visual.headline_font_size
+    assert headline.text == draft.slides[0].headline.text
+    assert headline.exact_coverage
+
+
+def test_social_excerpt_is_centered_with_visible_ink_inside_its_safe_region(
+    tmp_path, draft, visual
+):
+    visual.template_version = "social-editorial-v2"
+    result = render_carousel(draft, visual, tmp_path)
+    assert result.status == "PASS"
+    body = result.slides[0].text_coverage[2]
+    with Image.open(tmp_path / "slide-01.png") as image:
+        crop = image.crop(body.bounds)
+        background = Image.new("RGB", crop.size, visual.palette.background)
+        ink_bounds = ImageChops.difference(crop, background).getbbox()
+    assert ink_bounds is not None
+    assert 50 < ink_bounds[1] < ink_bounds[3] < crop.height - 50

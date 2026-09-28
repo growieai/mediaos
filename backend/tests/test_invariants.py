@@ -15,7 +15,7 @@ from app.services.workflows import Runner, create_run
 
 def test_migration_and_runtime_role(database):
     with database.connect() as c:
-        assert c.execute(text("select version_num from alembic_version")).scalar_one() == "0017"
+        assert c.execute(text("select version_num from alembic_version")).scalar_one() == "0019"
         unprotected = c.execute(
             text(
                 "select tablename from pg_tables where schemaname='public' and not rowsecurity and tablename not in ('principals','alembic_version')"
@@ -560,12 +560,13 @@ def test_model_output_schema_rejects_coercion():
         )
 
 
-def test_feature_flags_fail_closed(monkeypatch):
+@pytest.mark.parametrize("flag", ["ENABLE_AUTO_PUBLISH", "ENABLE_AUTO_REPLIES", "ENABLE_VIDEO"])
+def test_unsupported_feature_flags_fail_closed(monkeypatch, flag):
     from pydantic import ValidationError
 
     from app.config import Settings
 
-    monkeypatch.setenv("ENABLE_EXTERNAL_CREATORS", "true")
+    monkeypatch.setenv(flag, "true")
     with pytest.raises(ValidationError):
         Settings.model_validate({})
 

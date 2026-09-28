@@ -1,6 +1,6 @@
 # Local development
 
-The current schema head is 0017. Run migrate and seed after updating this branch, then rebuild
+The current schema head is 0019. Run migrate and seed after updating this branch, then rebuild
 and restart the API/console. Seed creates `.local/media` and `.local/social` for private bind mounts; no paid
 profile or budget is seeded. On this prepared Windows host the standalone PostgreSQL service
 uses port 55432 and `mediaos_dev`; the Docker example uses port 55433 and database `mediaos`.
@@ -80,7 +80,29 @@ Full container maintenance is also available:
 
 The seed reads the four Sofía Markdown files and runtime.json. Repeat it safely; changed character data creates a new immutable version.
 
-## Internal console flow
+## Creator workspace flow
+
+Set `ENABLE_EXTERNAL_CREATORS=true` in the ignored local `.env` and restart the API to enable
+authenticated creator setup. No AI/provider key is needed. The example keeps creation off for
+deployments that have not enabled this feature.
+
+1. Select **Open workspace** and enter `tenant_id` and a human token from `.local/credentials.json`.
+   OPERATOR creates, APPROVER reviews, and ADMIN can exercise both capabilities locally. Never
+   use server-only INGESTOR or SOCIAL credentials in the browser.
+2. Choose **Create influencer**, select a category, and enter name, audience, language, tone and mission.
+3. Under **Content studio**, choose **Create content** and submit source text with exact factual excerpts.
+4. Open the saved story. A reviewer verifies the source; an operator generates the draft.
+5. Inspect evidence, each slide, QA and readiness. Approve the exact content revision.
+6. In **Design**, generate a current carousel, review each image and approve the exact render.
+   Download requires both content and visual approval. Render generation may precede content
+   approval; visual approval cannot.
+7. **Channels** shows real account setup status. The story's **Publish** tab retains separate
+   account, caption, image and dispatch checks. Connecting an account does not publish.
+
+The readiness score is guidance, not a viral prediction. Portrait/voice generation remains
+separate from creating an identity. See [CREATOR_STUDIO.md](CREATOR_STUDIO.md) for boundaries.
+
+## Foundation API flow
 
 1. Open .local/credentials.json locally. Enter tenant_id and the OPERATOR token in the console.
 2. Submit a strict manual-source JSON request using the seeded influencer_id and mission_id.

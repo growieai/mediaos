@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import make_url
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCHEMA_REVISION = "0017"
+SCHEMA_REVISION = "0019"
 
 
 class Settings(BaseSettings):
@@ -56,14 +56,13 @@ class Settings(BaseSettings):
             raise ValueError("Real text mode requires a configured OpenAI key and tenant policy")
         if any(
             (
-                self.enable_external_creators,
                 self.enable_auto_publish,
                 self.enable_auto_replies,
                 self.enable_video,
             )
         ):
             raise ValueError(
-                "External creator and automatic publishing/reply feature gates must remain off"
+                "Automatic publishing/reply and legacy video feature gates must remain off"
             )
         return self
 

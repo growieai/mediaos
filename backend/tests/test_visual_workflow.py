@@ -331,6 +331,8 @@ def test_runtime_cannot_write_protected_visual_tables(client, passing_render, st
         "truncated_line",
         "missing_disclosure",
         "false_pass",
+        "off_canvas_geometry",
+        "legacy_geometry_for_social_template",
     ],
 )
 def test_database_rejects_fabricated_or_incomplete_manifest(
@@ -351,6 +353,10 @@ def test_database_rejects_fabricated_or_incomplete_manifest(
         manifest["slides"][0]["text_coverage"][2]["lines"] = []
     elif corruption == "missing_disclosure":
         manifest["slides"][0]["text_coverage"][-1]["text"] = ""
+    elif corruption == "off_canvas_geometry":
+        manifest["slides"][0]["text_coverage"][2]["bounds"] = [2000, 0, 3000, 1000]
+    elif corruption == "legacy_geometry_for_social_template":
+        manifest["slides"][0]["text_coverage"][2]["bounds"] = [72, 458, 1008, 1000]
     elif corruption == "false_pass":
         manifest["findings"] = [
             {
@@ -375,6 +381,57 @@ def test_database_rejects_fabricated_or_incomplete_manifest(
     assert getattr(rejected.value.orig, "sqlstate", None) == "23514"
     stored = client.get(f"/v1/renders/{render_id}", headers=headers(identity)).json()
     assert stored["status"] == "RENDERING" and stored["manifest"] is None
+
+
+def test_template_upgrade_preserves_old_revision_and_requires_new_visual_approval(
+    client, visual_context, database, monkeypatch
+):
+    identity = visual_context["a"]
+    current_builder = visual_seed.default_visual_config
+
+    def legacy_builder(name, disclosure):
+        config = current_builder(name, disclosure)
+        config.template_version = "editorial-v1"
+        config.headline_font_size = 58
+        config.body_font_size = 38
+        return config
+
+    monkeypatch.setattr(visual_seed, "default_visual_config", legacy_builder)
+    old_config = seed_visual_config(
+        database,
+        identity["tenant_id"],
+        identity["influencer_id"],
+        "Influencer test-a",
+        "This is an AI creator.",
+    )
+    run = create(client, identity)
+    old_render = render(client, identity, run, old_config)
+    assert old_render["status"] == "PASS"
+    approve_content(client, identity, run)
+    approve_visual(client, identity, old_render)
+    assert export(client, identity, old_render).status_code == 200
+
+    monkeypatch.setattr(visual_seed, "default_visual_config", current_builder)
+    new_config = seed_visual_config(
+        database,
+        identity["tenant_id"],
+        identity["influencer_id"],
+        "Influencer test-a",
+        "This is an AI creator.",
+    )
+    assert new_config != old_config
+    with transaction(UUID(identity["tenant_id"]), identity["tokens"]["OPERATOR"]) as repo:
+        before = repo.one("visual_config_versions", id=old_config)
+        after = repo.one("visual_config_versions", id=new_config)
+        assert before["payload"]["template_version"] == "editorial-v1"
+        assert after["payload"]["template_version"] == "social-editorial-v2"
+        assert after["version"] == before["version"] + 1
+    assert export(client, identity, old_render).status_code == 409
+    current = render(client, identity, run, new_config)
+    assert current["status"] == "PASS"
+    assert export(client, identity, current).status_code == 409
+    approve_visual(client, identity, current)
+    assert export(client, identity, current).status_code == 200
 
 
 def test_render_idempotency_same_payload_conflict_and_tenant_scope(

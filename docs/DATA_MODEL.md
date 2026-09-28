@@ -1,5 +1,23 @@
 # Data model
 
+## Creator setup and social design (0018–0019)
+
+`studio_creations` is an immutable creation receipt with tenant-composite ownership of the
+influencer, influencer version, mission and character version. `(tenant_id, idempotency_key)`
+is unique. Its strict input payload and canonical input hash bind retries to exactly one
+creator; changed payloads conflict. The guarded creation transaction writes the identity,
+mission, character configuration and initial visual configuration atomically. A retry after
+an interrupted response recovers that exact creator through its immutable receipt.
+
+The category is versioned creator configuration, not a hard-coded workflow branch. Generated
+policy uses only predefined non-factual creative text and mandatory disclosure. Every new
+business row follows forced RLS and the existing authenticated membership context.
+
+0019 extends the guarded render manifest validator with fixed geometry selected by the exact
+visual template version. It adds no mutable approval escape hatch. Existing visual versions,
+content/QA bindings, hashes and approvals retain their original meaning. Readiness is a typed
+read-only snapshot, not a persisted permission or an invented performance observation.
+
 ## Handoff and media follow-up (0016–0017)
 
 `business_identities` and `business_identity_reviews` preserve exact versioned registry evidence

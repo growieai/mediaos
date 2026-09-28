@@ -25,6 +25,7 @@ from app.rendering.schemas import (
     TextLine,
     VisualConfig,
 )
+from app.rendering.social_template import paint_social_surface, social_regions
 
 
 def _hash(value: bytes) -> str:
@@ -179,7 +180,10 @@ def render_carousel(
                         raise ValueError("Reference image exceeds 20 million pixels")
                     source.load()
                     reference = ImageOps.contain(
-                        ImageOps.exif_transpose(source).convert("RGB"), (144, 144)
+                        ImageOps.exif_transpose(source).convert("RGB"),
+                        (1080, 1350)
+                        if config.template_version == "social-editorial-v2"
+                        else (144, 144),
                     )
             except (OSError, ValueError, Image.DecompressionBombError):
                 finding(
@@ -252,6 +256,9 @@ def render_carousel(
                 (margin, 1198, right, 1296),
             ),
         ]
+        if config.template_version == "social-editorial-v2":
+            regions = social_regions(config, slide.index, len(draft.slides))
+            fields = [(*field[:5], bounds) for field, bounds in zip(fields, regions, strict=True)]
         coverage = []
         drawing = []
         overflow = False
@@ -337,16 +344,30 @@ def render_carousel(
         for rendered_slide, drawing in zip(rendered, planned, strict=True):
             image = Image.new("RGB", (config.width, config.height), config.palette.background)
             canvas = ImageDraw.Draw(image)
-            canvas.rectangle(
-                (config.margin, 202, config.width - config.margin, 208), fill=config.palette.accent
-            )
-            if reference is not None:
-                image.paste(reference, (config.width - config.margin - 144, 56))
-            for record, style in drawing:
+            if config.template_version == "social-editorial-v2":
+                text_colors = paint_social_surface(
+                    image, config, rendered_slide.index, len(rendered), reference
+                )
+            else:
+                canvas.rectangle(
+                    (config.margin, 202, config.width - config.margin, 208),
+                    fill=config.palette.accent,
+                )
+                if reference is not None:
+                    image.paste(reference, (config.width - config.margin - 144, 56))
+                text_colors = [config.palette.text] * len(drawing)
+            for (record, style), text_color in zip(drawing, text_colors, strict=True):
                 assert record.bounds is not None and record.font_size is not None
                 font = font_for(style, record.font_size)
                 x, top, _, _ = record.bounds
                 line_height = _line_height(font, record.lines)
+                if config.template_version == "social-editorial-v2" and record.field_path.endswith(
+                    ".body"
+                ):
+                    # The entire measured block stays inside its guarded region.
+                    # Centering short excerpts gives them editorial prominence;
+                    # long excerpts keep their size and fail preflight on overflow.
+                    top += (record.bounds[3] - top - len(record.lines) * line_height) // 2
                 for line_number, line in enumerate(record.lines):
                     # Account for glyph overhangs rather than clipping an initial character.
                     box = font.getbbox(line.text, anchor="lt")
@@ -355,7 +376,7 @@ def render_carousel(
                         line.text,
                         font=font,
                         anchor="lt",
-                        fill=config.palette.text,
+                        fill=text_color,
                     )
             buffer = io.BytesIO()
             image.save(buffer, format="PNG", optimize=False, compress_level=9)

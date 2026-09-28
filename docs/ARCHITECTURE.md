@@ -1,5 +1,24 @@
 # Architecture — Growie Media OS
 
+## Creator Studio
+
+The primary console is a modal-first creator workspace: Overview, Influencers, Content Studio,
+Channels and Insights. Typed category/influencer APIs persist configuration; source forms and
+official discovery reuse existing workflow services. Credentials stay in tab memory. Switching
+access clears the workspace and aborts pending requests. Source attestation, QA, content approval,
+visual approval and exact social dispatch remain separate server-protected steps.
+
+Migration 0018 adds immutable tenant-owned `studio_creations` receipts and guarded atomic
+influencer/configuration/mission creation. `ENABLE_EXTERNAL_CREATORS=true` enables OPERATOR/ADMIN
+creator setup, not public signup, billing or a marketplace. New creators have generic versioned
+editorial configuration and text-only identity artwork. Official discovery requires a mission
+with a configured editorial policy; assigning a category alone does not authorize ingestion.
+
+Migration 0019 adds `social-editorial-v2` geometry while preserving legacy renders. Reseeding
+creates an immutable visual revision; old approvals never transfer. See [Creator Studio](CREATOR_STUDIO.md),
+[social design](SOCIAL_DESIGN.md) and [content readiness](CONTENT_READINESS.md). The readiness
+checklist is advisory, cannot authorize publication, and does not predict audience engagement.
+
 ## Reviewed handoff and standalone pilot
 
 Migration 0016 extends manual conversion export with versioned business identity evidence,
@@ -75,7 +94,7 @@ Persona, voice, visual policy, brand policy, language, editorial settings and sa
 
 The synchronous runner uses an advisory execution lock and short checkpoint transactions. Approval and revision use a shared workflow row lock. These boundaries can become Temporal activities later. PostgreSQL supplies the required locking; Redis is not required locally. M3 adds a private local filesystem boundary for rendered binaries; production needs durable S3-compatible storage. Temporal and Redis remain later operational dependencies.
 
-External creator UI, signup, marketplace, automatic publishing/replies and billing remain disabled. Manual video/social paths are described above. Official ingestion is described below. M3 imports a generated character reference pack and renders fixed carousel templates; it does not expose a live image-generation API. Startup rejects unsupported automatic feature flags and real text mode without a credential.
+Creator setup is available behind its server feature flag. Public signup, marketplace, automatic publishing/replies and billing remain disabled. Manual video/social paths are described above. Official ingestion is described below. M3 imports a generated character reference pack and renders fixed carousel templates; it does not expose a live image-generation API. Startup rejects unsupported automatic feature flags and real text mode without a credential.
 
 ## Production deployment still deferred
 
@@ -93,7 +112,7 @@ The synchronous IngestionRunner commits its request, HTTP attempts, exact raw re
 
 A live-source workflow binds an immutable Opportunity version and editorial decision to the existing M1 workflow. Its ResearchPack carries typed opportunity context and exact allowed facts. The M1 factual-text policy remains strict: claims must equal their referenced evidence excerpts; free factual paraphrasing is not accepted. Content is a structured excerpt carousel with the configured character voice, disclosure and CTA. This implementation makes no LLM calls and does not claim semantic model reasoning.
 
-Only BDNS and BOE public APIs are enabled. Cámara's parser is available for recorded documents; its live connector fails closed pending source permission. There is no production scheduler or external creator surface. Manual social dispatch has an independent approval boundary.
+Only BDNS and BOE public APIs are enabled. Cámara's parser is available for recorded documents; its live connector fails closed pending source permission. There is no production scheduler. Authenticated creator setup is described above; manual social dispatch has an independent approval boundary.
 
 ## M3: deterministic visual production
 

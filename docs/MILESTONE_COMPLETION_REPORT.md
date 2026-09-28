@@ -1,7 +1,36 @@
 # Remaining-milestone implementation report
 
+The September 28 Creator Studio extension supersedes the earlier primary-console UI and moves
+the schema head to `0019`. It adds authenticated category/influencer setup, a content workspace,
+Channels, a transparent readiness checklist and revised carousel design. See
+[CREATOR_STUDIO.md](CREATOR_STUDIO.md) for its scope and setup. It does not close missing live
+provider, account, deployment or local physical-erasure requirements described below.
+
+Baseline `484ce5f` hosted CI has now been checked and
+[passed](https://github.com/growieai/mediaos/actions/runs/36044067134). This result covers that
+published baseline; validation of subsequent Creator Studio changes is reported separately.
+
 Branch: `milestone-completion`, based on `5bd3ab5` (local video concept).
-Updated: 2026-09-23. Database migration head: `0017`.
+Updated: 2026-09-25 (Asia/Kolkata). Database migration head: `0017`.
+
+The implementation commits are `4dbfdf2` and CLI replay correction `484ce5f`, published on
+`milestone-completion`.
+The local app has been rebuilt and restarted against the preserved standalone development
+database at schema 0017. The console-proxy acceptance rehearsal passed again on September 25;
+no database reset, paid generation, publication or external handoff occurred.
+
+A new bounded BDNS ingestion also succeeded: one page, five official documents, five new
+opportunities, no extraction failures, no verification conflicts and zero model cost. The editor
+selected `ES:BDNS:930715`; workflow `ec5ef9cd-c0e6-406a-8ee9-64d0b51adc47` has persisted research,
+brief, carousel, five skill attempts and QA PASS, and remains `AWAITING_APPROVAL` for the user.
+Its official source is not a fixture, and no approval was simulated for this fresh live draft.
+Evidence is recorded in `.local/release-4dbfdf2-live-report.json`; source freshness must still be
+checked at the time of a later approval.
+
+The CLI follow-up fixes draft-key replay before editorial reselection: an existing workflow is
+recovered through the original tenant-scoped service guard, while changed explicit opportunity
+or configuration still conflicts. Eleven offline regression tests passed, together with scoped
+lint/type checks. Repeating the actual live draft command returned the same workflow and state.
 
 ## September 23 follow-up
 
@@ -32,14 +61,19 @@ the release verification below.
 | September 23 follow-up check | Actual result |
 | --- | --- |
 | PostgreSQL integration and migrations | Initial 148-case consent/handoff/media slice passed with clean migrations through 0017. After review fixes, all 25 handoff integration cases passed again, including active API/SQL reconciliation races and interruption cleanup. |
-| Pure transport/media/operations checks | 33 handoff transport cases, 17 failure-metadata cases and 49 deployment-tool cases passed. One POSIX-only operations case is reserved for Linux CI. |
+| Pure transport/media/operations checks | 33 handoff transport cases, 17 failure-metadata cases and 49 deployment-tool cases passed locally. The POSIX-only operations case also passed in hosted Linux CI. |
 | Console behavior | 32 tests passed, including actual parent/child StrictMode cancellation ordering and rejection replacement recovery. TypeScript passed. |
+| Local frontend production build | Passed again September 25, including TypeScript and static pages. The earlier sandbox worker `spawn EPERM` was resolved by rerunning the same build with process-spawn access. |
 | Backend quality | Ruff lint and formatting passed across 166 files; mypy passed across all 103 application source files. |
+| Preserved local environment | Migration/seed through 0017 passed; authenticated API readiness and console HTTP checks passed after restart. |
+| Local console-proxy acceptance | Passed September 25: persisted content/render approvals, dry-run delivery, fixture metrics and internal community review; stale revisions, unsupported claims, idempotency and tenant isolation exercised. Approver calls were simulations. Evidence remains in `.local/community-acceptance-report.json`. |
 | Ingress configuration | Caddy 2.11.4 validated with the checksum-verified official Windows binary; no server was started or certificate requested. |
 | Review | Actual Codex CLI uncommitted review completed; its three material findings were fixed with regressions. Independent handoff/SQL/CI review found no remaining material issue. |
 | Secret scan | 281 source files scanned with no configured secret values or private-key headers found. |
+| Hosted full verification for `4dbfdf2` | [Passed](https://github.com/growieai/mediaos/actions/runs/36043114978): **1,300 backend tests**, no skips, one existing Starlette warning; clean migrations, quality checks, console tests/build, Docker startup/API acceptance, standalone Compose syntax and checksum-pinned Caddy validation. |
+| Current-schema recovery | Actual quiesced backup and isolated restore to `mediaos_restore_handoff_20260925b` passed: **63 private files**, schema 0017, RLS/role/function-owner checks. Authenticated restored API workflow/artifact/audit reads passed; unauthenticated and wrong-tenant access returned 401. The source database was preserved. Evidence: `.local/restored-0017-api-smoke-report.json`. |
 
-Hosted CI must verify the exact follow-up commit before this release is described as CI-passing.
+The separate complete CI run for CLI follow-up `484ce5f` passed, as recorded at the top of this report.
 
 M9's outbound implementation is available for a recipient implementing the documented
 [signed handoff protocol](CONVERSION_DELIVERY.md). A receipt proves the recipient acknowledged
@@ -254,8 +288,9 @@ alone are not evidence that quality, publishing or live acceptance passes. Setup
   off-site encryption, PITR/WAL, monitored recurring recovery checks, identity/secret rotation,
   alerting, TLS/ingress, multi-host workers/orchestration and reconciliation/runbooks. The local
   maintenance tool and successful isolated restore do not provide these capabilities.
-- Marketplace, external creator UI/signup, customer billing, DMs and automatic social actions
-  remain deferred. No connection to existing Growie production services/database was introduced.
+- Marketplace, public signup, customer billing, DMs and automatic social actions remain deferred.
+  Authenticated creator setup was subsequently added in the September 28 Creator Studio extension.
+  No connection to existing Growie production services/database was introduced.
 
 ## Local commands
 

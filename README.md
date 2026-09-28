@@ -1,5 +1,15 @@
 # Growie Media OS
 
+The primary interface is now [Creator Studio](docs/CREATOR_STUDIO.md): select a category,
+create a saved influencer, prepare sourced content, review the carousel design and connect
+Instagram through the existing protected publishing flow. The [new design system](docs/SOCIAL_DESIGN.md)
+uses distinct cover, evidence and closing layouts. [Content readiness](docs/CONTENT_READINESS.md)
+provides transparent suggestions, not a prediction of virality.
+
+Migrate and seed through `0019`, enable `ENABLE_EXTERNAL_CREATORS=true` for authenticated
+creator setup, then rebuild/restart. Public signup and billing are not implemented. Mock
+operation needs no provider credentials; live account and provider dependencies remain explicit.
+
 The latest follow-up adds [reviewed signed handoff delivery](docs/CONVERSION_DELIVERY.md),
 administrator voice/budget setup and a [standalone deployment scaffold](docs/STANDALONE_DEPLOYMENT.md).
 The earlier `42773ea` completion build passed [hosted tests, Docker and API acceptance](https://github.com/growieai/mediaos/actions/runs/35879186753).

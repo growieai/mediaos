@@ -75,10 +75,12 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
   const [previewError, setPreviewError] = useState("");
   const [previewReload, setPreviewReload] = useState(0);
   const mounted = useRef(false);
-  const scope = useMemo(() => ({ tenant, token, runId: run.id }), [tenant, token, run.id]);
+  const scope = useMemo(() => ({ tenant, token, runId: run.id, operator, approver, assetId: run.asset_version_id, researchId: run.research_version_id, qaId: run.qa_report_id, state: run.state }), [tenant, token, run.id, operator, approver, run.asset_version_id, run.research_version_id, run.qa_report_id, run.state]);
   const currentScope = useRef(scope);
   currentScope.current = scope;
   const controller = useRef<AbortController | null>(null);
+  const lifecycle = useRef(0);
+  const actionFlight = useRef<{ scope: typeof scope; id: symbol } | null>(null);
 
   const request = useCallback(async (path: string, method = "GET", body?: unknown, signal?: AbortSignal) => {
     return fetch(`/api/internal/${path}`, {
@@ -99,8 +101,9 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
 
   const load = useCallback(async (preferredRender?: string) => {
     const captured = scope;
+    const generation = lifecycle.current;
     const data = await json<RenderCollection>(`workflow-runs/${scope.runId}/renders`);
-    if (!mounted.current || currentScope.current !== captured) return;
+    if (!mounted.current || currentScope.current !== captured || lifecycle.current !== generation) return;
     const configurations = [...data.configurations].sort((a, b) => b.version - a.version);
     const renders = [...data.renders].sort((a, b) => b.sequence - a.sequence);
     setCollection({ configurations, renders });
@@ -110,19 +113,22 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
 
   useEffect(() => {
     mounted.current = true;
-    controller.current = new AbortController();
+    const abort = new AbortController();
+    controller.current = abort;
+    const generation = ++lifecycle.current;
     setCollection({ configurations: [], renders: [] });
     setConfigurationId("");
     setRenderId("");
     setRequestKey(crypto.randomUUID());
     setLoading(true);
+    setBusy(false);
     setMessage("");
     load().catch(error => {
-      if (mounted.current && currentScope.current === scope && !controller.current?.signal.aborted) {
+      if (mounted.current && currentScope.current === scope && lifecycle.current === generation && !abort.signal.aborted) {
         setMessage(error instanceof Error ? error.message : "Could not load visual renders.");
       }
-    }).finally(() => { if (mounted.current && currentScope.current === scope) setLoading(false); });
-    return () => { mounted.current = false; controller.current?.abort(); };
+    }).finally(() => { if (mounted.current && currentScope.current === scope && lifecycle.current === generation) setLoading(false); });
+    return () => { mounted.current = false; abort.abort(); };
   }, [load, scope]);
 
   const current = collection.renders.find(r => r.id === renderId);
@@ -189,13 +195,18 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
 
   async function action(work: () => Promise<void>) {
     const captured = scope;
+    const generation = lifecycle.current;
+    if (!mounted.current || currentScope.current !== captured || actionFlight.current?.scope === captured) return;
+    const flight = { scope: captured, id: Symbol("visual-action") };
+    actionFlight.current = flight;
     setBusy(true);
     setMessage("");
     try { await work(); }
     catch (error) {
-      if (mounted.current && currentScope.current === captured) setMessage(error instanceof Error ? error.message : "Visual request failed.");
+      if (mounted.current && currentScope.current === captured && lifecycle.current === generation) setMessage(error instanceof Error ? error.message : "Visual request failed.");
     } finally {
-      if (mounted.current && currentScope.current === captured) setBusy(false);
+      if (actionFlight.current === flight) actionFlight.current = null;
+      if (mounted.current && currentScope.current === captured && lifecycle.current === generation) setBusy(false);
     }
   }
 
@@ -206,6 +217,7 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
   }
 
   async function createRender() {
+    if (!canCreate || !requestKey) return;
     const result = await json<Render>(`workflow-runs/${run.id}/renders`, "POST", {
       asset_version_id: run.asset_version_id,
       visual_config_version_id: configurationId,
@@ -215,13 +227,13 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
   }
 
   async function decide(decision: "approve" | "reject") {
-    if (!current?.manifest_hash) return;
+    if (!canDecide || !current?.manifest_hash || (decision === "approve" && (!reviewed || !allImagesLoaded))) return;
     await json(`renders/${current.id}/${decision}`, "POST", { manifest_hash: current.manifest_hash, comment: comment.trim() || null });
     await refreshAfter(current.id);
   }
 
   async function download() {
-    if (!current) return;
+    if (!current || !contentApproved || status !== "PASS" || visualDecision?.decision !== "APPROVE" || stale) return;
     const response = await request(`renders/${current.id}/export`);
     if (!response.ok) throw await responseError(response);
     if (response.headers.get("content-type")?.split(";")[0] !== "application/zip") throw new Error("Export did not return a ZIP archive.");
@@ -240,69 +252,80 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
     await refreshAfter(current.id);
   }
 
-  return <section aria-labelledby="visual-review-heading" style={{ border: "1px solid #bbb", padding: 20, margin: "24px 0", background: "#fff" }}>
-    <h2 id="visual-review-heading">Carousel visual review</h2>
-    <p>Review and approve the sourced content first. Then review the rendered slides and caption, and approve that exact render before downloading its ZIP.</p>
-    <p>Content approval: <strong>{contentApproved ? "APPROVED" : run.state}</strong>. A visual QA PASS still requires a human decision.</p>
-    <button disabled={busy || loading} onClick={() => action(() => refreshAfter())}>Refresh visual status</button>
-    <p role="status">{loading ? "Loading visual versions…" : busy ? "Working on visual review…" : message}</p>
-    {!loading && collection.configurations.length === 0 && <p>No visual configuration is available for this influencer. Seed a visual version before rendering.</p>}
+  return <section aria-labelledby="visual-review-heading" className="visual-review">
+    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "start", justifyContent: "space-between", gap: 16 }}>
+      <div>
+        <p className="eyebrow">Instagram · Portrait carousel · 4:5</p>
+        <h2 id="visual-review-heading">Carousel design</h2>
+        <p>Turn your sourced draft into a set of slides. Preview every image, review the caption, then approve the design.</p>
+      </div>
+      <button disabled={busy || loading} onClick={() => action(() => refreshAfter())}>Refresh visual status</button>
+    </div>
+    <p className="visual-approval-status">Content approval: <strong>{contentApproved ? "Approved" : run.state === "AWAITING_APPROVAL" ? "Awaiting review" : run.state}</strong> · Design approval is a separate step.</p>
+    <p role="status">{loading ? "Loading your designs…" : busy ? "Working on your carousel…" : message}</p>
+    {!loading && collection.configurations.length === 0 && <div className="empty-state"><h3>Choose a visual identity first</h3><p>This influencer needs a saved visual configuration before its carousel can be generated.</p></div>}
     {operator && collection.configurations.length > 0 && <fieldset disabled={busy || loading}>
-      <legend>Create a render from the current content revision</legend>
+      <legend>Your visual direction</legend>
       <label>Visual configuration <select value={configurationId} onChange={event => { setConfigurationId(event.target.value); setRequestKey(crypto.randomUUID()); }}>
-        {collection.configurations.map(c => <option key={c.id} value={c.id}>{c.payload.display_name} · visual version {c.version}</option>)}
+        {collection.configurations.map(c => <option key={c.id} value={c.id}>{c.payload.display_name} · {c.payload.template_version === "social-editorial-v2" ? "Social editorial" : "Classic editorial"} · version {c.version}</option>)}
       </select></label>
-      <p style={{ overflowWrap: "anywhere" }}>Asset revision: {run.asset_version_id ?? "No content revision yet"}<br />Visual configuration: {configurationId}</p>
-      {selectedConfiguration && <details><summary>Character reference for this configuration</summary>
-        <p>{selectedConfiguration.reference_sha256 ? "This version includes a proposed character reference. Review its appearance in the rendered slides." : "This version uses a text-only layout without a character image."}</p>
-        <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{JSON.stringify(selectedConfiguration.reference_metadata, null, 2)}</pre>
-      </details>}
-      <p><button disabled={!canCreate || !requestKey} onClick={() => action(createRender)}>Create / recover this render request</button>{" "}
-        <button onClick={() => { setRequestKey(crypto.randomUUID()); setMessage("A new render request is ready. Click Create to execute it."); }}>Prepare new render request</button></p>
-      <p style={{ fontSize: 13, overflowWrap: "anywhere" }}>Request key: {requestKey}. Reusing it recovers the same render. After changing content or configuration, prepare a new request. Failed or rejected renders stay in history.</p>
-      {!canCreate && <p>Rendering requires the latest visual configuration, current content QA PASS, and a workflow that is awaiting approval or approved.</p>}
+      {selectedConfiguration && <p>{selectedConfiguration.payload.template_version === "social-editorial-v2" ? "Bold headlines, generous typography and distinct cover, detail and closing layouts." : "The classic editorial layout for this saved visual version."}{" "}{selectedConfiguration.reference_sha256 ? "Includes your configured character portrait." : selectedConfiguration.payload.template_version === "social-editorial-v2" ? "Uses an abstract identity design without a portrait." : "Uses a text-only design without a portrait."}</p>}
+      <p><button className="primary" aria-label="Create / recover this render request" disabled={!canCreate || !requestKey} onClick={() => action(createRender)}>Generate carousel</button>{" "}
+        <button onClick={() => { setRequestKey(crypto.randomUUID()); setMessage("A fresh design request is ready. Select Generate carousel to create it."); }}>Prepare new render request</button></p>
+      {!canCreate && <p>Use the latest visual configuration and a draft that has passed content QA to generate a carousel.</p>}
+      <details><summary>Design request details</summary>
+        <p style={{ overflowWrap: "anywhere" }}>Asset revision: {run.asset_version_id ?? "No content revision yet"}<br />Visual configuration: {configurationId}<br />Request key: {requestKey}</p>
+        <p>The same request recovers its saved result. Prepare a new request to create another design. Previous designs and decisions remain in history.</p>
+        {selectedConfiguration && <><h4>Character reference metadata</h4><pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{JSON.stringify(selectedConfiguration.reference_metadata, null, 2)}</pre></>}
+      </details>
     </fieldset>}
     {collection.renders.length > 0 && <>
       <p><label>Render history <select disabled={busy} value={renderId} onChange={event => setRenderId(event.target.value)}>
-        {collection.renders.map(r => <option key={r.id} value={r.id}>{r.status} · {new Date(r.created_at).toLocaleString()} · {r.id}</option>)}
+        {collection.renders.map(r => <option key={r.id} value={r.id}>Design {r.sequence} · {r.status === "PASS" ? "Visual checks passed" : r.status} · {new Date(r.created_at).toLocaleString()}</option>)}
       </select></label></p>
       {current && <>
-        <p>Visual QA: <strong>{current.status}</strong>. Human visual decision: <strong>{visualDecision?.decision ?? "Pending"}</strong>.</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "baseline" }}><h3>Design {current.sequence}</h3><p>Visual checks: <strong>{current.status === "PASS" ? "Passed" : current.status}</strong> · Your team: <strong>{visualDecision?.decision === "APPROVE" ? "Approved" : visualDecision?.decision === "REJECT" ? "Changes requested" : "Awaiting design review"}</strong></p></div>
         {stale && <p role="alert" style={{ color: "#8a2900" }}>Historical preview: {staleArtifact ? "the content, research or QA revision has changed. " : ""}{newerRender ? "A newer render exists. " : ""}{newerConfiguration ? "A newer visual configuration exists. " : ""}Review a current render before approval or export.</p>}
-        <p style={{ overflowWrap: "anywhere", fontSize: 13 }}>Render: {current.id}<br />Asset revision: {current.asset_version_id}<br />Research revision: {current.research_version_id}<br />Content QA: {current.qa_report_id}<br />Visual configuration: {current.visual_config_version_id}<br />Manifest hash: {current.manifest_hash ?? "Not completed"}</p>
-        {renderedConfiguration && <details><summary>Rendered character reference metadata</summary><pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{JSON.stringify(renderedConfiguration.reference_metadata, null, 2)}</pre></details>}
         {current.error_category && <p role="alert">Render execution failed: {current.error_category}. Inspect the persisted skill attempt before preparing a new request.</p>}
         {operator && ["CREATED", "RENDERING"].includes(current.status) && <button disabled={busy} onClick={() => action(async () => { await json(`renders/${current.id}/execute`, "POST"); await refreshAfter(current.id); })}>Execute / resume saved render</button>}
         {manifest && <>
-          {manifest.findings.length > 0 ? <ul>{manifest.findings.map((finding, index) => <li key={`${finding.code}:${index}`}><strong>{finding.severity}: {finding.code}</strong> · {finding.field_path}{finding.slide_index ? ` · slide ${finding.slide_index}` : ""}<br />{finding.message}</li>)}</ul> : <p>No visual QA findings in this manifest.</p>}
+          {manifest.findings.length > 0 && <div role="alert"><h4>Resolve these design checks</h4><ul>{manifest.findings.map((finding, index) => <li key={`${finding.code}:${index}`}><strong>{finding.severity}</strong>{finding.slide_index ? ` · Slide ${finding.slide_index}` : ""}<br />{finding.message}</li>)}</ul></div>}
           {status === "PASS" && <>
             {previewError ? <p role="alert">{previewError} <button disabled={busy} onClick={() => setPreviewReload(value => value + 1)}>Reload preview</button></p> : !allImagesLoaded && <p>Loading authenticated slide previews…</p>}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
-              {images.map(image => <figure key={image.index} style={{ margin: 0 }}>
-                <img src={image.url} alt={`Rendered carousel slide ${image.index}. Exact text and disclosure are included in the image.`} width={1080} height={1350} style={{ display: "block", width: "100%", height: "auto", border: "1px solid #ccc" }} />
-                <figcaption>Slide {image.index} · 1080 × 1350</figcaption>
+            <div className="carousel-preview-gallery" style={{ display: "flex", gap: 20, overflowX: "auto", padding: "8px 2px 20px", scrollSnapType: "x mandatory" }}>
+              {images.map(image => <figure key={image.index} style={{ margin: 0, flex: "0 0 min(82vw, 390px)", scrollSnapAlign: "start" }}>
+                <img src={image.url} alt={`Rendered carousel slide ${image.index}. Exact text and disclosure are included in the image.`} width={1080} height={1350} style={{ display: "block", width: "100%", height: "auto", borderRadius: 14, boxShadow: "0 8px 24px #132a2a18" }} />
+                <figcaption style={{ padding: "12px 0", display: "flex", justifyContent: "space-between", gap: 12 }}><strong>Slide {image.index}</strong><span>1080 × 1350</span></figcaption>
               </figure>)}
             </div>
           </>}
-          <h3>Caption included in the export</h3>
-          <p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{manifest.caption.text}</p>
-          {manifest.caption.fact_ids.length > 0 && <p style={{ fontSize: 13, overflowWrap: "anywhere" }}>Caption fact references: {manifest.caption.fact_ids.join(", ")}</p>}
+          <h3>Your caption</h3>
+          <p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", padding: 20, borderRadius: 14, background: "#f7f5ef", color: "#132a2a" }}>{manifest.caption.text}</p>
         </>}
-        <p>Previews can remain visible after evidence or revisions become stale. Approval and download always recheck current evidence, revisions and permissions on the server.</p>
+        <p>Review these exact slides and caption. Approval and download recheck the current source evidence and revisions.</p>
         {approver && !visualDecision && <fieldset disabled={busy}>
-          <legend>Human visual decision</legend>
+          <legend>Approve this design</legend>
           {!contentApproved && <p>Approve the exact content revisions above before making a visual decision.</p>}
           <label><input type="checkbox" checked={reviewed} disabled={!allImagesLoaded || !canDecide} onChange={event => setReviewed(event.target.checked)} /> I reviewed every slide, the caption, the AI disclosure and the character appearance.</label>
           <p><label>Visual review comment <textarea value={comment} maxLength={2000} rows={3} onChange={event => setComment(event.target.value)} style={{ display: "block", width: "100%" }} /></label></p>
           <button disabled={!canDecide || !allImagesLoaded || !reviewed} onClick={() => action(() => decide("approve"))}>Approve exact render</button>{" "}
           <button disabled={!canDecide} onClick={() => action(() => decide("reject"))}>Reject this render</button>
         </fieldset>}
-        {visualDecision && <p>Decision recorded at {new Date(visualDecision.created_at).toLocaleString()} by {visualDecision.approver_id}.{visualDecision.comment ? ` Comment: ${visualDecision.comment}` : ""}</p>}
+        {visualDecision && <p>Decision recorded {new Date(visualDecision.created_at).toLocaleString()}.{visualDecision.comment ? ` Comment: ${visualDecision.comment}` : ""}</p>}
         <p><button disabled={busy || !contentApproved || status !== "PASS" || visualDecision?.decision !== "APPROVE" || stale} onClick={() => action(download)}>Download approved carousel ZIP</button></p>
-        <DeliveryPreflight key={`${tenant}:${run.id}:${current.id}`} token={token} tenant={tenant} workflowId={run.id} renderId={current.id} allowed={operator && contentApproved && status === "PASS" && visualDecision?.decision === "APPROVE" && !stale} />
-        <MetricsReview key={`metrics:${tenant}:${run.id}:${current.id}`} token={token} tenant={tenant} workflowId={run.id} renderId={current.id} operator={operator} hasHistoricalApproval={visualDecision?.decision === "APPROVE"} />
+        <details><summary>Version history and technical details</summary>
+          <p style={{ overflowWrap: "anywhere" }}>Render: {current.id}<br />Asset revision: {current.asset_version_id}<br />Research revision: {current.research_version_id}<br />Content QA: {current.qa_report_id}<br />Visual configuration: {current.visual_config_version_id}<br />Manifest hash: {current.manifest_hash ?? "Not completed"}</p>
+          {manifest && manifest.caption.fact_ids.length > 0 && <p style={{ overflowWrap: "anywhere" }}>Caption fact references: {manifest.caption.fact_ids.join(", ")}</p>}
+          {manifest && manifest.findings.length > 0 && <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{JSON.stringify(manifest.findings, null, 2)}</pre>}
+          {renderedConfiguration && <><h4>Rendered character reference metadata</h4><pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{JSON.stringify(renderedConfiguration.reference_metadata, null, 2)}</pre></>}
+          {visualDecision && <p style={{ overflowWrap: "anywhere" }}>Approver identity: {visualDecision.approver_id}</p>}
+        </details>
+        <details><summary>Advanced delivery checks and observations</summary>
+          <DeliveryPreflight key={`${tenant}:${run.id}:${current.id}`} token={token} tenant={tenant} workflowId={run.id} renderId={current.id} allowed={operator && contentApproved && status === "PASS" && visualDecision?.decision === "APPROVE" && !stale} />
+          <MetricsReview key={`metrics:${tenant}:${run.id}:${current.id}`} token={token} tenant={tenant} workflowId={run.id} renderId={current.id} operator={operator} hasHistoricalApproval={visualDecision?.decision === "APPROVE"} />
+        </details>
       </>}
     </>}
-    {!loading && collection.renders.length === 0 && <p>No saved renders for this workflow.</p>}
+    {!loading && collection.renders.length === 0 && <div className="empty-state"><h3>Your carousel will appear here</h3><p>Generate the design to preview real slides, then send them through visual approval.</p></div>}
   </section>;
 }

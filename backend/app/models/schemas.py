@@ -249,6 +249,8 @@ class VerificationInput(StrictModel):
 class RunResponse(StrictModel):
     id: UUID
     tenant_id: UUID
+    influencer_id: UUID
+    mission_id: UUID
     state: WorkflowStatus
     source_snapshot_id: UUID | None
     research_version_id: UUID | None

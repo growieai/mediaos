@@ -1,5 +1,18 @@
 # Security
 
+Creator Studio does not add anonymous signup or bypass membership. Creator creation requires
+the server feature flag plus OPERATOR/ADMIN authorization. The SQL guard validates the typed
+allowlist and constructs disclosure/creative policy itself; callers cannot supply arbitrary
+allowlisted claims. Immutable tenant-scoped receipts preserve idempotency and audit correlation.
+Portrait previews validate the configured private file, size and content hash before returning
+authenticated bytes. Cross-tenant access stays invisible through forced RLS.
+
+Browser credentials stay in tab memory. Switching access aborts requests and clears selected
+artifacts, OAuth results and review state; stale response handlers cannot update another scope.
+The score is read-only, and all actual approvals/exports/posts continue to recheck database policy.
+No image generator, provider billing permission or automatic social permission is enabled by
+creating an influencer or choosing a category.
+
 The signed handoff extension (0016) requires a separately reviewed business identity, existing
 explicit consent, migration-provisioned destination and fresh exact outbound authorization.
 The runtime cannot read the private recipient-verification key or manufacture a successful
@@ -78,7 +91,8 @@ API and console proxy enforce a 256 KiB request cap. Source text and typed field
 
 Compose binds services to loopback and passes migration credentials only to maintenance jobs. Do not reuse development credentials in production, expose database services publicly, or connect this product to Growie's existing infrastructure.
 
-External-creator and automatic publishing/reply feature flags remain unsupported and fail startup.
+Automatic publishing/reply feature flags remain unsupported and fail startup. Authenticated
+creator setup is separately gated by ENABLE_EXTERNAL_CREATORS and tenant roles (0018).
 Manual media/social integrations use separate opt-in flags and guarded human decisions; APPROVED
 content alone never enables a paid call or public dispatch. Real text generation requires its own
 versioned budget policy in addition to configuration and credentials.
@@ -133,8 +147,8 @@ ordered media hashes and a typed no-network receipt. Target insertion and execut
 same tenant/target lock. Existing workflow/source/configuration locks remain authoritative.
 
 The only accepted mode is DRY_RUN. Requests cannot provide media URLs, captions, access tokens or
-post IDs. No social client is instantiated. Auto-publish, auto-reply, video, external creators and
-paid model execution remain disabled server-side. An internal receipt is not an approval to dispatch.
+post IDs. This dry-run adapter instantiates no social client and cannot enable a creator,
+provider or automatic publishing/reply capability. An internal receipt is not approval to dispatch.
 
 ## Historical metrics boundary (partial M7)
 
@@ -169,4 +183,5 @@ APPROVER roles for writes. Reply fact references must already belong to the pinn
 carousel and its exact brief/research lineage. Creative text and disclosure come from immutable
 configuration. Database validation independently rejects fabricated text or PASS results.
 Approval rechecks current parent evidence and serializes with content/source updates. A reviewed
-draft never authorizes dispatch. Auto-reply, publishing, DMs and external creator flags stay disabled.
+draft never authorizes dispatch. Auto-reply and DMs remain disabled; explicit social dispatch
+retains its separate gate. Creator setup does not grant community or publication permission.
