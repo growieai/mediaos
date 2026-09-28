@@ -150,4 +150,9 @@ suggested profile → chosen audience/name → mission suggestions → selected 
 edited mission, audience and versioned configuration. A 390-pixel mobile viewport had no horizontal
 page or dialog overflow. No provider call or social post occurred. Private evidence is retained in
 `.local/onboarding-acceptance-report.json` and the onboarding screenshots; credentials and evidence
-files are not committed. The CI link above describes the earlier baseline, not this follow-up.
+files are not committed. A full page reload and fresh sign-in also retained Sage's edited profile.
+
+[Hosted CI for `2d9ff57`](https://github.com/growieai/mediaos/actions/runs/36409564071) passed
+**1,477 backend tests** (no skips, one existing upstream Starlette/AnyIO warning), **184 frontend
+tests**, quality/type checks, production build, clean migrations, Docker build/startup and
+persisted API acceptance. The earlier CI link describes the pre-onboarding baseline.
