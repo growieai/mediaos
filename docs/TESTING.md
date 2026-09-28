@@ -8,6 +8,10 @@ explicitly enabled with `ENABLE_EXTERNAL_CREATORS=true` in the local environment
 
 Baseline commit `484ce5f` has now passed [hosted CI](https://github.com/growieai/mediaos/actions/runs/36044067134).
 That result does not substitute for validation of later Creator Studio changes.
+Creator Studio commit `a21efc6` has also passed its own
+[hosted verification](https://github.com/growieai/mediaos/actions/runs/36406451051): 1,403 backend
+tests, 151 frontend tests, clean migrations, build and Docker API acceptance. See the
+[implementation report](CREATOR_STUDIO_IMPLEMENTATION_REPORT.md) for local browser evidence and limits.
 
 The internal console is at **http://127.0.0.1:3000**. This checkout uses a separate native PostgreSQL instance and requires no AI API key for its mock and deterministic loops. It supports sourced carousel drafts, deterministic PNG rendering, separate content/visual approval, checked ZIP export, delivery dry runs and reported metrics. Opt-in real text, speaking video, connected Instagram/insights/replies and signed conversion handoff are implemented, but live integration flags remain disabled and provider/account credentials are not configured.
 

@@ -117,5 +117,6 @@ readiness provenance and v2 render/approval guards. Frontend behavior tests cove
 spans, retries, duplicate clicks, tenant/token/revision changes, OAuth result scope, exact QA
 approval binding and the saved-render review flow. Normal tests do not contact social providers.
 
-The implementation report records actual final test/build/browser results separately from this
-usage guide. Hosted CI for baseline `484ce5f` passed; later changes need their own CI result.
+The [implementation report](CREATOR_STUDIO_IMPLEMENTATION_REPORT.md) records actual test,
+build, browser and migration results. [Hosted CI for `a21efc6`](https://github.com/growieai/mediaos/actions/runs/36406451051)
+passed all 1,403 backend and 151 frontend tests, Docker startup/acceptance and the production build.

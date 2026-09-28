@@ -3,7 +3,9 @@
 The September 28 Creator Studio extension supersedes the earlier primary-console UI and moves
 the schema head to `0019`. It adds authenticated category/influencer setup, a content workspace,
 Channels, a transparent readiness checklist and revised carousel design. See
-[CREATOR_STUDIO.md](CREATOR_STUDIO.md) for its scope and setup. It does not close missing live
+[CREATOR_STUDIO.md](CREATOR_STUDIO.md) for its scope and setup and the
+[implementation report](CREATOR_STUDIO_IMPLEMENTATION_REPORT.md) for the passing `a21efc6`
+CI/browser acceptance. It does not close missing live
 provider, account, deployment or local physical-erasure requirements described below.
 
 Baseline `484ce5f` hosted CI has now been checked and
