@@ -2,11 +2,23 @@
 
 ## Planned Growie pilot
 
-The selected hostname is **mediaos.growie.ai**. This records the deployment target, not a live
-deployment. The server address/SSH access, operating system, dedicated-versus-shared status,
-DNS administrator, operator network, registry and backup/alert destinations still need to be
-confirmed before provisioning. Keep Media OS databases, credentials and storage separate from
-all existing Growie services.
+The selected hostname is **mediaos.growie.ai**. The user has identified an Ubuntu server already
+hosting Growie, with DNS managed through Cloudflare. SSH inspection confirmed adequate capacity,
+three existing Growie staging containers and no listener on ports 80/443. The owner authorized a
+separate Media OS deployment on this host. DNS/TLS, operator access and recovery must still be
+verified before claiming hosted readiness; off-site backup/alert destinations remain unspecified.
+Keep Media OS databases, credentials and storage separate from all existing Growie services.
+The exact server address is kept in local deployment notes rather than this public runbook.
+
+Always inspect which service owns ports 80/443 before starting ingress on a shared server. When
+an ingress already exists, add only the new Media OS hostname to that reviewed ingress. On this
+target the ports were free, allowing the separate Media OS Caddy service. App upstreams remain
+private or loopback-only, with a dedicated Compose project
+and fresh database volume. Do not stop or replace the Growie ingress, reuse its database, change
+zone-wide Cloudflare SSL settings, or trust arbitrary forwarded-IP headers. Cloudflare proxy
+status, origin TLS and operator access must be reviewed together for this hostname before DNS
+activation. Full (strict) requires a valid matching origin certificate; no global mode change
+should be used to make one subdomain work.
 
 For the authenticated creator pilot, the nonsecret deployment file will include:
 
@@ -29,10 +41,14 @@ start a second ingress on ports 80/443; review integration with that server's ex
 use a separate VM. The direct-edge Caddy profile below must not be placed behind a proxy without
 reviewing its trusted-peer/access policy.
 
-The latest application code verification (`748e455`) passed 1,531 backend and 226 frontend tests,
-production build, clean migrations and development-container startup/acceptance. Standalone
-deployment CI validates Compose syntax and ingress configuration only. Actual target-server
-startup, DNS/TLS, firewall behavior and recovery must still be demonstrated.
+Application verification at `748e455` passed 1,531 backend and 226 frontend tests, production build,
+clean migrations and development-container startup/acceptance. The subsequent `e9c8ef2` CI run
+found a frontend test waiting on a fixed number of event-loop turns for native WebCrypto; the
+test now awaits the actual completion signal with a bounded timeout. Actual target-server
+ingress validation also found the official Caddy binary needs its `NET_BIND_SERVICE` capability
+in the bounding set. Only ingress receives that capability; application containers still drop
+all capabilities. CI now validates the actual hardened ingress container. Syntax validation
+alone never establishes target startup, DNS/TLS, firewall behavior or recovery.
 
 The `deploy/compose.standalone.yml` scaffold is for one dedicated Linux host with one API worker.
 It is separate from local Compose and from every existing Growie service. It prepares a controlled
@@ -42,7 +58,8 @@ registry, external alerting or off-site backups have been provisioned by this ch
 The database and all private assets survive application container replacement. Only Caddy exposes
 ports 80/443. PostgreSQL has no host port and joins only an internal Docker network. The API,
 console and ingress run as UID 1000 with read-only roots, bounded resources, dropped capabilities
-and no privilege escalation. Mutable data goes to explicitly provisioned persistent directories;
+and no privilege escalation. Ingress retains only `NET_BIND_SERVICE` to execute the official
+file-capability-bearing Caddy binary. Mutable data goes to explicitly provisioned persistent directories;
 missing bind paths fail instead of being created implicitly as root. A separately provisioned
 external Docker volume holds PostgreSQL data. Never run a volume deletion or prune command on it.
 
@@ -68,6 +85,11 @@ Linux host or isolated VM to exercise this deployment. Do not substitute a produ
 to get a check to pass.
 
 ## Prepare a reviewed release
+
+For a single-host pilot without a registry, use the separately documented
+[immutable local application image release](LOCAL_IMAGE_RELEASE.md). It requires exact full image
+IDs, `--pull never`, source/build lineage and retained image archives. PostgreSQL and Caddy still
+use registry manifest digests. The registry-based sequence below remains the other supported path.
 
 Build the existing backend/console Dockerfiles from a reviewed, clean commit using the CI-tested
 lockfiles. Publish only to the chosen authorized registry. Pin `API_IMAGE` and `CONSOLE_IMAGE` to the

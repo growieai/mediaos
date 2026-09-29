@@ -36,6 +36,7 @@ OPTIONAL_CONFIG_KEYS = {"ENABLE_EXTERNAL_CREATORS"}
 RUNTIME_KEYS = {"DATABASE_URL", "INTELLIGENCE_TOKENS"}
 MAINTENANCE_KEYS = {"MIGRATION_DATABASE_URL", "POSTGRES_RUNTIME_PASSWORD"}
 DIGEST = re.compile(r"[a-zA-Z0-9./:_-]+@sha256:[0-9a-f]{64}\Z")
+LOCAL_IMAGE_ID = re.compile(r"sha256:[0-9a-f]{64}\Z")
 HOSTNAME = re.compile(r"(?=.{1,253}\Z)[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\Z")
 APP_UID = 1000
 
@@ -109,8 +110,12 @@ def check_values(values: dict[str, str]) -> None:
     if values.get("ENABLE_EXTERNAL_CREATORS", "false") not in {"true", "false"}:
         raise CheckError("ENABLE_EXTERNAL_CREATORS must be true or false")
     for name in ("API_IMAGE", "CONSOLE_IMAGE", "POSTGRES_IMAGE", "CADDY_IMAGE"):
-        if not DIGEST.fullmatch(values[name]) or "example.invalid" in values[name]:
-            raise CheckError("Every image must use an independently verified sha256 digest")
+        image = values[name]
+        local_app_image = name in {"API_IMAGE", "CONSOLE_IMAGE"} and LOCAL_IMAGE_ID.fullmatch(image)
+        if (not DIGEST.fullmatch(image) and not local_app_image) or "example.invalid" in image:
+            raise CheckError(
+                "Use verified registry digests or full local sha256 IDs for application images"
+            )
     check_hostname(values["SITE_DOMAIN"])
     if not re.fullmatch(r"[a-zA-Z0-9._+%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", values["ACME_EMAIL"]):
         raise CheckError("A certificate operator email is required")

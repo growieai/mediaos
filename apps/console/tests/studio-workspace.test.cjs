@@ -180,8 +180,8 @@ function evaluation(decision = "CREATE_CONTENT", version = opportunity.current_v
   return [{ audience_segment: audience, score: { opportunity_version_id: version, payload: { final_score: 70, eligibility: "UNKNOWN" } }, decision: { decision, payload: { reasons: ["Recorded deterministic policy reason"] } } }];
 }
 function discovery(handler) {
-  const calls = [], created = [];
-  const props = { session, creators: [creator], operator: true, onClose() {}, onCreated: async value => { created.push(value); } };
+  const calls = [], created = [], completion = deferred();
+  const props = { session, creators: [creator], operator: true, onClose() {}, onCreated: async value => { created.push(value); completion.resolve(value); } };
   const request = async (...args) => {
     calls.push(args); if (handler) { const result = handler(...args); if (result !== undefined) return result; }
     const endpoint = args[1];
@@ -194,7 +194,7 @@ function discovery(handler) {
     return {};
   };
   const component = load("studio/Discovery.tsx", { "./types": { ...types, request }, "./Icons": icons, "./Modal": stubs["./Modal"] });
-  return { host: mount(component, props), props, calls, created };
+  return { host: mount(component, props), props, calls, created, completed: completion.promise };
 }
 
 test("discovery workflow key is deterministic, bounded and specific to every exact input", async () => {
@@ -221,10 +221,11 @@ test("discovery rejects oversized search and disabled sources without a POST", a
   assert.equal(calls.filter(call => call[2] === "POST").length, 0);
 });
 
-test("a qualified exact opportunity revision produces one sourced workflow with a bounded key", async () => {
-  const { host, calls, created } = discovery(); await host.settle(); click(host, "Check audience fit"); await host.settle();
+test("a qualified exact opportunity revision produces one sourced workflow with a bounded key", { timeout: 5000 }, async () => {
+  const { host, calls, created, completed } = discovery(); await host.settle(); click(host, "Check audience fit"); await host.settle();
   const create = button(host, "Create sourced draft").props.onClick; create(); create();
-  for (let i = 0; i < 10 && !created.length; i++) await host.settle();
+  // Native WebCrypto work can outlast any fixed number of setImmediate turns.
+  await completed; await host.settle();
   const writes = calls.filter(call => call[1].endsWith("/workflow")); assert.equal(writes.length, 1);
   assert.equal(writes[0][3].audience_segment_id, audience.id); assert.ok(writes[0][3].idempotency_key.length <= 128);
   assert.equal(created[0], workflow, "the UI does not fabricate a title or approval state");

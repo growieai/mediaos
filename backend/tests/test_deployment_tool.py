@@ -102,6 +102,42 @@ def test_preflight_validates_separated_secrets_and_storage(config):
     assert TOKEN not in json.dumps(result)
 
 
+@pytest.mark.parametrize(
+    "keys", [("API_IMAGE",), ("CONSOLE_IMAGE",), ("API_IMAGE", "CONSOLE_IMAGE")]
+)
+def test_preflight_accepts_full_local_application_image_ids(config, keys):
+    path, values = config
+    for key in keys:
+        values[key] = "sha256:" + "a" * 64
+    save_config(path, values)
+    assert deployment.preflight(path)["configuration_valid"]
+
+
+@pytest.mark.parametrize("key", ["API_IMAGE", "CONSOLE_IMAGE"])
+@pytest.mark.parametrize(
+    "image",
+    ["mediaos:latest", "sha256:1234", "a" * 64, "sha256:" + "A" * 64, "sha256:" + "a" * 65],
+)
+def test_application_images_reject_mutable_tags_and_incomplete_or_invalid_local_ids(
+    config, key, image
+):
+    path, values = config
+    values[key] = image
+    save_config(path, values)
+    with pytest.raises(deployment.CheckError):
+        deployment.preflight(path)
+
+
+@pytest.mark.parametrize("key", ["POSTGRES_IMAGE", "CADDY_IMAGE"])
+@pytest.mark.parametrize("image", ["sha256:" + "a" * 64, "vendor:latest"])
+def test_infrastructure_images_still_require_registry_manifest_digests(config, key, image):
+    path, values = config
+    values[key] = image
+    save_config(path, values)
+    with pytest.raises(deployment.CheckError):
+        deployment.preflight(path)
+
+
 @pytest.mark.parametrize("enabled", ["true", "false"])
 def test_creator_setup_is_an_explicit_optional_deployment_setting(config, enabled):
     path, values = config

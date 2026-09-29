@@ -86,23 +86,25 @@ jobs:
           ACME_EMAIL: operator@example.invalid
           OPS_ALLOWED_CIDRS: 192.0.2.10/32
         run: |
-          # Synthetic interpolation only: no standalone deployment is started.
+          # Validate the actual hardened container without dependencies or published ports.
           fixture="$RUNNER_TEMP/mediaos-deployment-check"
-          mkdir -p "$fixture/state" "$fixture/tls/data" "$fixture/tls/config"
+          mkdir -p "$fixture"
+          sudo install -d -m 0700 -o 1000 -g 1000 \
+            "$fixture/state" "$fixture/state/renders" "$fixture/state/media" "$fixture/state/social" \
+            "$fixture/tls" "$fixture/tls/data" "$fixture/tls/config"
           touch "$fixture/runtime.env" "$fixture/maintenance.env" "$fixture/postgres-password"
           export API_IMAGE=mediaos-ci-api:syntax-only CONSOLE_IMAGE=mediaos-ci-console:syntax-only
-          export POSTGRES_IMAGE=postgres:18.4-bookworm CADDY_IMAGE=caddy:2.11.4
+          export POSTGRES_IMAGE=postgres:18.4-bookworm
+          export CADDY_IMAGE=caddy@sha256:0c994536bddb66445885237f1a5dcc1916bccea922661c76b4e9fc24061f9b52
           export MEDIAOS_STATE_DIR="$fixture/state" MEDIAOS_TLS_DIR="$fixture/tls"
           export RUNTIME_ENV_FILE="$fixture/runtime.env" MAINTENANCE_ENV_FILE="$fixture/maintenance.env"
           export POSTGRES_PASSWORD_FILE="$fixture/postgres-password" POSTGRES_VOLUME=mediaos_ci_syntax_only
-          docker compose -f deploy/compose.standalone.yml config --quiet
-          curl --fail --silent --show-error --location --max-time 120 \
-            https://github.com/caddyserver/caddy/releases/download/v2.11.4/caddy_2.11.4_linux_amd64.tar.gz \
-            -o "$fixture/caddy.tar.gz"
-          echo "527fbf917c39189a1e3b31d34fa955601680b2d5c8055d2a87b8b9588dec7bb9  $fixture/caddy.tar.gz" | sha256sum --check
-          tar -xzf "$fixture/caddy.tar.gz" -C "$fixture" caddy
-          XDG_DATA_HOME="$fixture/data" XDG_CONFIG_HOME="$fixture/config" \
-            "$fixture/caddy" validate --config deploy/Caddyfile --adapter caddyfile
+          standalone=(docker compose --project-name "mediaos-ci-ingress-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" -f deploy/compose.standalone.yml)
+          trap '"${standalone[@]}" down --remove-orphans' EXIT
+          "${standalone[@]}" config --quiet
+          "${standalone[@]}" pull ingress
+          "${standalone[@]}" run --no-deps --rm --pull never ingress \
+            caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
       - name: Container diagnostics
         if: failure()
         run: docker compose logs --no-color --tail=100

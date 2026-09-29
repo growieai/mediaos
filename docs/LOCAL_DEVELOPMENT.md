@@ -6,7 +6,7 @@ console and restart the API/console. No package, external service or credential 
 preview uses local templates. Its saved source is always test material and cannot be approved;
 paste real source evidence into a new story for the normal publication workflow.
 
-The current schema head is 0019. Run migrate and seed after updating this branch, then rebuild
+The current schema head is 0020. Run migrate and seed after updating this branch, then rebuild
 and restart the API/console. Seed creates `.local/media` and `.local/social` for private bind mounts; no paid
 profile or budget is seeded. On this prepared Windows host the standalone PostgreSQL service
 uses port 55432 and `mediaos_dev`; the Docker example uses port 55433 and database `mediaos`.

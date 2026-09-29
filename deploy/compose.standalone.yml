@@ -158,6 +158,9 @@ services:
   ingress:
     <<: *app
     image: ${CADDY_IMAGE:?Supply a verified Caddy image digest}
+    # The official binary carries this file capability; an empty bounding set
+    # prevents execution even with the unprivileged-port sysctl below.
+    cap_add: [NET_BIND_SERVICE]
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN:?Supply the dedicated Media OS DNS name}
       ACME_EMAIL: ${ACME_EMAIL:?Supply the certificate operator email}
