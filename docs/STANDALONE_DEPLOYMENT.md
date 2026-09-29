@@ -1,12 +1,15 @@
 # Standalone deployment and release runbook
 
-## Planned Growie pilot
+## Hosted Growie pilot
 
 The selected hostname is **mediaos.growie.ai**. The user has identified an Ubuntu server already
 hosting Growie, with DNS managed through Cloudflare. SSH inspection confirmed adequate capacity,
 three existing Growie staging containers and no listener on ports 80/443. The owner authorized a
-separate Media OS deployment on this host. DNS/TLS, operator access and recovery must still be
-verified before claiming hosted readiness; off-site backup/alert destinations remain unspecified.
+separate Media OS deployment on this host. DNS-only routing, trusted HTTPS, operator browser
+access, authentication/tenant rejection and same-host recovery have now been verified. The
+internal pilot is ready for testing from the configured operator network with hosted credentials;
+off-site backup/alert destinations remain unspecified. See the exact checks and limits in
+[hosted pilot verification](HOSTED_PILOT.md).
 Keep Media OS databases, credentials and storage separate from all existing Growie services.
 The exact server address is kept in local deployment notes rather than this public runbook.
 
@@ -20,7 +23,7 @@ status, origin TLS and operator access must be reviewed together for this hostna
 activation. Full (strict) requires a valid matching origin certificate; no global mode change
 should be used to make one subdomain work.
 
-For the authenticated creator pilot, the nonsecret deployment file will include:
+For the authenticated creator pilot, the nonsecret deployment file includes:
 
 ```dotenv
 SITE_DOMAIN=mediaos.growie.ai
@@ -50,10 +53,12 @@ in the bounding set. Only ingress receives that capability; application containe
 all capabilities. CI now validates the actual hardened ingress container. Syntax validation
 alone never establishes target startup, DNS/TLS, firewall behavior or recovery.
 
-The `deploy/compose.standalone.yml` scaffold is for one dedicated Linux host with one API worker.
-It is separate from local Compose and from every existing Growie service. It prepares a controlled
-internal pilot; it does not establish deployed production readiness. Current target-server checks
-and outstanding DNS/TLS and operational dependencies are recorded in [hosted pilot verification](HOSTED_PILOT.md).
+The `deploy/compose.standalone.yml` scaffold runs one API worker on a single Linux host, using a
+dedicated Compose project, database and storage. An explicitly authorized shared host is supported
+after capacity, existing service ownership and ingress are inspected, as on this pilot target.
+It is separate from local Compose and every existing Growie service. The verified internal pilot
+does not establish unrestricted customer or unattended production readiness. Current target-server
+checks and remaining operational dependencies are recorded in [hosted pilot verification](HOSTED_PILOT.md).
 
 The database and all private assets survive application container replacement. Only Caddy exposes
 ports 80/443. PostgreSQL has no host port and joins only an internal Docker network. The API,
@@ -63,10 +68,11 @@ file-capability-bearing Caddy binary. Mutable data goes to explicitly provisione
 missing bind paths fail instead of being created implicitly as root. A separately provisioned
 external Docker volume holds PostgreSQL data. Never run a volume deletion or prune command on it.
 
-## Decisions required before a real deployment
+## Decisions required for each deployment
 
-- A new dedicated Linux host, jurisdiction and capacity. The included memory limits total about
-  8 GiB before host overhead; choose capacity from measured workload and budget.
+- A Linux host, jurisdiction and capacity. Prefer a dedicated host; an owner-authorized shared
+  host requires verified capacity and isolation from its existing services. The included memory
+  limits total about 8 GiB before host overhead; choose capacity from measured workload and budget.
 - A dedicated DNS name, operator/VPN source CIDRs, certificate contact and direct edge routing.
   Only operator CIDRs can access the console and normal API. App bearer authentication and tenant
   authorization still apply. Do not point the DNS name at an existing Growie service.
@@ -217,7 +223,7 @@ retained checksums. Stop every application writer during the combined database/f
 PostgreSQL running. A volume/disk snapshot alone does not establish consistent database-and-asset
 recovery. Do not automatically retry uncertain social/media/handoff side effects during recovery.
 
-The existing backup tool deliberately accepts loopback databases only. On the dedicated Linux
+The existing backup tool deliberately accepts loopback databases only. On the selected Linux
 Compose host, a trusted administrator may run the host tool in **only** the PostgreSQL container's
 network namespace. This keeps database ports private and retains the host filesystem for asset
 capture. Install compatible PostgreSQL client binaries and Python on the host. Inspect the PID
@@ -252,7 +258,10 @@ ACLs, RLS and function ownership. A separately started restored API must keep al
 have no provider keys, and bind only to loopback. Rehearse authenticated artifact/audit reads and
 private previews. Do not repoint ingress or resume side effects from a restored database without
 reconciling the external world and explicitly accepting the recovery point. Namespace-based
-Compose backup/restore remains unverified until exercised on the chosen Linux host.
+Compose backup and an isolated restore were exercised on the pilot host, including checksums,
+schema, RLS and authenticated restricted-role reads. This verifies same-host, same-cluster recovery;
+off-site and full host-loss recovery remain pending. Repeat the exercise for each deployment and
+recovery policy rather than treating the pilot result as universal evidence.
 
 ## Release, rollback and rotation
 
@@ -293,7 +302,10 @@ documented recovery objectives. This single-host scaffold does not claim those a
 
 On 2026-09-23, the offline deployment tests passed on Windows: **49 passed, one POSIX permission
 test skipped**. Ruff checks and formatting passed. The tests do not contact PostgreSQL, Docker or
-providers. The POSIX permission case still needs the Linux CI run.
+providers. These are historical local results. The subsequent Linux hosted CI for `a2405d2`
+passed 1,580 backend tests and 234 frontend tests, including the deployment checks, clean
+migrations, quality checks, builds and actual hardened ingress validation. The current target
+verification and the CI link are recorded in [hosted pilot verification](HOSTED_PILOT.md).
 
 The official [Caddy 2.11.4 release](https://github.com/caddyserver/caddy/releases/tag/v2.11.4)
 Windows verifier was downloaded outside the repository and checked against the release's archive
@@ -301,8 +313,10 @@ SHA-256 `1708333f79e274c7697285afe6d592ab39314e0b131e9ec6bea08ad27df62ebf`.
 `caddy validate --config deploy/Caddyfile --adapter caddyfile` passed with a synthetic `.invalid`
 hostname, example operator CIDRs and task-local state paths. Standard Caddy formatting was applied
 and validation repeated successfully. No server was started and no certificate was requested.
-This establishes configuration validity, not Docker startup, actual network restrictions, DNS/TLS
-issuance or production deployment acceptance.
+That initial verifier run established configuration validity only. Subsequent target-server
+Docker startup, operator access restrictions, trusted DNS/TLS and browser acceptance are now
+recorded separately in [hosted pilot verification](HOSTED_PILOT.md); production operational limits
+remain explicit there.
 
 References: [Compose service configuration](https://docs.docker.com/reference/compose-file/services/),
 [Caddy request matching](https://caddyserver.com/docs/caddyfile/matchers),

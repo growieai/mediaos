@@ -4,7 +4,9 @@ The owner-authorized Ubuntu host already runs Growie staging services. Media OS 
 `mediaos-standalone` Compose project, a fresh `mediaos_standalone_postgres` volume, private
 networks, `/srv/mediaos` storage and `/etc/mediaos` secrets. No existing Growie service, database,
 configuration, container or volume was changed. The host address and operator IP remain in
-private deployment notes.
+private deployment notes. The hosted internal pilot is ready for testing at
+[mediaos.growie.ai](https://mediaos.growie.ai/) from the configured operator network with hosted
+workspace credentials. This is not an unrestricted public or customer launch.
 
 ## Verified on the target
 
@@ -48,7 +50,7 @@ manifest; an off-host archive copy is still pending. All 16 private-server check
 the regional-language fix, including the actual seeded Spanish draft response and the
 APPROVER's inability to invoke operator drafting.
 
-## Public access still pending
+## Hosted HTTPS and access verified on 2026-09-29
 
 The initial AWS group allowed SSH only. After renewing the existing AWS SSO session, the exact
 instance, VPC and public network interface were verified. A separate tagged Media OS group now
@@ -56,23 +58,38 @@ allows only inbound IPv4 TCP 80/443. Its default egress was removed before attac
 existing interface group was preserved. No existing group rule was edited. Exact AWS identifiers
 and the before/after group lists are retained in private deployment notes.
 
-Caddy is running on ports 80/443. External HTTP now reaches the origin and redirects to the
-expected HTTPS hostname; origin TCP 443 is reachable. The console/API/database remain private.
-The hostname now resolves through Cloudflare's proxy, and the public HTTPS request returned
-525 while the origin did not yet have a usable certificate. Public HTTPS and browser acceptance
-are therefore still pending. The next steps are:
+Cloudflare's `mediaos` record is now **DNS only**. Authoritative servers, a public recursive
+resolver and the operator's default resolver returned the intended origin A record, with no AAAA
+record. Existing Growie records and zone-wide settings were unchanged. Only the Media OS ingress
+was restarted to complete certificate issuance; existing Growie services remained untouched.
 
-1. The DNS operator sets only the `mediaos` A record for the supplied host to Cloudflare
-   **DNS only** and TTL Auto. Existing Growie records and zone-wide settings remain unchanged.
-2. Verify direct-origin DNS and a matching HTTPS certificate on the already-running dedicated
-   Media OS ingress. Do not disable certificate verification or weaken application access checks
-   to bypass the current proxy/certificate mismatch.
-3. Verify browser access from the configured operator address, denial from outside that scope,
-   and application authentication/tenant enforcement through HTTPS. The current Caddy policy
-   uses the direct peer; enabling the Cloudflare proxy needs a separately reviewed policy.
+External HTTP redirects to the expected HTTPS hostname. Normal hostname HTTPS and direct-origin
+TLS verification succeeded with a trusted, matching Let's Encrypt YE1 certificate, expiring
+2026-12-28 at 11:28:09 UTC. The direct-origin connection negotiated TLS 1.3. Certificate
+verification remained enabled throughout. Caddy is the only Media OS service with public host ports;
+console, API and database containers remain on private upstream networks.
 
-Do not call the public deployment ready before those checks pass. Operator IP changes require
-updating only the Media OS allowlist; do not open it to every address as a workaround.
+All 25 public HTTPS checks passed: trusted TLS, console HTTP 200 and security headers;
+missing/invalid credentials and wrong-tenant HTTP 401 through both `/v1/...` and
+`/api/internal/...`; OPERATOR, APPROVER and ADMIN readiness/context; overview, category and
+influencer responses; and the expected mock-mode pilot flags.
+
+All 10 denied-peer and disabled-provider checks passed through the server's loopback connection,
+whose actual peer is outside the operator allowlist. The console root and both API paths returned
+HTTP 404, including when `X-Forwarded-For`, `Forwarded`, `X-Real-IP` and `CF-Connecting-IP` were forged together to
+claim the allowed operator address. The intentionally public provider exceptions also failed
+closed: disabled OAuth returned 409; webhook GET/POST returned 403; media returned 409 because its
+vault is unconfigured. This checks disabled-provider behavior, not live cryptographic capability
+validation or an independent external monitoring location.
+
+Hosted browser acceptance succeeded using the separate OPERATOR identity. Sofía's source form
+rendered a Spanish mock draft with its unverified/unpublishable marker visible. Nothing was saved
+or approved during that browser check.
+
+Access still requires the configured operator source IP plus application authentication and
+tenant authorization. Moving to another network requires updating only the Media OS allowlist;
+do not open it to every address as a workaround. The Caddy policy uses the direct peer, so enabling
+Cloudflare's proxy requires a separately reviewed access policy.
 
 ## Operational limits
 
