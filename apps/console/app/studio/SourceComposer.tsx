@@ -6,7 +6,7 @@ import { request, type Influencer, type Session, type Workflow } from "./types";
 
 export type ManualClaimType = "" | "GENERAL_EVERGREEN" | "GRANT_OR_TIME_SENSITIVE";
 type SourceRelationship = "" | "PRIMARY" | "SECONDARY" | "INTERNAL";
-type SourceDraft = { schema_version: 1; provider: "mock"; mode: "MOCK"; cost: 0; notice: string; influencer_id: string; mission_id: string; language: string; title: string; publisher: string; raw_content: string; source_type: "GENERATED"; classification: "INTERNAL"; is_fixture: true; origin: string; metadata: { source_draft_policy: "studio-source-draft-v1" } };
+type SourceDraft = { schema_version: 1; provider: "mock"; mode: "MOCK"; cost: 0; notice: string; influencer_id: string; mission_id: string; language: "en" | "es"; title: string; publisher: string; raw_content: string; source_type: "GENERATED"; classification: "INTERNAL"; is_fixture: true; origin: string; metadata: { source_draft_policy: "studio-source-draft-v1" } };
 export function checkedSourceDraft(value: unknown): SourceDraft {
   const object = (item: unknown): item is Record<string, unknown> => !!item && typeof item === "object" && !Array.isArray(item);
   const plain = (item: unknown, max: number): item is string => typeof item === "string" && !!item.trim() && item === item.trim() && Array.from(item).length <= max && !/[\u0000-\u001f\u007f]/.test(item);
@@ -91,7 +91,7 @@ export default function SourceComposer({ session, creators, initialCreatorId, mo
       const response = await request<unknown>(session, "studio/source-drafts", "POST", { influencer_id: creator.id, title: title.trim() }, controller.signal);
       if (!active()) return;
       const data = checkedSourceDraft(response);
-      if (data.influencer_id !== creator.id || data.mission_id !== creator.mission_id || data.title !== title.trim() || data.language !== creator.language) throw new Error("The source draft no longer matches this story. Generate a fresh draft.");
+      if (data.influencer_id !== creator.id || data.mission_id !== creator.mission_id || data.title !== title.trim() || data.language !== creator.language.split("-", 1)[0].toLowerCase()) throw new Error("The source draft no longer matches this story. Generate a fresh draft.");
       setDraft({ context: draftContext, controller, data });
     } catch (cause) { if (active()) { setDraftError(cause instanceof Error ? cause.message : "Could not prepare a source draft. Your writing is unchanged."); draftRequest.current = null; } }
     finally { if (active() || draftRequest.current === null && currentDraftContext.current === draftContext && !lifetime.signal.aborted) setDrafting(false); }

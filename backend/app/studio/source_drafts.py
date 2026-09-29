@@ -12,10 +12,11 @@ from app.studio.service import influencer
 def build_source_draft(request: SourceDraftRequest, creator: StudioInfluencer) -> SourceDraft:
     if request.influencer_id != creator.id:
         raise ConflictError("Source draft creator does not match the selected identity")
-    if creator.language not in ("en", "es"):
+    language = creator.language.split("-", 1)[0].lower()
+    if language not in ("en", "es"):
         raise ConflictError("Source draft previews currently support English and Spanish only")
     audience = "; ".join(creator.audience)
-    if creator.language == "es":
+    if language == "es":
         raw = (
             "BORRADOR CREATIVO — NO ES EVIDENCIA VERIFICADA\n\n"
             f"Título de trabajo: {request.title}\n"
@@ -62,7 +63,7 @@ def build_source_draft(request: SourceDraftRequest, creator: StudioInfluencer) -
             "notice": notice,
             "influencer_id": creator.id,
             "mission_id": creator.mission_id,
-            "language": creator.language,
+            "language": language,
             "title": request.title,
             "raw_content": raw,
             "origin": "generated:studio-source-draft-v1:"

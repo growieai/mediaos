@@ -12,6 +12,9 @@ const creators = [
   { id: id(1), mission_id: id(2), name: "Local Educator", language: "en", category_id: "education" },
   { id: id(3), mission_id: id(4), name: "Another Educator", language: "en", category_id: "education" },
 ];
+const sofiaConfig = JSON.parse(fs.readFileSync(path.join(__dirname, "../../../characters/sofia/runtime.json"), "utf8").replace(/^\uFEFF/, ""));
+const sofia = { ...creators[0], name: "Sofía", category_id: null, language: sofiaConfig.language,
+  tone: sofiaConfig.tone, audience: sofiaConfig.audience, objective: sofiaConfig.objective };
 const title = "A thoughtful study routine";
 const paragraph = "Choose a topic that interests your audience. Keep each explanation focused on a single idea.";
 const raw = `Mock writing draft. Not verified source evidence.\n\n${paragraph}`;
@@ -68,6 +71,45 @@ test("empty source can preview and explicitly insert a typed mock draft without 
   assert.equal(field(host, "Evidence 1").props.value, "", "generated prose cannot attest itself");
   assert.equal(button(host, "Save source for review").props.disabled, true);
   assert.equal(calls.length, 1); assert.deepEqual(created, []);
+});
+
+test("seeded Sofía can preview and insert a Spanish draft without changing her regional language", async () => {
+  assert.equal(sofia.language, "es-ES");
+  const spanish = "Borrador simulado. No es evidencia verificada.\n\nElige un tema que interese a tu audiencia.";
+  const { host, calls, props, created } = composer(() => draft({ language: "es", raw_content: spanish }), { creators: [sofia] });
+  start(host); await host.settle();
+  assert.equal(field(host, "Original source text").props.value, "", "preview still requires an explicit choice");
+  click(host, "Use draft");
+  assert.equal(field(host, "Original source text").props.value, spanish);
+  assert.equal(props.creators[0].language, "es-ES");
+  assert.equal(field(host, "This is test or demonstration evidence.").props.checked, true);
+  assert.equal(calls.length, 1); assert.deepEqual(created, []);
+});
+
+for (const [language, primary] of [["en-GB", "en"], ["EN-gb", "en"], ["ES-es", "es"]]) {
+  test(`${language} creator accepts a ${primary} source draft`, async () => {
+    const { host } = composer(() => draft({ language: primary }), { creators: [{ ...creators[0], language }] });
+    await apply(host);
+    assert.equal(field(host, "Original source text").props.value, raw);
+  });
+}
+
+for (const [name, overrides] of [["wrong language", { language: "en" }], ["wrong creator", { influencer_id: creators[1].id }], ["wrong mission", { mission_id: creators[1].mission_id }]]) {
+  test(`regional Spanish creator still rejects ${name} source drafts`, async () => {
+    const { host } = composer(() => draft({ language: "es", ...overrides }), { creators: [sofia] });
+    start(host); await host.settle();
+    assert.equal(buttons(host, "Use draft").length, 0);
+    assert.equal(field(host, "Original source text").props.value, "");
+    assert.match(text(host.tree), /no longer matches this story/);
+  });
+}
+
+test("unsupported underscore language is not treated as a supported regional language", async () => {
+  const { host } = composer(undefined, { creators: [{ ...creators[0], language: "en_US" }] });
+  start(host); await host.settle();
+  assert.equal(buttons(host, "Use draft").length, 0);
+  assert.equal(field(host, "Original source text").props.value, "");
+  assert.match(text(host.tree), /no longer matches this story/);
 });
 
 test("existing manual text cannot be overwritten even through a captured generation handler", async () => {

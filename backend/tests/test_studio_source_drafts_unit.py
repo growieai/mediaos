@@ -51,14 +51,28 @@ def test_source_draft_rejects_client_override_of_persisted_context(field):
         )
 
 
-@pytest.mark.parametrize("language", ["en", "es"])
-def test_source_draft_uses_saved_context_with_explicit_nonfactual_provenance(language):
+@pytest.mark.parametrize(
+    ("language", "draft_language"),
+    [
+        ("en", "en"),
+        ("es", "es"),
+        ("en-GB", "en"),
+        ("es-ES", "es"),
+        ("EN-gb", "en"),
+        ("ES-es", "es"),
+    ],
+)
+def test_source_draft_uses_saved_context_with_explicit_nonfactual_provenance(
+    language, draft_language
+):
     item = creator(language)
+    saved_context = item.model_dump()
     request = SourceDraftRequest(influencer_id=item.id, title="Una idea / An idea")
     result = build_source_draft(request, item)
     assert result == build_source_draft(request, item)
+    assert item.model_dump() == saved_context
     assert result.influencer_id == item.id and result.mission_id == item.mission_id
-    assert result.language == language and result.title == request.title
+    assert result.language == draft_language and result.title == request.title
     for value in (request.title, item.name, item.objective, *item.audience):
         assert value in result.raw_content
     assert result.source_type == "GENERATED" and result.classification == "INTERNAL"
@@ -67,17 +81,21 @@ def test_source_draft_uses_saved_context_with_explicit_nonfactual_provenance(lan
     assert result.metadata.source_draft_policy == "studio-source-draft-v1"
     assert (
         "NO ES EVIDENCIA VERIFICADA" in result.raw_content
-        if language == "es"
+        if draft_language == "es"
         else "NOT VERIFIED SOURCE EVIDENCE" in result.raw_content
     )
     SourceDraft.model_validate_json(result.model_dump_json(), strict=True)
 
 
-def test_source_draft_rejects_wrong_creator_and_unsupported_language():
+def test_source_draft_rejects_wrong_creator():
     item = creator()
     with pytest.raises(ConflictError, match="identity"):
         build_source_draft(SourceDraftRequest(influencer_id=uuid4(), title="Idea"), item)
-    item.language = "fr"
+
+
+@pytest.mark.parametrize("language", ["fr", "fr-FR", "de-DE", "en_US"])
+def test_source_draft_rejects_unsupported_language(language):
+    item = creator(language)
     with pytest.raises(ConflictError, match="English and Spanish"):
         build_source_draft(SourceDraftRequest(influencer_id=item.id, title="Idea"), item)
 

@@ -52,8 +52,8 @@ alone never establishes target startup, DNS/TLS, firewall behavior or recovery.
 
 The `deploy/compose.standalone.yml` scaffold is for one dedicated Linux host with one API worker.
 It is separate from local Compose and from every existing Growie service. It prepares a controlled
-internal pilot; it does not establish deployed production readiness. No host, domain, certificates,
-registry, external alerting or off-site backups have been provisioned by this change.
+internal pilot; it does not establish deployed production readiness. Current target-server checks
+and outstanding DNS/TLS and operational dependencies are recorded in [hosted pilot verification](HOSTED_PILOT.md).
 
 The database and all private assets survive application container replacement. Only Caddy exposes
 ports 80/443. PostgreSQL has no host port and joins only an internal Docker network. The API,
