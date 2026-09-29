@@ -23,12 +23,14 @@
 		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options nosniff
 		Referrer-Policy no-referrer
+		Content-Security-Policy "frame-ancestors 'none'"
+		X-Frame-Options DENY
 	}
 	request_body {
 		max_size 256KB
 	}
 
-	# Only these provider-facing paths are public. Their existing signatures,
+	# These provider-facing API paths are public. Their existing signatures,
 	# short-lived capabilities, state verification and feature flags still apply.
 	@provider_get {
 		method GET
@@ -45,18 +47,23 @@
 		reverse_proxy api:8000
 	}
 
-	# Uses the direct peer, not spoofable X-Forwarded-For. Deploy Caddy directly
-	# at the network edge; a CDN/load balancer needs a separate reviewed policy.
-	@operator remote_ip {$OPS_ALLOWED_CIDRS}
-	handle @operator {
-		handle /v1/* {
+	# Direct API access remains restricted to the operator network. Uses the
+	# direct peer, not spoofable X-Forwarded-For. A CDN/load balancer needs a
+	# separate reviewed trusted-proxy policy for these maintenance endpoints.
+	@direct_api path /v1 /v1/*
+	handle @direct_api {
+		@operator remote_ip {$OPS_ALLOWED_CIDRS}
+		handle @operator {
 			reverse_proxy api:8000
 		}
 		handle {
-			reverse_proxy console:3000
+			respond "Not found" 404
 		}
 	}
+	# Ordinary users can reach the login/setup screens from any network. The
+	# same-origin console proxy requires app authentication for tenant data;
+	# cookie mutations additionally require the configured exact public origin.
 	handle {
-		respond "Not found" 404
+		reverse_proxy console:3000
 	}
 }

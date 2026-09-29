@@ -8,7 +8,7 @@ import SourceComposer from "./SourceComposer";
 import ContentDetail from "./ContentDetail";
 import Channels from "./Channels";
 import Discovery from "./Discovery";
-import { currentConnections, label, request, stateTone, type Accounts, type Category, type Identity, type Influencer, type Overview, type Session, type StudioData, type Workflow } from "./types";
+import { accountRequest, accountSession, SignInRequired, currentConnections, label, request, stateTone, type Accounts, type Category, type Identity, type Influencer, type Overview, type Session, type StudioData, type Workflow } from "./types";
 
 const navigation = [{ name: "Overview", icon: "grid" }, { name: "Influencers", icon: "people" }, { name: "Content studio", icon: "layers" }, { name: "Channels", icon: "link" }, { name: "Insights", icon: "chart" }];
 const starterCategories: Category[] = [
@@ -35,18 +35,46 @@ export async function loadStudio(session: Session, signal: AbortSignal): Promise
   return { identity, overview, influencers: catalog.influencers, creationEnabled: catalog.creation_enabled, categories: categories.categories, accounts, dependencies };
 }
 
-function WorkspaceLogin({ onClose, onConnected }: { onClose: () => void; onConnected: (session: Session, data: StudioData) => void }) {
-  const [tenant, setTenant] = useState(""); const [token, setToken] = useState(""); const [error, setError] = useState(""); const [busy, setBusy] = useState(false);
-  const abort = useRef<AbortController | null>(null); const lock = useRef(false);
+function WorkspaceLogin({ onClose, onConnected, setupToken = null }: { onClose: () => void; onConnected: (session: Session, data: StudioData) => void; setupToken?: string | null }) {
+  const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [confirmation, setConfirmation] = useState("");
+  const [tenant, setTenant] = useState(""); const [token, setToken] = useState(""); const [advanced, setAdvanced] = useState(false);
+  const [error, setError] = useState(""); const [busy, setBusy] = useState(false); const [resetHelp, setResetHelp] = useState(false); const [accountReady, setAccountReady] = useState(false);
+  const abort = useRef<AbortController | null>(null); const lock = useRef(false); const authenticatedSession = useRef<Session | null>(null);
   useEffect(() => { const controller = new AbortController(); abort.current = controller; return () => controller.abort(); }, []);
   async function connect() {
     const controller = abort.current; if (lock.current || !controller || controller.signal.aborted) return;
-    lock.current = true; setBusy(true); setError(""); const session = { tenant: tenant.trim(), token: token.trim() };
-    try { const data = await loadStudio(session, controller.signal); if (!controller.signal.aborted) onConnected(session, data); }
-    catch (cause) { if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "Could not open this workspace."); }
+    setError("");
+    if (!authenticatedSession.current && setupToken && (Array.from(password).length < 15 || new TextEncoder().encode(password).length > 72 || password.includes("\0"))) { setError("Choose at least 15 characters, no more than 72 UTF-8 bytes, and no null characters. A memorable passphrase works well."); return; }
+    if (!authenticatedSession.current && setupToken && password !== confirmation) { setError("The passwords do not match."); return; }
+    lock.current = true; setBusy(true);
+    try {
+      let next: Session;
+      if (authenticatedSession.current) next = authenticatedSession.current;
+      else if (advanced && !setupToken) next = { tenant: tenant.trim(), token: token.trim() };
+      else {
+        const identity = await accountRequest(setupToken ? "setup" : "login", setupToken ? { token: setupToken, password } : { email: email.trim(), password }, controller.signal);
+        if (!identity || controller.signal.aborted) return;
+        next = accountSession(identity); authenticatedSession.current = next; setAccountReady(true); setPassword(""); setConfirmation("");
+      }
+      const data = await loadStudio(next, controller.signal); if (!controller.signal.aborted) onConnected(next, data);
+    }
+    catch (cause) { if (!controller.signal.aborted) { setPassword(""); setConfirmation(""); setError(authenticatedSession.current ? "You are signed in, but the workspace could not load. Try opening it again." : cause instanceof Error ? cause.message : "Could not open this workspace."); } }
     finally { lock.current = false; if (!controller.signal.aborted) setBusy(false); }
   }
-  return <Modal title="Open your workspace" onClose={onClose}><div className="login-intro"><span className="login-symbol"><Icon name="layers" size={30}/></span><h2>Your creative home.</h2><p className="muted">Sign in with the workspace access provided by your administrator.</p></div><form onSubmit={event => { event.preventDefault(); void connect(); }}><fieldset className="plain-fieldset form-stack" disabled={busy}><label>Workspace ID<input autoFocus required autoComplete="off" spellCheck={false} value={tenant} onChange={event => setTenant(event.target.value)} placeholder="Your workspace UUID"/></label><label>Access key<input required type="password" autoComplete="off" value={token} onChange={event => setToken(event.target.value)} placeholder="Your personal workspace access key"/></label>{error && <p className="notice error" role="alert">{error}</p>}<button className="button primary">{busy ? "Opening workspace…" : "Open workspace"}<Icon name="arrow" size={17}/></button></fieldset></form><p className="small muted login-footnote"><Icon name="shield" size={15}/>Access stays in this browser tab’s memory. Closing or refreshing the page signs you out.</p></Modal>;
+  return <Modal title={setupToken ? "Create your password" : "Sign in"} onClose={onClose}>
+    <div className="login-intro"><span className="login-symbol"><Icon name="layers" size={30}/></span><span className="eyebrow">YOUR CREATOR WORKSPACE</span><h2>{setupToken ? "Make yourself at home." : "Welcome back."}</h2><p className="muted">{setupToken ? "Create a password to activate your invited account." : "Sign in to create, review and share your next story."}</p></div>
+    <form onSubmit={event => { event.preventDefault(); void connect(); }}><fieldset className="plain-fieldset form-stack" disabled={busy}>
+      {accountReady ? <p className="notice" role="status">Your account is signed in. Your password has been cleared from this form.</p> : advanced && !setupToken ? <><label>Workspace ID<input autoFocus required autoComplete="off" spellCheck={false} value={tenant} onChange={event => setTenant(event.target.value)} placeholder="Workspace UUID"/></label><label>Access key<input required type="password" autoComplete="off" value={token} onChange={event => setToken(event.target.value)} placeholder="Personal workspace access key"/></label></> : <>
+        {!setupToken && <label>Email address<input autoFocus required type="email" autoComplete="username" maxLength={254} value={email} onChange={event => { setEmail(event.target.value); setError(""); }} placeholder="you@company.com"/></label>}
+        <label>{setupToken ? "Create password" : "Password"}<input autoFocus={!!setupToken} required type="password" autoComplete={setupToken ? "new-password" : "current-password"} maxLength={128} value={password} onChange={event => { setPassword(event.target.value); setError(""); }} placeholder={setupToken ? "A memorable passphrase" : "Your password"}/></label>
+        {setupToken && <><p className="small muted">Use a unique passphrase of at least 15 characters. Longer Unicode characters may reach the 72-byte limit sooner.</p><label>Confirm password<input required type="password" autoComplete="new-password" maxLength={128} value={confirmation} onChange={event => { setConfirmation(event.target.value); setError(""); }}/></label></>}
+      </>}
+      {error && <p className="notice error" role="alert">{error}</p>}<button className="button primary">{busy ? "Opening workspace…" : accountReady ? "Open workspace" : setupToken ? "Create password & sign in" : advanced ? "Open workspace" : "Sign in"}<Icon name="arrow" size={17}/></button>
+    </fieldset></form>
+    {!setupToken && !accountReady && <div className="login-options"><button type="button" className="text-button" disabled={busy} onClick={() => setResetHelp(value => !value)}>Forgot password?</button><button type="button" className="text-button login-advanced" disabled={busy} onClick={() => { setAdvanced(value => !value); setError(""); setPassword(""); setToken(""); }}>{advanced ? "Back to email sign-in" : "Advanced access"}</button></div>}
+    {resetHelp && <p className="notice" role="status">Contact your workspace administrator for a new password setup link. This workspace does not send password reset emails yet.</p>}
+    <p className="small muted login-footnote"><Icon name="shield" size={15}/>{advanced ? "Access keys stay in this tab’s memory." : "Your workspace access is protected by a secure session. Sign out when using a shared device."}</p>
+  </Modal>;
 }
 
 function EditorialPreview() {
@@ -55,26 +83,79 @@ function EditorialPreview() {
 
 export default function CreatorStudio() {
   const [page, setPage] = useState("Overview"); const [session, setSession] = useState<Session | null>(null); const [data, setData] = useState<StudioData | null>(null);
-  const [login, setLogin] = useState(false); const [wizard, setWizard] = useState<string | null>(null); const [composer, setComposer] = useState<string | null>(null); const [discovery, setDiscovery] = useState(false); const [selected, setSelected] = useState<Workflow | null>(null); const [creatorDetail, setCreatorDetail] = useState<Influencer | null>(null);
+  const [login, setLogin] = useState(false); const [setupToken, setSetupToken] = useState<string | null>(null); const [checkingSession, setCheckingSession] = useState(true); const [signingOut, setSigningOut] = useState(false); const [signOutError, setSignOutError] = useState(false); const [wizard, setWizard] = useState<string | null>(null); const [composer, setComposer] = useState<string | null>(null); const [discovery, setDiscovery] = useState(false); const [selected, setSelected] = useState<Workflow | null>(null); const [creatorDetail, setCreatorDetail] = useState<Influencer | null>(null);
   const [query, setQuery] = useState(""); const [filter, setFilter] = useState("all"); const [message, setMessage] = useState(""); const [messageIsError, setMessageIsError] = useState(true); const [busy, setBusy] = useState(false); const [scopeId, setScopeId] = useState(0);
   const scope = useRef<{ session: Session; controller: AbortController } | null>(null); const intent = useRef<string | null>(null); const refreshing = useRef(false);
+  const restoration = useRef<AbortController | null>(null); const loginGeneration = useRef(0); const logoutLock = useRef(false); const logoutAccount = useRef(false); const invitation = useRef<string | null>(null);
   const renderedScope = scope.current;
-  useEffect(() => () => scope.current?.controller.abort(), []);
+  useEffect(() => {
+    const controller = new AbortController(); restoration.current = controller; const generation = loginGeneration.current;
+    if (consumeSetupFragment() || invitation.current) return () => controller.abort();
+    void (async () => {
+      try {
+        const identity = await accountRequest("session", undefined, controller.signal);
+        if (!identity || controller.signal.aborted || generation !== loginGeneration.current) return;
+        const next = accountSession(identity); const nextData = await loadStudio(next, controller.signal);
+        if (!controller.signal.aborted && generation === loginGeneration.current) connect(next, nextData);
+      } catch (cause) {
+        if (!controller.signal.aborted && generation === loginGeneration.current && !(cause instanceof SignInRequired)) setMessage("Could not restore your workspace. Please sign in again.");
+      } finally { if (!controller.signal.aborted && generation === loginGeneration.current) setCheckingSession(false); }
+    })();
+    return () => { controller.abort(); scope.current?.controller.abort(); };
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const consume = () => { consumeSetupFragment(); };
+    window.addEventListener?.("hashchange", consume);
+    return () => window.removeEventListener?.("hashchange", consume);
+  }, []);
+  useEffect(() => {
+    if (!session?.expiresAt) return;
+    const timer = setTimeout(() => { clearWorkspace(); setMessage("Your session expired. Sign in again to continue."); setLogin(true); }, Math.max(0, Date.parse(session.expiresAt) - Date.now()));
+    return () => clearTimeout(timer);
+  }, [session]);
   useEffect(() => { if (typeof window !== "undefined") window.scrollTo?.(0, 0); }, [page]);
   const categories = data?.categories ?? starterCategories; const creators = data?.influencers ?? []; const runs = data?.overview.workflows ?? [];
   const roles = data?.identity.memberships.flatMap(row => row.roles) ?? []; const operator = roles.includes("OPERATOR") || roles.includes("ADMIN");
   const replacementContext = useRef({ session, operator, creators, selected }); replacementContext.current = { session, operator, creators, selected };
   const connected = data ? currentConnections(data.accounts).length : null;
+  function consumeSetupFragment() {
+    if (typeof window === "undefined" || !window.location.hash.startsWith("#setup=")) return false;
+    if (logoutAccount.current) return true;
+    const token = new URLSearchParams(window.location.hash.slice(1)).get("setup");
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    clearWorkspace();
+    if (token && /^[a-zA-Z0-9_-]{20,512}$/.test(token)) { invitation.current = token; setSetupToken(token); }
+    else setMessage("This setup link is invalid. Ask your administrator for a fresh link.");
+    setLogin(true); return true;
+  }
+  function openLogin() {
+    if (logoutLock.current || logoutAccount.current) return;
+    loginGeneration.current += 1; restoration.current?.abort(); setCheckingSession(false); setLogin(true);
+  }
   function connect(next: Session, nextData: StudioData) {
+    if (logoutLock.current || logoutAccount.current) return;
+    loginGeneration.current += 1; restoration.current?.abort(); setCheckingSession(false); setSetupToken(null); invitation.current = null;
     scope.current?.controller.abort(); scope.current = { session: next, controller: new AbortController() };
     refreshing.current = false; setBusy(false); setSelected(null); setWizard(null); setComposer(null); setCreatorDetail(null); setDiscovery(false);
     setSession(next); setData(nextData); setScopeId(old => old + 1); setLogin(false); setMessage(""); setFilter("all"); setQuery("");
     const nextIntent = intent.current; intent.current = null;
     if (nextIntent !== null && nextData.creationEnabled && nextData.identity.memberships.some(row => row.roles.some(role => ["ADMIN", "OPERATOR"].includes(role)))) setWizard(nextIntent);
   }
-  function logout() {
+  function clearWorkspace() {
+    loginGeneration.current += 1; restoration.current?.abort(); setCheckingSession(false); setSetupToken(null); invitation.current = null;
     scope.current?.controller.abort(); scope.current = null; refreshing.current = false; intent.current = null;
     setSession(null); setData(null); setLogin(false); setSelected(null); setWizard(null); setComposer(null); setCreatorDetail(null); setDiscovery(false); setQuery(""); setFilter("all"); setMessage(""); setBusy(false); setScopeId(old => old + 1); setPage("Overview");
+  }
+  async function logout() {
+    if (logoutLock.current) return;
+    const cookieSession = (session && !session.token) || logoutAccount.current; clearWorkspace();
+    if (!cookieSession) return;
+    logoutAccount.current = true; setSignOutError(false);
+    logoutLock.current = true; setSigningOut(true);
+    try { await accountRequest("logout", {}); logoutAccount.current = false; }
+    catch { setSignOutError(true); setMessage("Could not confirm server sign-out. Please reconnect and try signing out again before leaving a shared device."); }
+    finally { logoutLock.current = false; setSigningOut(false); }
   }
   async function refresh() {
     const captured = renderedScope; if (!captured || scope.current !== captured || captured.controller.signal.aborted) return;
@@ -89,14 +170,14 @@ export default function CreatorStudio() {
   }
   function create(category = "") {
     setMessageIsError(true);
-    if (!session) { intent.current = category; setLogin(true); return; }
+    if (!session) { intent.current = category; openLogin(); return; }
     if (!operator) { setMessage("An operator or administrator can create influencers in this workspace."); return; }
     if (!data?.creationEnabled) { setMessage("Influencer creation is not activated for this workspace. Ask your administrator to enable the creator feature."); return; }
     setWizard(category);
   }
   function content(creatorId = "") {
     setMessageIsError(true);
-    if (!session) { setLogin(true); return; }
+    if (!session) { openLogin(); return; }
     if (!operator) { setMessage("An operator or administrator can create content."); return; }
     if (!creators.length) { create(); return; } setComposer(creatorId || creators[0].id);
   }
@@ -114,10 +195,10 @@ export default function CreatorStudio() {
     return <div className="content-grid">{rows.map((run, index) => { const creator = creators.find(row => row.id === run.influencer_id); return <button className="content-card" key={run.id} onClick={() => setSelected(run)}><div className={`content-thumbnail category-${creator?.category_id ?? "business"} variant-${index % 3}`}><div className="thumbnail-meta"><span>{creator?.name ?? "AI CREATOR"}</span><Icon name="layers" size={16}/></div><h3>{run.title || "Untitled source story"}</h3><span className="thumbnail-foot">STRUCTURED CAROUSEL DRAFT <Icon name="arrow" size={17}/></span></div><div className="content-card-info"><span className={`pill ${stateTone(run.state)}`}>{label(run.state)}</span><p>{creator?.name ?? "Workspace influencer"}<span>{new Date(run.updated_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></p></div></button>; })}</div>;
   }
   const needsLogin = !session && page !== "Overview";
-  return <div className="studio-shell"><a className="skip-link" href="#workspace-main">Skip to workspace</a><aside className="studio-sidebar"><button className="wordmark" onClick={() => changePage("Overview")} aria-label="Media OS home"><span className="logo-mark"><span/><span/><span/></span>media<span className="wordmark-os">os</span><span className="wordmark-dot"/></button><button className="workspace-switch" onClick={() => session ? void refreshClick() : setLogin(true)}><span className="workspace-avatar">{(data?.overview.tenant_name ?? "M").slice(0, 1)}</span><span><strong>{data?.overview.tenant_name ?? "Your workspace"}</strong><small>{session ? "Creator workspace" : "Let’s make something"}</small></span><Icon name="chevron" size={16}/></button><span className="nav-label">WORKSPACE</span><nav aria-label="Main navigation">{navigation.map(item => <button key={item.name} className={page === item.name ? "active" : ""} aria-current={page === item.name ? "page" : undefined} onClick={() => changePage(item.name)}><Icon name={item.icon}/><span>{item.name}</span>{item.name === "Content studio" && !!data?.overview.counts.awaiting_approval && <span className="nav-count">{data.overview.counts.awaiting_approval}</span>}</button>)}</nav><div className="sidebar-bottom"><div className="human-note"><Icon name="shield" size={20}/><strong>Creativity, with you in control.</strong><p>You approve the story.<br/>You choose when it goes live.</p></div><button className="account-button" onClick={() => session ? logout() : setLogin(true)}><Icon name={session ? "settings" : "link"} size={18}/>{session ? "Sign out / switch access" : "Open workspace"}<Icon name="arrow" size={15}/></button></div></aside>
-    <div className="studio-body"><header className="studio-topbar"><div className="breadcrumbs"><span>Workspace</span><Icon name="chevron" size={13}/><strong>{page}</strong></div><div className="topbar-actions">{session && <button className="icon-button" title="Sign out / switch access" aria-label="Sign out / switch access" onClick={logout}><Icon name="settings" size={18}/></button>}{session && <button className="icon-button" title="Refresh workspace" aria-label="Refresh workspace" disabled={busy} onClick={() => void refreshClick()}><Icon name="clock" size={18}/></button>}<span className="workspace-status"><span/>{session ? "Workspace connected" : "Creator workspace"}</span><button className="button primary compact" onClick={() => create()}><Icon name="plus" size={16}/>Create new</button></div></header>
-    <main id="workspace-main" className="workspace-main">{message && <p className={`notice ${messageIsError ? "error" : ""}`} role={messageIsError ? "alert" : "status"}>{message}</p>}
-      {needsLogin ? <section className="locked-workspace surface"><Icon name={navigation.find(item => item.name === page)?.icon ?? "layers"} size={42}/><span className="eyebrow">YOUR {page.toUpperCase()}</span><h1>{page === "Influencers" ? "A personality. A purpose. Your creator." : page === "Channels" ? "Bring your audience along." : page === "Insights" ? "Learn from what actually happens." : "Your next story starts here."}</h1><p>Open your workspace to see saved influencers, content and connected accounts.</p><button className="button primary" onClick={() => setLogin(true)}>Open workspace<Icon name="arrow" size={17}/></button></section> : <>
+  return <div className="studio-shell"><a className="skip-link" href="#workspace-main">Skip to workspace</a><aside className="studio-sidebar"><button className="wordmark" onClick={() => changePage("Overview")} aria-label="Media OS home"><span className="logo-mark"><span/><span/><span/></span>media<span className="wordmark-os">os</span><span className="wordmark-dot"/></button><button className="workspace-switch" onClick={() => session ? void refreshClick() : openLogin()}><span className="workspace-avatar">{(data?.overview.tenant_name ?? "M").slice(0, 1)}</span><span><strong>{data?.overview.tenant_name ?? "Your workspace"}</strong><small>{session ? "Creator workspace" : "Let’s make something"}</small></span><Icon name="chevron" size={16}/></button><span className="nav-label">WORKSPACE</span><nav aria-label="Main navigation">{navigation.map(item => <button key={item.name} className={page === item.name ? "active" : ""} aria-current={page === item.name ? "page" : undefined} onClick={() => changePage(item.name)}><Icon name={item.icon}/><span>{item.name}</span>{item.name === "Content studio" && !!data?.overview.counts.awaiting_approval && <span className="nav-count">{data.overview.counts.awaiting_approval}</span>}</button>)}</nav><div className="sidebar-bottom"><div className="human-note"><Icon name="shield" size={20}/><strong>Creativity, with you in control.</strong><p>You approve the story.<br/>You choose when it goes live.</p></div><button className="account-button" onClick={() => session ? logout() : openLogin()}><Icon name={session ? "settings" : "link"} size={18}/>{session ? "Sign out / switch access" : "Open workspace"}<Icon name="arrow" size={15}/></button></div></aside>
+    <div className="studio-body"><header className="studio-topbar"><div className="breadcrumbs"><span>Workspace</span><Icon name="chevron" size={13}/><strong>{page}</strong></div><div className="topbar-actions">{!session && <button className="button secondary compact" disabled={checkingSession || signingOut || signOutError} onClick={openLogin}>Sign in</button>}{session && <button className="icon-button" title="Sign out / switch access" aria-label="Sign out / switch access" onClick={() => void logout()}><Icon name="settings" size={18}/></button>}{session && <button className="icon-button" title="Refresh workspace" aria-label="Refresh workspace" disabled={busy} onClick={() => void refreshClick()}><Icon name="clock" size={18}/></button>}<span className="workspace-status"><span/>{session ? "Workspace connected" : "Creator workspace"}</span><button className="button primary compact" onClick={() => create()}><Icon name="plus" size={16}/>Create new</button></div></header>
+    <main id="workspace-main" className="workspace-main">{checkingSession && <p className="notice" role="status">Checking your saved session…</p>}{signingOut && <p className="notice" role="status">Signing out securely…</p>}{signOutError && <button className="button secondary" disabled={signingOut} onClick={() => void logout()}>Retry sign out</button>}{message && <p className={`notice ${messageIsError ? "error" : ""}`} role={messageIsError ? "alert" : "status"}>{message}</p>}
+      {needsLogin ? <section className="locked-workspace surface"><Icon name={navigation.find(item => item.name === page)?.icon ?? "layers"} size={42}/><span className="eyebrow">YOUR {page.toUpperCase()}</span><h1>{page === "Influencers" ? "A personality. A purpose. Your creator." : page === "Channels" ? "Bring your audience along." : page === "Insights" ? "Learn from what actually happens." : "Your next story starts here."}</h1><p>Open your workspace to see saved influencers, content and connected accounts.</p><button className="button primary" onClick={openLogin}>Open workspace<Icon name="arrow" size={17}/></button></section> : <>
       {page === "Overview" && <><section className="welcome-row"><div><span className="eyebrow">THE HOME OF YOUR NEXT BIG IDEA</span><h1>{session ? `Welcome to ${data?.overview.tenant_name ?? "your studio"}.` : "Your creator era starts here."}</h1><p>Build a personality. Find your audience. Create something worth sharing.</p></div><span className="date-stamp">{new Date().toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</span></section><section className="studio-hero"><div className="hero-copy"><span className="hero-kicker"><span/>FROM IDEA TO AUDIENCE</span><h2>Your creators.<br/>Your point<br/>of <em>view.</em></h2><p>Choose a world. Give it a voice.<br/>Turn real stories into content with character.</p><button className="button lime" onClick={() => create()}>Create new<Icon name="arrow" size={18}/></button><span className="hero-footnote">SOURCE IT. CREATE IT. MAKE IT YOURS.</span></div><EditorialPreview/></section><div className="stats-grid">{[["people", "Influencers", data?.overview.counts.influencers], ["layers", "Saved content", data?.overview.counts.workflow_runs], ["clock", "Awaiting review", data?.overview.counts.awaiting_approval], ["link", "Connected accounts", connected]].map(([icon, title, count]) => <div className="stat-card" key={String(title)}><span className="stat-icon"><Icon name={String(icon)}/></span><div><span>{title}</span><strong>{count ?? "—"}</strong></div></div>)}</div><section className="section-block"><div className="section-heading"><div><span className="eyebrow">FIND YOUR WORLD</span><h2>What will you create around?</h2></div><button className="text-button" onClick={() => create()}>Explore categories<Icon name="arrow" size={15}/></button></div><div className="category-strip">{categories.slice(0, 4).map(category => <button className={`category-tile category-${category.id}`} key={category.id} onClick={() => create(category.id)}><span className="category-symbol"><Icon name={categoryIcon[category.id]} size={23}/></span><h3>{category.name}</h3><p>{category.description}</p><span className="category-arrow"><Icon name="arrow" size={18}/></span></button>)}</div></section><section className="section-block"><div className="section-heading"><div><span className="eyebrow">FROM YOUR STUDIO</span><h2>{runs.length ? "Stories in the making" : "From blank page to first post."}</h2></div><button className="text-button" onClick={() => changePage("Content studio")}>View studio<Icon name="arrow" size={15}/></button></div>{runs.length ? workflowCards(runs.slice(0, 3)) : <div className="start-steps">{[["01", "Choose your world", "A category, a purpose, an audience."], ["02", "Create with character", "A named identity and a distinctive voice."], ["03", "Review, then share", "Your content. Your connected account. Your approval."]].map(([number, title, text]) => <div key={number}><span>{number}</span><h3>{title}</h3><p>{text}</p></div>)}</div>}</section></>}
       {page === "Influencers" && <><div className="page-heading"><div><span className="eyebrow">THE PERSONALITIES BEHIND THE POSTS</span><h1>Your creative collective.</h1><p>Give every creator a distinct perspective, audience and purpose.</p></div><button className="button primary" onClick={() => create()}><Icon name="plus" size={17}/>Create new</button></div><div className="library-toolbar"><label className="search-field"><Icon name="search" size={18}/><input aria-label="Search influencers" placeholder="Find an influencer or category…" value={query} onChange={event => setQuery(event.target.value)}/></label><span className="small muted">{creators.length} saved {creators.length === 1 ? "influencer" : "influencers"}</span></div><div className="influencer-grid">{filteredCreators.map(creator => <article className="influencer-card" key={creator.id}><button className={`influencer-visual category-${creator.category_id ?? "business"}`} onClick={() => setCreatorDetail(creator)}><Avatar session={session!} creator={creator} large/><span className="identity-badge"><span/>AI CREATOR</span><span className="influencer-visual-name">{creator.name}</span></button><div className="influencer-info"><div><h2>{creator.name}</h2><span className="pill neutral">{categories.find(category => category.id === creator.category_id)?.name ?? "Editorial creator"}</span></div><p>{creator.objective}</p><div className="influencer-meta"><span>{creator.language.toUpperCase()}</span><span>{label(creator.tone)} voice</span><span>{runs.filter(run => run.influencer_id === creator.id).length} recent drafts</span></div><button className="button secondary" onClick={() => content(creator.id)}>Create content<Icon name="arrow" size={17}/></button></div></article>)}<button className="add-creator-card" onClick={() => create()}><span><Icon name="plus" size={30}/></span><h3>Someone new.<br/>Something different.</h3><p>Create new</p></button></div>{query && !filteredCreators.length && <p className="muted">No influencers match that search.</p>}</>}
       {page === "Content studio" && <><div className="page-heading"><div><span className="eyebrow">MAKE SOMETHING WORTH SAVING</span><h1>Your content, with character.</h1><p>A real source. A distinctive story. A design made for the feed.</p></div><button className="button primary" onClick={() => content()}><Icon name="plus" size={17}/>Create content</button></div><div className="studio-format-banner"><div><span className="format-label"><Icon name="instagram" size={18}/>INSTAGRAM CAROUSEL</span><strong>Big hooks. Clear facts. A reason to swipe.</strong><p>Portrait 4:5 · Cover, evidence & closing layouts · Human review</p></div>{creators.some(creator => creator.opportunity_discovery) && <button className="button secondary" onClick={() => setDiscovery(true)}><Icon name="globe" size={17}/>Discover opportunities</button>}</div><div className="library-toolbar"><label className="search-field"><Icon name="search" size={18}/><input aria-label="Search content" placeholder="Search stories, creators or status…" value={query} onChange={event => setQuery(event.target.value)}/></label><select aria-label="Filter content by influencer" value={filter} onChange={event => setFilter(event.target.value)}><option value="all">All influencers</option>{creators.map(creator => <option value={creator.id} key={creator.id}>{creator.name}</option>)}</select></div>{filteredRuns.length ? workflowCards(filteredRuns) : <section className="empty-stage surface"><Icon name="layers" size={42}/><h2>{query || filter !== "all" ? "No stories match this view." : "Good stories start with a source."}</h2><p>{query || filter !== "all" ? "Try another creator or search term." : "Bring a trusted source and build your first carousel."}</p>{!query && filter === "all" && <button className="button primary" onClick={() => content()}>Create your first story<Icon name="arrow" size={17}/></button>}</section>}<p className="small muted library-footnote">Showing the latest {runs.length} saved workflows. Card artwork is a draft preview; open Design for the exact rendered images.</p></>}
@@ -126,7 +207,7 @@ export default function CreatorStudio() {
       </>}
       <footer className="workspace-footer"><span>MADE TO CREATE. BUILT TO BE ACCOUNTABLE.</span><span>Media OS · Creator studio</span></footer>
     </main></div>
-    {login && <WorkspaceLogin onClose={() => { setLogin(false); intent.current = null; }} onConnected={connect}/>}
+    {login && !signingOut && !signOutError && <WorkspaceLogin key={`login:${scopeId}`} setupToken={setupToken} onClose={() => { setLogin(false); setSetupToken(null); invitation.current = null; intent.current = null; }} onConnected={connect}/>}
     {session && wizard !== null && <CreatorWizard key={`wizard:${scopeId}`} session={session} categories={categories} initialCategory={wizard} mockMode={data?.overview.capabilities?.ai_mode === "mock"} onClose={() => setWizard(null)} onCreated={createdInfluencer}/ >}
     {session && composer !== null && <SourceComposer key={`composer:${scopeId}:${composer}`} session={session} creators={creators} initialCreatorId={composer} mockMode={data?.overview.capabilities?.ai_mode === "mock"} onClose={() => setComposer(null)} onCreated={createdRun}/>}
     {session && selected && <ContentDetail key={`detail:${scopeId}:${selected.id}`} session={session} initialRun={selected} creator={creators.find(creator => creator.id === selected.influencer_id)} roles={roles} onClose={() => setSelected(null)} onChange={refresh} onReplace={operator && creators.some(creator => creator.id === selected.influencer_id) ? replaceSelectedStory : undefined}/>}

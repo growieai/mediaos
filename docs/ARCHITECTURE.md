@@ -4,9 +4,17 @@
 
 The primary console is a modal-first creator workspace: Overview, Influencers, Content Studio,
 Channels and Insights. Typed category/influencer APIs persist configuration; source forms and
-official discovery reuse existing workflow services. Credentials stay in tab memory. Switching
+official discovery reuse existing workflow services. Named users sign in through a server-managed
+HttpOnly session; advanced bearer access remains in tab memory. Switching
 access clears the workspace and aborts pending requests. Source attestation, QA, content approval,
 visual approval and exact social dispatch remain separate server-protected steps.
+
+Migration `0021` adds administrator-provisioned email/password accounts, single-use setup links,
+tenant-bound expiring sessions, persisted login throttles and authentication audit records.
+The console proxy forwards the session cookie; the API and database revalidate identity and
+membership before business operations. Exact-origin checks protect cookie-authenticated writes.
+The public sign-in screen replaces the former network gate for console traffic. Direct operator
+API routes retain their CIDR gate. See [user sign-in](USER_LOGIN.md); public signup is absent.
 
 The optional source-draft helper creates a typed local-template preview from a tenant-owned
 creator and story title. It performs no research or model call. Explicitly using and saving a

@@ -7,7 +7,7 @@ export default function Avatar({ creator, session, large = false }: { creator: I
   useEffect(() => {
     const abort = new AbortController(); let url = "";
     if (creator.portrait_available !== false) void (async () => {
-      const response = await fetch(`/api/internal/studio/influencers/${creator.id}/portrait`, { headers: { Authorization: `Bearer ${session.token}`, "X-Tenant-ID": session.tenant }, cache: "no-store", signal: abort.signal });
+      const response = await fetch(`/api/internal/studio/influencers/${creator.id}/portrait`, { credentials: "same-origin", headers: { ...(session.token ? { Authorization: `Bearer ${session.token}` } : {}), "X-Tenant-ID": session.tenant }, cache: "no-store", signal: abort.signal });
       if (!response.ok || response.headers.get("content-type")?.split(";")[0] !== "image/png") return;
       const blob = await response.blob(); if (abort.signal.aborted || blob.size > 12_000_000) return;
       url = URL.createObjectURL(blob); setImage({ identity, url });

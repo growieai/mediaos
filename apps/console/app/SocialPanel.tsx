@@ -50,7 +50,7 @@ export default function SocialPanel({ tenant, token, run, operator, approver, ad
 
   const request = useCallback((path: string, method = "GET", body?: unknown) => fetch(`/api/internal/${path}`, {
     method, cache: "no-store", signal: controller.current?.signal,
-    headers: { Authorization: `Bearer ${token}`, "X-Tenant-ID": tenant, "Content-Type": "application/json" },
+    credentials: "same-origin", headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), "X-Tenant-ID": tenant, "Content-Type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
   }), [tenant, token]);
   const json = useCallback(async <T,>(path: string, method = "GET", body?: unknown): Promise<T> => {

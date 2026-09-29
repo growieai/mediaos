@@ -1,17 +1,19 @@
 from functools import lru_cache
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import make_url
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCHEMA_REVISION = "0020"
+SCHEMA_REVISION = "0021"
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=REPO_ROOT / ".env", extra="ignore")
     app_env: str = "development"
+    auth_public_origin: str = "http://127.0.0.1:3000"
     app_name: str = "Growie Media OS"
     database_url: SecretStr
     ai_mock_mode: bool = True
@@ -47,6 +49,24 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def milestone_scope(self):
+        origin = urlsplit(self.auth_public_origin)
+        if (
+            origin.scheme not in {"http", "https"}
+            or not origin.hostname
+            or origin.username
+            or origin.password
+            or origin.path
+            or origin.query
+            or origin.fragment
+            or (
+                origin.scheme == "http" and origin.hostname not in {"127.0.0.1", "localhost", "::1"}
+            )
+        ):
+            raise ValueError("AUTH_PUBLIC_ORIGIN must be an exact HTTP(S) origin without a path")
+        if self.app_env == "production" and (
+            origin.scheme != "https" or "auth_public_origin" not in self.model_fields_set
+        ):
+            raise ValueError("Production requires an explicit HTTPS AUTH_PUBLIC_ORIGIN")
         url = make_url(self.database_url.get_secret_value())
         if url.drivername != "postgresql+psycopg" or url.username != "mediaos_runtime":
             raise ValueError("Runtime must use its restricted PostgreSQL role")

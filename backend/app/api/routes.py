@@ -28,12 +28,24 @@ class Context:
 
 
 def authenticated(
+    request: Request,
     x_tenant_id: Annotated[UUID | None, Header()] = None,
     authorization: Annotated[str | None, Header()] = None,
 ):
-    if x_tenant_id is None or not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(401, "Tenant and bearer credential required")
-    token = authorization[7:]
+    if authorization:
+        if x_tenant_id is None or not authorization.startswith("Bearer "):
+            raise HTTPException(401, "Tenant and bearer credential required")
+        token = authorization[7:]
+    else:
+        from app.auth.service import cookie_token, require_same_origin, session_info
+
+        token = cookie_token(request)
+        if request.method not in {"GET", "HEAD", "OPTIONS"}:
+            require_same_origin(request)
+        info = session_info(token)
+        if x_tenant_id is not None and x_tenant_id != info.tenant_id:
+            raise HTTPException(403, "Session belongs to a different workspace")
+        x_tenant_id = info.tenant_id
     with transaction(x_tenant_id, token):
         pass
     return Context(x_tenant_id, token)

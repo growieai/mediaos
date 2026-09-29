@@ -8,6 +8,7 @@ from sqlalchemy.exc import DBAPIError
 
 from app.ai.routes import router as ai_router
 from app.api.routes import router
+from app.auth.routes import router as auth_router
 from app.community.routes import router as community_router
 from app.config import get_settings
 from app.conversion.routes import router as conversion_router
@@ -34,6 +35,11 @@ configure_logging()
 async def lifespan(app):
     get_settings()
     yield
+    from app.auth.service import login_engine
+
+    if login_engine.cache_info().currsize:
+        login_engine().dispose()
+        login_engine.cache_clear()
 
 
 app = FastAPI(title="Growie Media OS", version="0.2.0", lifespan=lifespan)
@@ -139,6 +145,7 @@ async def failed(request: Request, exc: SkillFailed):
 
 
 app.include_router(router)
+app.include_router(auth_router)
 app.include_router(intelligence_router)
 app.include_router(rendering_router)
 app.include_router(delivery_router)

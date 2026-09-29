@@ -20,9 +20,11 @@ cd ../..
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-local.ps1
 ```
 
-Open `http://127.0.0.1:3000`, select **Open workspace**, and enter the tenant ID and a human
-access key from `.local/credentials.json`. ADMIN can exercise creation and review locally;
-OPERATOR and APPROVER retain their separate permissions. Access stays in page memory.
+Open `http://127.0.0.1:3000`, select **Sign in**, and use your administrator-provisioned
+email/password account. See [user sign-in](USER_LOGIN.md). A valid session survives refresh;
+signing out revokes it. Advanced access still accepts the tenant ID and a human access key
+from `.local/credentials.json` for internal testing. ADMIN can exercise creation and review
+locally; OPERATOR and APPROVER retain their separate permissions.
 
 Choose **Create new** to pick a category, name, audience, language, tone and mission.
 The new card is backed by PostgreSQL, including immutable initial configuration. Generic

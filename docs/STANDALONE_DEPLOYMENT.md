@@ -5,10 +5,11 @@
 The selected hostname is **mediaos.growie.ai**. The user has identified an Ubuntu server already
 hosting Growie, with DNS managed through Cloudflare. SSH inspection confirmed adequate capacity,
 three existing Growie staging containers and no listener on ports 80/443. The owner authorized a
-separate Media OS deployment on this host. DNS-only routing, trusted HTTPS, operator browser
-access, authentication/tenant rejection and same-host recovery have now been verified. The
-internal pilot is ready for testing from the configured operator network with hosted credentials;
-off-site backup/alert destinations remain unspecified. See the exact checks and limits in
+separate Media OS deployment on this host. The initial pilot verified DNS-only routing, trusted
+HTTPS, operator-network browser access, bearer authentication/tenant rejection and same-host
+recovery. The updated release adds ordinary-network access to the console with invited user
+sign-in; its hosted login/setup acceptance must be recorded separately before claiming it verified.
+Off-site backup/alert destinations remain unspecified. See the exact checks and limits in
 [hosted pilot verification](HOSTED_PILOT.md).
 Keep Media OS databases, credentials and storage separate from all existing Growie services.
 The exact server address is kept in local deployment notes rather than this public runbook.
@@ -74,16 +75,18 @@ external Docker volume holds PostgreSQL data. Never run a volume deletion or pru
   host requires verified capacity and isolation from its existing services. The included memory
   limits total about 8 GiB before host overhead; choose capacity from measured workload and budget.
 - A dedicated DNS name, operator/VPN source CIDRs, certificate contact and direct edge routing.
-  Only operator CIDRs can access the console and normal API. App bearer authentication and tenant
-  authorization still apply. Do not point the DNS name at an existing Growie service.
+  The console and its authenticated proxy are public; direct `/v1` API access remains restricted
+  to operator CIDRs. Account authentication and tenant authorization protect workspace data.
+  Do not point the DNS name at an existing Growie service.
 - A trusted image registry/release process and independently verified image digests. The example
   intentionally contains invalid placeholders. A digest ensures immutability, not trust; retain
   build provenance, scan results and the reviewed source commit separately.
 - Protected storage and encryption, an off-site backup destination, retention/recovery objectives,
   an alert destination and responsible on-call operator. Local persistent disks are not off-site
   backups or multi-host object storage.
-- Human identity issuance/rotation and a secret manager or protected host-secret lifecycle. Seed
-  is an initial internal bootstrap only; this scaffold does not add SSO, public signup or billing.
+- Human identity issuance/rotation and a secret manager or protected host-secret lifecycle.
+  Provision named password accounts through the maintenance-only [user login procedure](USER_LOGIN.md).
+  Seed remains an initial service/internal bootstrap; there is no SSO, public signup or billing.
 
 Docker Engine/Compose **2.30+**, Python 3.12+, PostgreSQL 18-compatible client tools and Linux
 `nsenter` are operator dependencies. Windows/WSL remains the local development path; use a separate
@@ -116,6 +119,13 @@ either maintenance file, bootstrap secret or human credential file. Do not put s
 arguments, shell history, source control, screenshots or `docker compose config` output. Use
 `config --quiet` for validation; Docker administrators can still inspect container environments.
 
+Production Compose derives `AUTH_PUBLIC_ORIGIN=https://${SITE_DOMAIN}` for both API and console.
+It is nonsecret configuration and must exactly match the browser origin, without a trailing slash,
+path or query. Do not add a different value to the runtime secret file. The backend requires an
+explicit HTTPS origin in production. Both layers reject authentication POSTs and cookie-authenticated
+mutations from other origins; forwarded host headers cannot select the trusted origin. Local Compose
+instead gives both services the explicit default `http://127.0.0.1:3000` for local testing.
+
 Create `/srv/mediaos/state/{renders,media,social}` and `/srv/mediaos/tls/{data,config}`, including
 their parents, owned by UID/GID `1000:1000`, mode `0700`. Choose an encrypted durable filesystem.
 Create the exact dedicated external PostgreSQL volume named in `POSTGRES_VOLUME`; verify it is new
@@ -146,6 +156,13 @@ channel. Do not grant an operator approval authority simply to make the demo eas
 with its existing private credentials file is idempotent; losing/replacing that file can rotate
 seeded identities, so do not treat seed as a routine release action without examining its inputs.
 
+After applying migration `0021`, provision named user accounts with the separate maintenance
+identity, following [USER_LOGIN.md](USER_LOGIN.md). Give each account only its reviewed roles in an
+existing tenant. The CLI writes a private, expiring setup link; it does not send email. Distribute
+that link through the chosen private channel so the user sets their own password. Keep the link
+out of logs, screenshots and source control, and keep its output file outside API asset mounts.
+Password accounts use revocable sessions; their setup is separate from seed/service bearer tokens.
+
 Run preflight again, then start API, console and ingress. Check ingress validation/TLS from the
 actual operator network. Initial configuration forces text mock mode and disables media execution,
 social connections/publishing/replies, conversion delivery and all unsupported automatic features.
@@ -159,6 +176,10 @@ Use real manually submitted evidence and separate human operator/approver identi
 pilot. Do not run the acceptance harness against production data: it intentionally creates fixtures
 and simulates approval. Run it on an isolated staging deployment instead. Readiness must report
 the expected migration head, and missing/wrong-tenant authentication must remain rejected.
+Verify login/setup, session restoration, logout, wrong-tenant rejection and protected approval
+through the public console after deployment. Also verify that an ordinary network can reach the
+sign-in page while direct `/v1` access remains blocked outside the operator CIDRs. A passing
+configuration check does not establish these hosted behaviors.
 
 ## TLS and public routes
 
@@ -167,15 +188,23 @@ Persist its private `/data` and `/config` mounts; restrict access to certificate
 host so only SSH from the administration network and 80/443 as appropriate are reachable. Do not
 publish PostgreSQL, Redis, object stores, API port 8000, console port 3000 or Docker's control socket.
 
-Ingress exposes only GET OAuth callback, GET/POST signed webhook, and GET short-lived social JPEG
-capability routes to provider traffic. Every other route requires an operator source CIDR before
-application authentication. The existing public-route signatures, OAuth state, expiry checks and
-server-side integration flags remain authoritative. It has no filesystem-serving route.
+Ingress sends the console, including `/api/internal/...`, to the console service from any network.
+The public sign-in/setup screens reveal no tenant data. The console proxy and backend require
+authenticated tenant membership for workspace operations; cookie-authenticated mutations require
+the exact configured origin. Caddy and Next responses disallow framing with
+CSP `frame-ancestors 'none'` and `X-Frame-Options: DENY`, protecting login and review screens
+from clickjacking.
+
+Direct `/v1` and `/v1/*` paths still require an operator source CIDR before app authentication,
+except the existing GET OAuth callback, GET/POST signed webhook, and GET short-lived social JPEG
+capability routes. Their signatures, OAuth state, expiry checks and server-side integration flags
+remain authoritative. Ingress has no filesystem-serving route.
 
 The CIDR check uses the **direct peer IP**. Put this Caddy instance directly at the edge. A CDN or
 load balancer would change that peer and needs a separate reviewed trusted-proxy policy; blindly
 allowing a proxy's address could allow every visitor through. Do not trust a client-supplied
-`X-Forwarded-For` header. Never use `0.0.0.0/0` or `::/0` for console access.
+`X-Forwarded-For` header. Never use `0.0.0.0/0` or `::/0` in `OPS_ALLOWED_CIDRS`; ordinary users reach
+the authenticated console without widening direct API maintenance access.
 
 Raw proxy logs are discarded because they can contain OAuth codes or media capability URLs.
 Application metadata logs remain bounded in Docker's local log driver and omit raw request data.
@@ -288,6 +317,9 @@ update both maintenance/bootstrap secrets; preserve tested emergency access firs
 For human/INGESTOR/SOCIAL credentials, use the reviewed administrative identity lifecycle, revoke the
 old principal/token, inject the replacement and test tenant/role rejection. Preserve immutable
 approval history. Do not rerun seed with missing credential files as an informal rotation tool.
+For password accounts, the maintenance reset/revoke commands in [USER_LOGIN.md](USER_LOGIN.md)
+invalidate existing sessions. A reset issues a new private setup link; it never asks an operator
+to collect the user's password.
 Provider-key changes require a controlled restart and feature gates staying off until validated.
 An Instagram vault-key change requires deliberate decrypt/re-encrypt or reconnect recovery; merely
 replacing the key strands encrypted tokens. Follow SOCIAL_INTEGRATION.md, disable dispatch, retain

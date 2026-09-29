@@ -1,5 +1,21 @@
 # Data model
 
+## Named user sessions (0021)
+
+`private.user_logins` maps a normalized unique email to an existing tenant/principal membership,
+with a password verifier and credential generation. `private.login_setups` stores only the
+hash of an expiring one-time setup secret. `private.browser_sessions` stores session hashes,
+the pinned tenant/principal/generation, expiry and revocation. No session or setup secret is
+persisted in plaintext. `private.login_throttles` and `private.auth_audit` hold admission counters
+and authentication outcomes separately from editorial workflow audit events.
+
+These identity tables are inaccessible to direct runtime SQL. Security-definer functions with
+fixed search paths verify credentials and constrain session issuance. `authenticate()` accepts
+valid sessions as well as existing internal bearer tokens and retains the transaction-bound
+private request context. Business RLS and exact approval/revision guards are unchanged. Account
+provisioning, role assignment, reset and revocation use the separate maintenance identity.
+See [user sign-in](USER_LOGIN.md) for operational commands and limitations.
+
 ## Generated source drafts (0020)
 
 `source_snapshots.source_type` also accepts `GENERATED`. A database CHECK requires generated

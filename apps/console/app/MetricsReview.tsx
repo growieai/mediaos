@@ -37,7 +37,7 @@ export default function MetricsReview({ token, tenant, workflowId, renderId, ope
   const request = useCallback(async <T,>(path: string, method = "GET", body?: unknown): Promise<T> => {
     const response = await fetch(`/api/internal/${path}`, {
       method, cache: "no-store", signal: abort.current?.signal,
-      headers: { Authorization: `Bearer ${token}`, "X-Tenant-ID": tenant, "Content-Type": "application/json" },
+      credentials: "same-origin", headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), "X-Tenant-ID": tenant, "Content-Type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
     if (response.headers.get("content-type")?.split(";")[0] !== "application/json") throw new Error(`Metrics request failed (${response.status}).`);

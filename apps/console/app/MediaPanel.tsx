@@ -44,7 +44,7 @@ export default function MediaPanel({ tenant, token, run, operator, approver, adm
 
   const request = useCallback(async (path: string, method = "GET", body?: unknown, signal?: AbortSignal) => fetch(`/api/internal/${path}`, {
     method, cache: "no-store", signal: signal ?? controller.current?.signal,
-    headers: { Authorization: `Bearer ${token}`, "X-Tenant-ID": tenant, "Content-Type": "application/json" },
+    credentials: "same-origin", headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), "X-Tenant-ID": tenant, "Content-Type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
   }), [tenant, token]);
   const json = useCallback(async <T,>(path: string, method = "GET", body?: unknown, signal?: AbortSignal): Promise<T> => {

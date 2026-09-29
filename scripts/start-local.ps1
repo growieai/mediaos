@@ -34,6 +34,14 @@ foreach ($required in @($pythonPath, $nextPath, (Join-Path $projectRoot 'apps/co
     if (-not (Test-Path -LiteralPath $required)) { throw 'Run setup, migrate, seed and check first; see docs/TESTING.md.' }
 }
 $nodePath = (Get-Command node.exe).Source
+# Next's production build does not read the repository-root Python .env. Pass
+# only the nonsecret browser origin explicitly so its cookie/CSRF policy matches
+# the API when running the production build on local HTTP loopback.
+if (-not $env:AUTH_PUBLIC_ORIGIN) {
+    $originLines = @(Get-Content -LiteralPath (Join-Path $projectRoot '.env') | Where-Object { $_ -match '^AUTH_PUBLIC_ORIGIN=' })
+    if ($originLines.Count -gt 1) { throw 'AUTH_PUBLIC_ORIGIN must be configured once.' }
+    $env:AUTH_PUBLIC_ORIGIN = if ($originLines.Count -eq 1) { $originLines[0].Substring('AUTH_PUBLIC_ORIGIN='.Length).Trim() } else { 'http://127.0.0.1:3000' }
+}
 New-Item -ItemType Directory -Path $localDirectory -Force | Out-Null
 $services = @(
     @{ name='api'; port=8000; executable=$pythonPath; directory=(Join-Path $projectRoot 'backend'); arguments=@('-m','uvicorn','app.main:app','--host','127.0.0.1','--port','8000','--no-access-log') },
@@ -69,5 +77,6 @@ for ($attempt=0; $attempt -lt 30; $attempt++) {
 }
 if (-not $ready) { throw 'Services did not become ready. Check .local/*.stderr.log and the standalone PostgreSQL service.' }
 Write-Host 'Media OS is ready at http://127.0.0.1:3000'
-Write-Host 'Use .local/credentials.json for the tenant and OPERATOR/APPROVER credentials.'
+Write-Host 'Use your email/password account; see docs/USER_LOGIN.md for private account setup.'
+Write-Host 'Advanced access still supports .local/credentials.json for internal testing.'
 Write-Host 'Stop with: powershell -File scripts/start-local.ps1 -Stop'

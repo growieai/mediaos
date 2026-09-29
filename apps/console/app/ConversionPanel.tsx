@@ -26,7 +26,7 @@ export default function ConversionPanel({ tenant, token, workflowId, operator, a
     try {
       const response = await fetch(`/api/internal/workflow-runs/${workflowId}/conversion-requests`, {
         cache: "no-store", signal: controller.current?.signal,
-        headers: { Authorization: `Bearer ${token}`, "X-Tenant-ID": tenant },
+        credentials: "same-origin", headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), "X-Tenant-ID": tenant },
       });
       if (response.headers.get("content-type")?.split(";")[0] !== "application/json") throw new Error("Invalid request-history response.");
       const body = await response.json();

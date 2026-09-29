@@ -28,7 +28,7 @@ export default function HandoffReview({ tenant, token, request, operator, approv
   const json = useCallback(async <T,>(path: string, method = "GET", body?: unknown): Promise<T> => {
     if (active.current !== scope || controller.current?.signal.aborted) throw new Error("Handoff context changed. Refresh current state.");
     const response = await fetch(`/api/internal/${path}`, { method, cache: "no-store", signal: controller.current?.signal,
-      headers: { Authorization: `Bearer ${token}`, "X-Tenant-ID": tenant, "Content-Type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) });
+      credentials: "same-origin", headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), "X-Tenant-ID": tenant, "Content-Type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) });
     if (response.headers.get("content-type")?.split(";")[0] !== "application/json") throw new Error("Invalid handoff response. Refresh saved state.");
     const result = await response.json();
     if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "Request failed. Refresh before retrying.");

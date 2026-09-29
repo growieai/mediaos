@@ -7,7 +7,9 @@ allowlisted claims. Immutable tenant-scoped receipts preserve idempotency and au
 Portrait previews validate the configured private file, size and content hash before returning
 authenticated bytes. Cross-tenant access stays invisible through forced RLS.
 
-Browser credentials stay in tab memory. Switching access aborts requests and clears selected
+Named users use administrator-provisioned email/password authentication with HttpOnly sessions;
+advanced bearer credentials stay in tab memory. See [user sign-in](USER_LOGIN.md) for setup,
+expiry, revocation, throttling and exact-origin protection. Switching access aborts requests and clears selected
 artifacts, OAuth results and review state; stale response handlers cannot update another scope.
 The score is read-only, and all actual approvals/exports/posts continue to recheck database policy.
 No image generator, provider billing permission or automatic social permission is enabled by
@@ -38,9 +40,11 @@ with a new key. Receipt reconciliation is a separate persisted read. Revocation 
 reviewed minimal notice and never implies that downloaded data has been physically erased.
 See [conversion delivery](CONVERSION_DELIVERY.md), including its local retention limitation.
 
-The standalone deployment scaffold keeps database ports private, operator access CIDR-restricted
-and migration secrets separate from workloads. Its initial configuration disables all live
-dispatch. A configured host, TLS, identity lifecycle and operational acceptance are still needed.
+The standalone deployment scaffold keeps database ports private and direct operator APIs CIDR-restricted.
+Console/sign-in traffic is reachable from ordinary networks and enforces application authentication
+for workspace data. Migration secrets remain separate from workloads. Its initial configuration
+disables all live dispatch. Hosted verification and remaining operational requirements are recorded
+in [the hosted pilot report](HOSTED_PILOT.md).
 The media administrator UI stores no provider secrets and requires fresh price/budget confirmation;
 the database independently enforces permissions and a 30-day rate-card review window (0017).
 
@@ -83,7 +87,13 @@ OPERATOR can submit sources, execute/resume workflows and revise content. APPROV
 
 ## Authentication and RLS
 
-Bearer tokens are cryptographically random; only SHA-256 hashes are stored in principals. Membership binds identities to tenants and roles. Credentials are never accepted from request body identity fields. In production, token issuance, expiry, rotation, revocation and organizational SSO need an operational policy; the initial local seed is not a customer authentication product.
+Bearer tokens are cryptographically random; only SHA-256 hashes are stored in principals.
+Migration `0021` adds named password accounts and opaque session hashes in the private schema.
+Guarded database functions verify credentials, and every business transaction rechecks the
+session's pinned tenant, active principal, credential generation, expiry and membership.
+Membership binds identities to tenants and roles. No caller-supplied role or principal field
+confers authority. Account provisioning/recovery uses the separate maintenance identity.
+Organizational SSO, MFA and self-service email recovery remain operational/product work.
 
 The restricted mediaos_runtime PostgreSQL login is NOSUPERUSER, NOBYPASSRLS, NOCREATEDB, NOCREATEROLE and NOINHERIT. Tenant tables enable and force RLS. Public schema creation is revoked. Database business reads/writes need transaction-local authenticated context. Security-definer authentication stores the context in a private table keyed by backend and transaction. SET app.tenant_id cannot impersonate a tenant.
 
@@ -103,7 +113,11 @@ Factual content is a verbatim verified excerpt in M1. CREATIVE blocks must match
 
 .env and .local are ignored by Git and Docker build context. Configuration uses SecretStr for runtime database credentials. Generated seed tokens stay in .local/credentials.json; protect that directory and do not share its contents. Application logs allowlist metadata and omit request bodies, headers, exception messages and SQL parameters.
 
-API and console proxy enforce a 256 KiB request cap. Source text and typed fields have additional bounds. The UI keeps bearer tokens only in memory and renders data as escaped text. No tokens are placed in URLs or browser persistent storage.
+API and console proxy enforce a 256 KiB request cap. Source text and typed fields have additional
+bounds. The UI keeps advanced bearer tokens only in memory and renders data as escaped text.
+User session secrets live only in HttpOnly cookies, with Secure required in production.
+Setup tokens use a private single-use URL fragment that the UI immediately removes; they never
+enter HTTP request URLs. Neither passwords nor session tokens are written to JavaScript storage.
 
 Compose binds services to loopback and passes migration credentials only to maintenance jobs. Do not reuse development credentials in production, expose database services publicly, or connect this product to Growie's existing infrastructure.
 

@@ -6,7 +6,7 @@ console and restart the API/console. No package, external service or credential 
 preview uses local templates. Its saved source is always test material and cannot be approved;
 paste real source evidence into a new story for the normal publication workflow.
 
-The current schema head is 0020. Run migrate and seed after updating this branch, then rebuild
+The current schema head is 0021. Run migrate and seed after updating this branch, then rebuild
 and restart the API/console. Seed creates `.local/media` and `.local/social` for private bind mounts; no paid
 profile or budget is seeded. On this prepared Windows host the standalone PostgreSQL service
 uses port 55432 and `mediaos_dev`; the Docker example uses port 55433 and database `mediaos`.
@@ -92,9 +92,12 @@ Set `ENABLE_EXTERNAL_CREATORS=true` in the ignored local `.env` and restart the 
 authenticated creator setup. No AI/provider key is needed. The example keeps creation off for
 deployments that have not enabled this feature.
 
-1. Select **Open workspace** and enter `tenant_id` and a human token from `.local/credentials.json`.
-   OPERATOR creates, APPROVER reviews, and ADMIN can exercise both capabilities locally. Never
-   use server-only INGESTOR or SOCIAL credentials in the browser.
+1. Select **Sign in** and use an administrator-provisioned email/password account; see
+   [user sign-in](USER_LOGIN.md) for account setup. Use `http://127.0.0.1:3000` consistently;
+   a different origin must match `AUTH_PUBLIC_ORIGIN` on both API and console.
+   Advanced access still accepts `tenant_id` and a human token from `.local/credentials.json`.
+   OPERATOR creates, APPROVER reviews, and ADMIN can exercise both capabilities locally.
+   Never use server-only INGESTOR or SOCIAL credentials in the browser.
 2. Choose **Create new**, select a category, and enter name, audience, language, tone and mission.
    **Suggest with AI** and **Draft mission with AI** offer editable mock starter drafts without
    provider credentials. Choose a suggestion explicitly; only the final **Create new** saves it.

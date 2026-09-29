@@ -85,7 +85,7 @@ export default function VisualReview({ token, tenant, run, operator, approver, r
   const request = useCallback(async (path: string, method = "GET", body?: unknown, signal?: AbortSignal) => {
     return fetch(`/api/internal/${path}`, {
       method,
-      headers: { Authorization: `Bearer ${token}`, "X-Tenant-ID": tenant, "Content-Type": "application/json" },
+      credentials: "same-origin", headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), "X-Tenant-ID": tenant, "Content-Type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
       cache: "no-store",
       signal: signal ?? controller.current?.signal,

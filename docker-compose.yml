@@ -44,6 +44,7 @@ services:
       AI_MOCK_MODE: ${AI_MOCK_MODE:-true}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       APP_ENV: development
+      AUTH_PUBLIC_ORIGIN: ${AUTH_PUBLIC_ORIGIN:-http://127.0.0.1:3000}
       MEDIA_LIVE_ENABLED: ${MEDIA_LIVE_ENABLED:-false}
       ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:-}
       HEYGEN_API_KEY: ${HEYGEN_API_KEY:-}
@@ -100,6 +101,7 @@ services:
       dockerfile: apps/console/Dockerfile
     environment:
       INTERNAL_API_URL: http://api:8000
+      AUTH_PUBLIC_ORIGIN: ${AUTH_PUBLIC_ORIGIN:-http://127.0.0.1:3000}
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:

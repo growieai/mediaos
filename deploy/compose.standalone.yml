@@ -93,6 +93,7 @@ services:
         format: raw
     environment:
       APP_ENV: production
+      AUTH_PUBLIC_ORIGIN: https://${SITE_DOMAIN:?Supply the dedicated Media OS DNS name}
       PYTHONDONTWRITEBYTECODE: "1"
       AI_MOCK_MODE: "true"
       MEDIA_LIVE_ENABLED: "false"
@@ -142,6 +143,7 @@ services:
     image: ${CONSOLE_IMAGE:?Supply the tested console image digest}
     environment:
       INTERNAL_API_URL: http://api:8000
+      AUTH_PUBLIC_ORIGIN: https://${SITE_DOMAIN:?Supply the dedicated Media OS DNS name}
       NEXT_TELEMETRY_DISABLED: "1"
     networks: [private]
     depends_on:
@@ -164,7 +166,7 @@ services:
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN:?Supply the dedicated Media OS DNS name}
       ACME_EMAIL: ${ACME_EMAIL:?Supply the certificate operator email}
-      OPS_ALLOWED_CIDRS: ${OPS_ALLOWED_CIDRS:?Supply operator or VPN source CIDRs}
+      OPS_ALLOWED_CIDRS: ${OPS_ALLOWED_CIDRS:?Supply direct API operator or VPN source CIDRs}
     ports: ["80:80", "443:443"]
     sysctls:
       net.ipv4.ip_unprivileged_port_start: "0"

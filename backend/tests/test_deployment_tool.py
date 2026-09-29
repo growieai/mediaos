@@ -479,11 +479,58 @@ def test_deployment_example_keeps_creator_setup_an_opt_in():
     assert example["ENABLE_EXTERNAL_CREATORS"] == "false"
 
 
+def test_standalone_services_share_exact_https_browser_origin():
+    spec = yaml.safe_load((ROOT / "deploy/compose.standalone.yml").read_text())
+    expected = "https://${SITE_DOMAIN:?Supply the dedicated Media OS DNS name}"
+    for service in ("api", "console"):
+        assert spec["services"][service]["environment"]["AUTH_PUBLIC_ORIGIN"] == expected
+    # A separately supplied runtime secret file cannot override the public origin.
+    assert "AUTH_PUBLIC_ORIGIN" not in deployment.RUNTIME_KEYS
+
+
+def test_local_services_share_explicit_loopback_browser_origin():
+    spec = yaml.safe_load((ROOT / "docker-compose.yml").read_text())
+    for service in ("api", "console"):
+        assert spec["services"][service]["environment"]["AUTH_PUBLIC_ORIGIN"] == (
+            "${AUTH_PUBLIC_ORIGIN:-http://127.0.0.1:3000}"
+        )
+    example = deployment.raw_env(ROOT / ".env.example", secret=False)
+    assert example["AUTH_PUBLIC_ORIGIN"] == "http://127.0.0.1:3000"
+
+
 def test_ingress_never_serves_assets_or_trusts_forwarded_ip():
     caddy = (ROOT / "deploy/Caddyfile").read_text()
     assert "@operator remote_ip {$OPS_ALLOWED_CIDRS}" in caddy
     assert "file_server" not in caddy
     assert "trusted_proxies" not in caddy
     assert "output discard" in caddy
+    assert "Content-Security-Policy \"frame-ancestors 'none'\"" in caddy
+    assert "X-Frame-Options DENY" in caddy
     assert "request_body" in caddy and "max_size 256KB" in caddy
     assert 'respond "Not found" 404' in caddy
+
+
+def test_ingress_exposes_console_login_but_keeps_raw_api_network_restricted():
+    caddy = (ROOT / "deploy/Caddyfile").read_text()
+    # The raw API matcher must include its root and remain before the public
+    # console fallback; the CIDR guard must be nested within that API handler.
+    assert "\t@direct_api path /v1 /v1/*\n" in caddy
+    assert (
+        "\thandle @direct_api {\n"
+        "\t\t@operator remote_ip {$OPS_ALLOWED_CIDRS}\n"
+        "\t\thandle @operator {\n"
+        "\t\t\treverse_proxy api:8000\n"
+        "\t\t}\n"
+        "\t\thandle {\n"
+        '\t\t\trespond "Not found" 404\n'
+        "\t\t}\n"
+        "\t}"
+    ) in caddy
+    public_console = "\thandle {\n\t\treverse_proxy console:3000\n\t}"
+    assert public_console in caddy
+    assert caddy.index("handle @direct_api {") < caddy.index(public_console)
+    assert caddy.count("reverse_proxy console:3000") == 1
+    # Signed provider callbacks retain their narrow method/path exceptions.
+    assert caddy.index("handle @provider_get {") < caddy.index("handle @direct_api {")
+    assert caddy.index("handle @provider_post {") < caddy.index("handle @direct_api {")
+    assert "\t\tmethod POST\n\t\tpath /v1/social/webhook\n" in caddy

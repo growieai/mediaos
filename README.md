@@ -6,7 +6,7 @@ Instagram through the existing protected publishing flow. The [new design system
 uses distinct cover, evidence and closing layouts. [Content readiness](docs/CONTENT_READINESS.md)
 provides transparent suggestions, not a prediction of virality.
 
-Migrate and seed through `0019`, enable `ENABLE_EXTERNAL_CREATORS=true` for authenticated
+Migrate through `0021` and seed, enable `ENABLE_EXTERNAL_CREATORS=true` for authenticated
 creator setup, then rebuild/restart. Public signup and billing are not implemented. Mock
 operation needs no provider credentials; live account and provider dependencies remain explicit.
 
@@ -53,8 +53,12 @@ python scripts/dev.py dev
 python scripts/dev.py acceptance
 ```
 
-Console: http://localhost:3000. API: http://localhost:8000/v1/health.
-Local identity IDs and bearer credentials are generated in `.local/credentials.json`; never commit them. Use the OPERATOR identity to submit/execute and the APPROVER identity to attest source evidence and approve exact revisions.
+Console: http://127.0.0.1:3000. API: http://127.0.0.1:8000/v1/health.
+Use [email/password sign-in](docs/USER_LOGIN.md) with an administrator-provisioned account.
+Set `AUTH_PUBLIC_ORIGIN` consistently on API and console if using another origin. The hosted
+sign-in screen is accessible from ordinary networks; protected data still requires membership.
+Local bearer credentials remain in `.local/credentials.json` for internal tooling and advanced
+access. Never commit them. OPERATOR creates/executes; APPROVER attests and approves exact revisions.
 
 The acceptance command simulates separate operator/approver API requests and records evidence in `.local/acceptance-report.json`. It does not represent an actual person's editorial sign-off.
 

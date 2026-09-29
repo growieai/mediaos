@@ -13,6 +13,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 
+from app.auth.service import login_engine
 from app.config import REPO_ROOT, get_settings
 from app.db.repository import engine, metadata
 from app.models.schemas import CharacterConfig
@@ -41,8 +42,14 @@ def database():
     get_settings.cache_clear()
     engine.cache_clear()
     metadata.cache_clear()
+    if login_engine.cache_info().currsize:
+        login_engine().dispose()
+    login_engine.cache_clear()
     yield admin
     engine().dispose()
+    if login_engine.cache_info().currsize:
+        login_engine().dispose()
+    login_engine.cache_clear()
     admin.dispose()
 
 
