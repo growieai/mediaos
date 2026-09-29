@@ -98,10 +98,30 @@ jobs:
           export CADDY_IMAGE=caddy@sha256:0c994536bddb66445885237f1a5dcc1916bccea922661c76b4e9fc24061f9b52
           export MEDIAOS_STATE_DIR="$fixture/state" MEDIAOS_TLS_DIR="$fixture/tls"
           export RUNTIME_ENV_FILE="$fixture/runtime.env" MAINTENANCE_ENV_FILE="$fixture/maintenance.env"
-          export POSTGRES_PASSWORD_FILE="$fixture/postgres-password" POSTGRES_VOLUME=mediaos_ci_syntax_only
+          export POSTGRES_PASSWORD_FILE="$fixture/postgres-password"
+          export POSTGRES_VOLUME="mediaos_ci_ingress_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
           standalone=(docker compose --project-name "mediaos-ci-ingress-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" -f deploy/compose.standalone.yml)
-          trap '"${standalone[@]}" down --remove-orphans' EXIT
+          if docker volume inspect "$POSTGRES_VOLUME" >/dev/null 2>&1; then
+            echo "Refusing to reuse an existing ingress-check volume" >&2
+            exit 1
+          fi
+          fixture_volume_created=false
+          cleanup_ingress_check() {
+            status=$?
+            trap - EXIT
+            cleanup_status=0
+            "${standalone[@]}" down --remove-orphans || cleanup_status=$?
+            if [ "$fixture_volume_created" = true ]; then
+              docker volume rm "$POSTGRES_VOLUME" || cleanup_status=$?
+            fi
+            if [ "$status" -ne 0 ]; then exit "$status"; fi
+            exit "$cleanup_status"
+          }
+          trap cleanup_ingress_check EXIT
           "${standalone[@]}" config --quiet
+          # Compose resolves external volumes even for an ingress-only run.
+          docker volume create "$POSTGRES_VOLUME" >/dev/null
+          fixture_volume_created=true
           "${standalone[@]}" pull ingress
           "${standalone[@]}" run --no-deps --rm --pull never ingress \
             caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile

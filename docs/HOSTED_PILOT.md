@@ -36,15 +36,28 @@ configuration. The helper and UI now use the supported primary language for the 
 preview while preserving the saved creator configuration. Regional-language regression tests
 cover the actual canonical configuration, provenance and rejected mismatched responses.
 
+The deployed application source is `1d50447`, with API image
+`sha256:09ee178eadd0920d2e18fae2093d7ec854b51fa986e14d0f1deea7882da23e4c`
+and console image `sha256:43a85bf68d7026e5371de2742db9c1a2fb33b5c3c3d1a3d235bf990579a28c06`.
+The exact application and infrastructure images were archived on the host with a SHA-256
+manifest; an off-host archive copy is still pending. All 16 private-server checks passed after
+the regional-language fix, including the actual seeded Spanish draft response and the
+APPROVER's inability to invoke operator drafting.
+
 ## Public access still pending
 
-At this checkpoint, `mediaos.growie.ai` did not resolve. The console/API/database are private;
-successful private checks do not establish a working public URL. The next steps are:
+At this checkpoint, `mediaos.growie.ai` did not resolve. Caddy is running on ports 80/443 and a
+host-local HTTP request redirects to the expected HTTPS hostname. An external HTTP connection
+timed out, and a narrowly filtered packet check saw no incoming test connection; an upstream
+firewall remains the suspected blocker. The cloud firewall has not been inspected or changed.
+The console/API/database are private; successful private checks do not establish a working
+public URL. The next steps are:
 
 1. The DNS operator creates only the `mediaos` A record for the supplied host, with Cloudflare
    **DNS only** and TTL Auto. Existing Growie records and zone-wide settings remain unchanged.
-2. Verify DNS, start the dedicated Media OS ingress, obtain and verify a matching HTTPS
-   certificate, and check inbound host/cloud firewall behavior.
+2. Verify the cloud firewall permits HTTP/HTTPS to this instance, preserving existing groups
+   and rules. Open no database/API/console ports. Verify DNS and a matching HTTPS certificate
+   on the already-running dedicated Media OS ingress.
 3. Verify browser access from the configured operator address, denial from outside that scope,
    and application authentication/tenant enforcement through HTTPS. The current Caddy policy
    uses the direct peer; enabling the Cloudflare proxy needs a separately reviewed policy.
