@@ -102,6 +102,58 @@ def test_preflight_validates_separated_secrets_and_storage(config):
     assert TOKEN not in json.dumps(result)
 
 
+@pytest.mark.parametrize("enabled", ["true", "false"])
+def test_creator_setup_is_an_explicit_optional_deployment_setting(config, enabled):
+    path, values = config
+    values["ENABLE_EXTERNAL_CREATORS"] = enabled
+    save_config(path, values)
+    assert deployment.preflight(path)["configuration_valid"]
+
+
+@pytest.mark.parametrize("enabled", ["TRUE", "False", "1", "0", "yes", "on", "enabled"])
+def test_creator_setup_rejects_ambiguous_boolean_values(config, enabled):
+    path, values = config
+    values["ENABLE_EXTERNAL_CREATORS"] = enabled
+    save_config(path, values)
+    with pytest.raises(deployment.CheckError, match="must be true or false"):
+        deployment.preflight(path)
+
+
+def test_optional_creator_setting_does_not_replace_required_configuration(config):
+    path, values = config
+    del values["OPS_ALLOWED_CIDRS"]
+    values["ENABLE_EXTERNAL_CREATORS"] = "true"
+    save_config(path, values)
+    with pytest.raises(deployment.CheckError, match="keys are missing or unexpected"):
+        deployment.preflight(path)
+
+
+@pytest.mark.parametrize(
+    "key,value",
+    [
+        ("AI_MOCK_MODE", "false"),
+        ("MEDIA_LIVE_ENABLED", "true"),
+        ("SOCIAL_CONNECT_ENABLED", "true"),
+        ("SOCIAL_PUBLISH_ENABLED", "true"),
+        ("SOCIAL_REPLY_ENABLED", "true"),
+        ("CONVERSION_DELIVERY_ENABLED", "true"),
+        ("ENABLE_AUTO_PUBLISH", "true"),
+        ("ENABLE_AUTO_REPLIES", "true"),
+        ("ENABLE_VIDEO", "true"),
+        ("OPENAI_API_KEY", TOKEN),
+        ("ELEVENLABS_API_KEY", TOKEN),
+        ("HEYGEN_API_KEY", TOKEN),
+    ],
+)
+def test_creator_opt_in_does_not_allow_provider_settings(config, key, value):
+    path, values = config
+    values["ENABLE_EXTERNAL_CREATORS"] = "true"
+    values[key] = value
+    save_config(path, values)
+    with pytest.raises(deployment.CheckError, match="keys are missing or unexpected"):
+        deployment.preflight(path)
+
+
 @pytest.mark.parametrize(
     "key,value",
     [
@@ -130,7 +182,13 @@ def test_preflight_rejects_unsafe_or_placeholder_values(config, key, value):
 
 
 @pytest.mark.parametrize(
-    "extra", ["MIGRATION_DATABASE_URL", "OPENAI_API_KEY", "SOCIAL_PUBLISH_ENABLED"]
+    "extra",
+    [
+        "MIGRATION_DATABASE_URL",
+        "OPENAI_API_KEY",
+        "SOCIAL_PUBLISH_ENABLED",
+        "ENABLE_EXTERNAL_CREATORS",
+    ],
 )
 def test_runtime_file_rejects_admin_credentials_or_live_mode(config, extra):
     path, values = config
@@ -373,10 +431,16 @@ def test_compose_contract_has_no_runtime_admin_or_public_dependency_ports():
         "CONVERSION_DELIVERY_ENABLED",
         "ENABLE_AUTO_PUBLISH",
         "ENABLE_AUTO_REPLIES",
-        "ENABLE_EXTERNAL_CREATORS",
+        "ENABLE_VIDEO",
     ):
         assert flags[key] == "false"
     assert flags["AI_MOCK_MODE"] == "true"
+    assert flags["ENABLE_EXTERNAL_CREATORS"] == "${ENABLE_EXTERNAL_CREATORS:-false}"
+
+
+def test_deployment_example_keeps_creator_setup_an_opt_in():
+    example = deployment.raw_env(ROOT / "deploy/deployment.env.example", secret=False)
+    assert example["ENABLE_EXTERNAL_CREATORS"] == "false"
 
 
 def test_ingress_never_serves_assets_or_trusts_forwarded_ip():

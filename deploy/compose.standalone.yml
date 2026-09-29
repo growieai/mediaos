@@ -102,7 +102,7 @@ services:
       CONVERSION_DELIVERY_ENABLED: "false"
       ENABLE_AUTO_PUBLISH: "false"
       ENABLE_AUTO_REPLIES: "false"
-      ENABLE_EXTERNAL_CREATORS: "false"
+      ENABLE_EXTERNAL_CREATORS: "${ENABLE_EXTERNAL_CREATORS:-false}"
       ENABLE_VIDEO: "false"
       ASSET_STORAGE_PATH: /workspace/.local/renders
       MEDIA_STORAGE_PATH: /workspace/.local/media

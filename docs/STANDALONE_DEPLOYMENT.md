@@ -1,5 +1,39 @@
 # Standalone deployment and release runbook
 
+## Planned Growie pilot
+
+The selected hostname is **mediaos.growie.ai**. This records the deployment target, not a live
+deployment. The server address/SSH access, operating system, dedicated-versus-shared status,
+DNS administrator, operator network, registry and backup/alert destinations still need to be
+confirmed before provisioning. Keep Media OS databases, credentials and storage separate from
+all existing Growie services.
+
+For the authenticated creator pilot, the nonsecret deployment file will include:
+
+```dotenv
+SITE_DOMAIN=mediaos.growie.ai
+ENABLE_EXTERNAL_CREATORS=true
+```
+
+`ENABLE_EXTERNAL_CREATORS` defaults to `false` if omitted, and preflight accepts only literal
+`true` or `false`. Opting in exposes creator setup only to authorized workspace members; it
+does not add public signup or enable paid AI, video or social dispatch. All those execution
+flags remain fixed off in this deployment profile. The source/onboarding draft helpers remain
+mock templates; live drafting needs a separately implemented adapter.
+
+Launch order: verify the host and existing port owners → provision dedicated storage/secrets
+and reviewed images → migrate/seed the fresh Media OS database → configure the `mediaos` DNS
+record and HTTPS → start the authenticated pilot → verify tenant/role restrictions → configure
+off-site backups/alerts and rehearse recovery. If the server already hosts other sites, do not
+start a second ingress on ports 80/443; review integration with that server's existing proxy or
+use a separate VM. The direct-edge Caddy profile below must not be placed behind a proxy without
+reviewing its trusted-peer/access policy.
+
+The latest application code verification (`748e455`) passed 1,531 backend and 226 frontend tests,
+production build, clean migrations and development-container startup/acceptance. Standalone
+deployment CI validates Compose syntax and ingress configuration only. Actual target-server
+startup, DNS/TLS, firewall behavior and recovery must still be demonstrated.
+
 The `deploy/compose.standalone.yml` scaffold is for one dedicated Linux host with one API worker.
 It is separate from local Compose and from every existing Growie service. It prepares a controlled
 internal pilot; it does not establish deployed production readiness. No host, domain, certificates,

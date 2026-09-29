@@ -32,6 +32,7 @@ CONFIG_KEYS = {
     "MAINTENANCE_ENV_FILE",
     "POSTGRES_PASSWORD_FILE",
 }
+OPTIONAL_CONFIG_KEYS = {"ENABLE_EXTERNAL_CREATORS"}
 RUNTIME_KEYS = {"DATABASE_URL", "INTELLIGENCE_TOKENS"}
 MAINTENANCE_KEYS = {"MIGRATION_DATABASE_URL", "POSTGRES_RUNTIME_PASSWORD"}
 DIGEST = re.compile(r"[a-zA-Z0-9./:_-]+@sha256:[0-9a-f]{64}\Z")
@@ -103,8 +104,10 @@ def check_hostname(value: str) -> None:
 
 
 def check_values(values: dict[str, str]) -> None:
-    if set(values) != CONFIG_KEYS:
+    if not CONFIG_KEYS <= set(values) <= CONFIG_KEYS | OPTIONAL_CONFIG_KEYS:
         raise CheckError("Deployment configuration keys are missing or unexpected")
+    if values.get("ENABLE_EXTERNAL_CREATORS", "false") not in {"true", "false"}:
+        raise CheckError("ENABLE_EXTERNAL_CREATORS must be true or false")
     for name in ("API_IMAGE", "CONSOLE_IMAGE", "POSTGRES_IMAGE", "CADDY_IMAGE"):
         if not DIGEST.fullmatch(values[name]) or "example.invalid" in values[name]:
             raise CheckError("Every image must use an independently verified sha256 digest")
