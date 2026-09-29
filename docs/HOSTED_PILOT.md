@@ -8,6 +8,10 @@ private deployment notes.
 
 ## Verified on the target
 
+- [Hosted CI for `a2405d2`](https://github.com/growieai/mediaos/actions/runs/36565327139)
+  passed 1,580 backend tests, 234 frontend tests, clean migrations, lint/format/type checks,
+  builds, persisted application/container acceptance and the hardened ingress check. This
+  verifies the deployed application source plus the corrected isolated CI volume setup.
 - Docker Engine 29.8.1 and Compose 5.5.1; sufficient available memory/disk; no pre-existing HTTP
   or HTTPS listener. Existing Growie containers remained running throughout commissioning.
 - Source archives built with the checked-in lockfiles. Application containers use full local
@@ -46,18 +50,23 @@ APPROVER's inability to invoke operator drafting.
 
 ## Public access still pending
 
-At this checkpoint, `mediaos.growie.ai` did not resolve. Caddy is running on ports 80/443 and a
-host-local HTTP request redirects to the expected HTTPS hostname. An external HTTP connection
-timed out, and a narrowly filtered packet check saw no incoming test connection; an upstream
-firewall remains the suspected blocker. The cloud firewall has not been inspected or changed.
-The console/API/database are private; successful private checks do not establish a working
-public URL. The next steps are:
+The initial AWS group allowed SSH only. After renewing the existing AWS SSO session, the exact
+instance, VPC and public network interface were verified. A separate tagged Media OS group now
+allows only inbound IPv4 TCP 80/443. Its default egress was removed before attachment, and every
+existing interface group was preserved. No existing group rule was edited. Exact AWS identifiers
+and the before/after group lists are retained in private deployment notes.
 
-1. The DNS operator creates only the `mediaos` A record for the supplied host, with Cloudflare
+Caddy is running on ports 80/443. External HTTP now reaches the origin and redirects to the
+expected HTTPS hostname; origin TCP 443 is reachable. The console/API/database remain private.
+The hostname now resolves through Cloudflare's proxy, and the public HTTPS request returned
+525 while the origin did not yet have a usable certificate. Public HTTPS and browser acceptance
+are therefore still pending. The next steps are:
+
+1. The DNS operator sets only the `mediaos` A record for the supplied host to Cloudflare
    **DNS only** and TTL Auto. Existing Growie records and zone-wide settings remain unchanged.
-2. Verify the cloud firewall permits HTTP/HTTPS to this instance, preserving existing groups
-   and rules. Open no database/API/console ports. Verify DNS and a matching HTTPS certificate
-   on the already-running dedicated Media OS ingress.
+2. Verify direct-origin DNS and a matching HTTPS certificate on the already-running dedicated
+   Media OS ingress. Do not disable certificate verification or weaken application access checks
+   to bypass the current proxy/certificate mismatch.
 3. Verify browser access from the configured operator address, denial from outside that scope,
    and application authentication/tenant enforcement through HTTPS. The current Caddy policy
    uses the direct peer; enabling the Cloudflare proxy needs a separately reviewed policy.
