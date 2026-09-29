@@ -4,11 +4,49 @@ The owner-authorized Ubuntu host already runs Growie staging services. Media OS 
 `mediaos-standalone` Compose project, a fresh `mediaos_standalone_postgres` volume, private
 networks, `/srv/mediaos` storage and `/etc/mediaos` secrets. No existing Growie service, database,
 configuration, container or volume was changed. The host address and operator IP remain in
-private deployment notes. The hosted internal pilot is ready for testing at
-[mediaos.growie.ai](https://mediaos.growie.ai/) from the configured operator network with hosted
-workspace credentials. This is not an unrestricted public or customer launch.
+private deployment notes. The hosted internal pilot is ready for invited-user testing at
+[mediaos.growie.ai](https://mediaos.growie.ai/) using email/password sign-in. The console is
+reachable from ordinary networks; workspace data still requires authentication and tenant
+membership. Raw `/v1/*` operator APIs retain their direct-peer allowlist. There is no public signup.
 
-## Verified on the target
+## Email/password release verified on 2026-09-29
+
+Application release `26f2c22` runs schema `0021`. The API image is
+`sha256:74a2bb3a3cad8cb56248ce75d133d6035fe7555674868dc41722e1c6b290d722`;
+the console image is `sha256:87c9e17c46899504c272a059f3f57f92f54ce54c64fa71c977b72337d7442022`.
+Running image IDs match the release manifest. The existing PostgreSQL/Caddy image digests remain
+unchanged. A quiesced schema-0020 database/private-assets backup with verified checksums was taken
+before migration. Only Media OS application/ingress containers were replaced; existing Growie
+containers retained their uptime.
+The exact application and infrastructure images were archived on the host with checksum
+`e4150fb47bececc3641b63fb281797fd2e119c929dc5eb8d56e1c93b4cbb76f9`; an off-host copy remains pending.
+
+[Hosted CI for `26f2c22`](https://github.com/growieai/mediaos/actions/runs/36571725926) passed:
+1,631 backend tests, 258 frontend tests, clean migrations, lint/format/type checks, frontend and
+container builds, persisted API acceptance and actual hardened ingress validation.
+The final Windows authentication/affected-regression rerun passed all 53 checks. The initial
+Windows full-suite process had loaded the earlier code before the anonymous-request 401 fix;
+its five error-code failures were reproduced and resolved by that rerun. The complete Linux CI
+suite above ran the final committed code.
+
+Twenty hosted authentication checks passed using a temporary OPERATOR identity: single-use setup,
+normal password login, secure host-only HttpOnly cookies, session restoration, tenant scoping,
+wrong-tenant and cross-origin rejection, server logout, revoked-session rejection, session
+rotation, mock source drafting and anti-framing headers. Thirteen separate ingress checks passed
+from a peer outside the raw API allowlist: public console access, authenticated console API,
+restricted direct APIs, forged forwarding-header rejection and disabled provider behavior.
+
+Browser acceptance verified email/password sign-in, refresh recovery, Sofía's source form, an
+unsaved Spanish mock draft and sign-out. The temporary account was then revoked. A separate
+named OPERATOR invitation was provisioned for the owner; its single-use setup page is ready for
+the owner to set their password. No password was selected on their behalf, and no email was sent.
+See [user sign-in](USER_LOGIN.md) for setup, expiry and administrator-managed recovery.
+
+Paid AI/media and social dispatch remain disabled. The checks saved or published no editorial
+content. The earlier commissioning results below are historical evidence for the initial release;
+their console-wide network restriction was replaced by this authenticated-user access policy.
+
+## Initial target commissioning
 
 - [Hosted CI for `a2405d2`](https://github.com/growieai/mediaos/actions/runs/36565327139)
   passed 1,580 backend tests, 234 frontend tests, clean migrations, lint/format/type checks,
@@ -42,7 +80,7 @@ configuration. The helper and UI now use the supported primary language for the 
 preview while preserving the saved creator configuration. Regional-language regression tests
 cover the actual canonical configuration, provenance and rejected mismatched responses.
 
-The deployed application source is `1d50447`, with API image
+The initial application source was `1d50447`, with API image
 `sha256:09ee178eadd0920d2e18fae2093d7ec854b51fa986e14d0f1deea7882da23e4c`
 and console image `sha256:43a85bf68d7026e5371de2742db9c1a2fb33b5c3c3d1a3d235bf990579a28c06`.
 The exact application and infrastructure images were archived on the host with a SHA-256
@@ -86,16 +124,17 @@ Hosted browser acceptance succeeded using the separate OPERATOR identity. Sofía
 rendered a Spanish mock draft with its unverified/unpublishable marker visible. Nothing was saved
 or approved during that browser check.
 
-Access still requires the configured operator source IP plus application authentication and
-tenant authorization. Moving to another network requires updating only the Media OS allowlist;
-do not open it to every address as a workaround. The Caddy policy uses the direct peer, so enabling
-Cloudflare's proxy requires a separately reviewed access policy.
+That initial release required the configured operator source IP for the console as well.
+The email/password release above removes this console restriction while preserving it for raw
+operator APIs. The Caddy policy uses the direct peer, so enabling Cloudflare's proxy still requires
+a separately reviewed policy for those raw APIs.
 
 ## Operational limits
 
 The initial backup stays on the server. An encrypted off-site destination, retention policy,
-external alerts and full host-loss recovery are not configured. Human token issuance/rotation
-and durable unattended orchestration remain operational work. This is an authenticated internal
+external alerts and full host-loss recovery are not configured. Account recovery remains an
+administrator operation; self-service email recovery, MFA/SSO and durable unattended orchestration
+remain deferred. This is an authenticated internal
 pilot, with no public signup or customer billing. No live model/video/social acceptance was
 performed. The source/onboarding draft helpers remain local mock templates, not real research.
 

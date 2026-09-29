@@ -7,8 +7,8 @@ hosting Growie, with DNS managed through Cloudflare. SSH inspection confirmed ad
 three existing Growie staging containers and no listener on ports 80/443. The owner authorized a
 separate Media OS deployment on this host. The initial pilot verified DNS-only routing, trusted
 HTTPS, operator-network browser access, bearer authentication/tenant rejection and same-host
-recovery. The updated release adds ordinary-network access to the console with invited user
-sign-in; its hosted login/setup acceptance must be recorded separately before claiming it verified.
+recovery. Release `26f2c22` verified ordinary-network console access with invited-user email/password
+sign-in, session restoration, revocation and tenant/CSRF rejection on the hosted server.
 Off-site backup/alert destinations remain unspecified. See the exact checks and limits in
 [hosted pilot verification](HOSTED_PILOT.md).
 Keep Media OS databases, credentials and storage separate from all existing Growie services.
